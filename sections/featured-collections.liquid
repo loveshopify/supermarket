@@ -1,0 +1,149 @@
+{% if section.settings.home_feature_collection_grid_layout == '6-col' %}
+{% assign grid_item_width = '2' %}
+{% assign grid_item_count = '6' %}
+{% elsif section.settings.home_feature_collection_grid_layout == '4-col' %}
+{% assign grid_item_width = '3' %}
+{% assign grid_item_count = '4' %}
+{% elsif section.settings.home_feature_collection_grid_layout == '3-col' %}
+{% assign grid_item_width = '4' %}
+{% assign grid_item_count = '3' %}
+{% else %}
+{% assign grid_item_width = '6' %}
+{% assign grid_item_count = '2' %}
+{% endif %}
+
+{% assign index = 0 %}
+{% for block in section.blocks %}
+    {% assign index = index | plus: 1 %}
+{% endfor %}
+<div class="container" data-section-id="{{ section.id }}" data-section-type="featured-collections-section">
+{% if index != 0 %}
+<div class="h_row_content home_collection section-{{section.id}}">
+  <div class="clearfix">
+  <h3>{{ section.settings.title | escape }}</h3>   
+  </div>
+  <div class="catalog_c mt30">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="product_c">
+          <div class="row view-grid fadeInUp" >
+            {% for block in section.blocks %}
+            {% assign featured = block.settings.collection %}
+           		<div class="col-md-{{ grid_item_width }} col-sm-4 col-xs-6 mb30">
+                  {% include 'featured-collection' %}
+                </div>
+            {% endfor %} 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+</div>
+<style>
+  #content .home_collection.section-{{section.id}} .box_1 {
+    {% if section.settings.home_feature_collection_grid_layout == '6-col' %}
+    height: 140px;
+    {% elsif section.settings.home_feature_collection_grid_layout == '3-col' %}
+    height:285px;
+    {% else %}
+    height: 200px;
+    {% endif %}
+  }
+</style> 
+{% schema %}
+  {
+    "name": "Collection list",
+    "max_blocks": 12,
+    "settings": [
+	    {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collection list"
+        },	      
+		{
+        "type": "select",
+        "id": "home_feature_collection_grid_layout",
+        "label": "Grid layout",
+        "options": [
+          {
+            "value": "2-col",
+            "label": "Two columns"
+          },
+          {
+            "value": "3-col",
+            "label": "Three columns"
+          },
+          {
+            "value": "4-col",
+            "label": "Four columns"
+          },
+          {
+            "value": "6-col",
+            "label": "Six columns"
+          }
+        ],
+        "default": "4-col"
+      },
+      {
+        "type": "select",
+        "id": "featured_collection_images",
+        "label": "Image type",
+		"info": "Choose whether to show the collection's featured image or the first product's featured image",
+        "options": [
+          {
+            "value": "featured",
+            "label": "Collection featured image"
+          },
+          {
+            "value": "product",
+            "label": "Product image"
+          }
+        ],
+        "default": "featured"
+      },
+       {
+        "type": "checkbox",
+        "id": "show_item_count",
+        "label": "Show item count"
+      }
+	],
+  	 "blocks" : [
+	  {"type": "collection",
+        "name": "Collection",
+        "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+       ]
+	}
+   ],
+    "presets": [
+        {
+          "name": "Collection list",
+          "category": "Collection",
+		  "settings": {
+			"home_feature_collection_grid_layout":"4-col"
+   			},
+		  "blocks": [
+          {
+       		 "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+		  {
+            "type": "collection"
+          },
+		  {
+            "type": "collection"
+           }
+          ]
+        }
+      ]
+  }
+{% endschema %}

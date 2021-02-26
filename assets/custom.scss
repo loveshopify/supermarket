@@ -1,0 +1,62 @@
+.template-product{
+  #shopify-section-product{
+    .pro_main_c{
+      .product_payments_btns{
+        margin-top: 20px; 
+      }
+    }
+  }
+}
+.logout-wrapper{
+  a{
+    svg{
+      width: 15px;
+      height: 15px;
+      margin-top: 4px;
+      path{
+        fill: #148e5c;
+        stroke: #148e5c;
+        stroke-width: 13px; 
+      }
+    }
+  }
+}
+#product-loop-wrapper{
+  #is_new{
+    position: absolute;
+    color: #148e5c;
+    z-index: 999;
+    background: white;
+    width: 100px;
+    transform: rotate(-41deg);
+    left: -22px;
+    top: 9px;
+    border: 1px solid #148e5c;
+  }
+}
+.owl-carousel .owl-item{
+/*   min-height: unset;  */
+}
+#gorgias-web-messenger-container{
+  position: fixed;
+  left: 0px !important;
+  direction: rtl;
+  #messenger-button{
+    position: fixed;
+    left: 20px !important;
+  }
+}
+.change-password{
+  position: relative;
+  top: 13px;
+  font-size: 15px;
+  border: 1px solid;
+  padding: 5px 13px;
+  color: white;
+  background-color: #2dab2b;
+  border-radius: 4px; 
+  &:hover{
+    color: white; 
+    background-color: rgb(49, 179, 47);
+  }
+}

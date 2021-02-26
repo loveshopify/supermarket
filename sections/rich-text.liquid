@@ -1,0 +1,148 @@
+<div class="home-cta-bg mt-30  {% if section.settings.home-cta != blank %} ratio-container lazyload {% endif %} mb30 section-{{ section.id }}" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="text-section"
+      {% if section.settings.home-cta != blank %}
+     data-bgset="{% include 'bgset', image: section.settings.home-cta %}"
+     data-sizes="auto"
+     data-parent-fit="cover"
+     style="background-image: url('{{ section.settings.home-cta | img_url: '300x300' }});"
+     {% endif %}
+     >
+  <div class="cta-overlay">
+  <div class="container">
+    <div class="h_row_content h_row_3">
+      <h2>{{ section.settings.home_cta_heading }}</h2>
+      {% if section.settings.home_cta_heading == blank %}
+      	<div class="no_padding_top">
+      {% endif %}
+      {{ section.settings.home_cta_subtext }}
+       {% if section.settings.home_cta_heading == blank %}
+      </div>
+      {% endif %}
+      {% unless section.settings.home_cta_link == blank %}
+      <a class="btn_c" href="{{ section.settings.home_cta_link}}">{{ 'home_page.sections.learn_more' | t }}</a>
+      {% endunless %}
+    </div>
+  </div>
+  </div>
+</div>
+<noscript>
+  <style>
+  {% if section.settings.home-cta != blank %}
+      #content .home-cta-bg.section-{{ section.id }} {
+    background-image:url('{{ section.settings.home-cta | img_url: '1400x' }}');
+    }
+    {% endif%}
+  </style>
+</noscript>
+<style>
+  {% if section.settings.home-cta != blank %}
+  #content .home-cta-bg.section-{{ section.id }} .cta-overlay {
+    background: rgba(0,0,0, {% if section.settings.cta_caption_val == 100%} 1 {% else %}0.{{section.settings.cta_caption_val}} {% endif %});
+  } 
+  {% endif %}
+  #content .home-cta-bg.section-{{ section.id }} p {
+    font-size:{{section.settings.home_cta_content_size | append: 'px'}};
+    color:{{section.settings.home_cta_txt_color}};
+  }
+  #content .home-cta-bg.section-{{ section.id }} h2 {
+    font-size:{{ section.settings.home_cta_heading_size | append: 'px'}};
+    color:{{ section.settings.home_cta_hd_color }};
+  }
+  #content .home-cta-bg.section-{{ section.id }} h2 p{
+    font-size:{{ section.settings.home_cta_heading_size | append: 'px'}};
+    color:{{ section.settings.home_cta_hd_color }};
+  }
+   #content .home-cta-bg.section-{{ section.id }}{
+  	background-color:{{section.settings.home_cta_bg_color}};
+  }
+</style>  
+{% schema %}
+  {
+    "name": "Rich text",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "home_cta_heading",
+        "label": "Heading",
+		"default": "<p>Large Call to Action Area<\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "home_cta_subtext",
+        "label": "Text",
+		"default": "<p>Add a background image or color to this section and create some keyword-rich text about your store here. Great for SEO! You can customize this section with any heading, text, link, and image you want in Theme Settings.<\/p>"
+      },
+      {
+        "type": "url",
+        "id": "home_cta_link",
+        "label": "Link"
+      },
+      {
+        "type": "image_picker",
+        "id": "home-cta",
+        "label": "Background",
+        "info": "1600 x 1200px jpg recommended"
+      },
+	  {
+        "type": "range",
+        "id": "cta_caption_val",
+        "label": "Overlay opacity",
+        "info": "Add a darkened overlay over your image to make text easier to read.  Higher percentages produce darker overlays.",
+         "min":       0,
+        "max":        100,
+        "step":       10,
+        "unit":       "%",
+        "default": 20
+      },
+	  {
+        "type": "range",
+        "id": "home_cta_heading_size",
+        "label": "Heading size",
+        "default": 36,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "home_cta_content_size",
+        "label": "Text size",
+        "default": 18,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+	  {
+        "type": "header",
+        "content": "Colors"
+      },
+	  {
+        "type": "color",
+        "label": "Heading text",
+        "id": "home_cta_hd_color",
+		"default": "#282727"
+      },
+      {
+        "type": "color",
+        "label": "Content",
+        "id": "home_cta_txt_color",
+		"default": "#9A9A9A"
+      },
+      {
+        "type": "color",
+        "label": "Background",
+        "id": "home_cta_bg_color",
+		"default": "#DBDBDB"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Rich text",
+          "category": "Text"
+        }
+      ]
+  }
+{% endschema %}

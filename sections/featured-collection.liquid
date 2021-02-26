@@ -1,0 +1,147 @@
+{% assign featured = section.settings.featured_collection %}
+{% assign collection = collections[featured] %}
+{% assign img_size = "350x"%}
+{% if section.settings.home_feature_product_grid_layout == "col-md-6" %}
+{% assign img_size = "550x"%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" data-section-type="featured-products-section" data-reviews-stars="{{section.settings.show_product_reviews_stars}}">
+  <div class="container">
+    <div class="h_row_content h_row_4 featured-products">
+      <div class="clearfix">
+        <h3>{{ section.settings.title | escape }}</h3>   
+      </div>
+      {% if section.settings.home_feature_product_grid_type == "grid" %}
+      <div class="product_c mt30 grid-layout" id="products-{{ section.id }}">
+        <div class="row">
+          {% if section.settings.featured_collection != blank and collections[section.settings.featured_collection].handle == section.settings.featured_collection and collections[section.settings.featured_collection].products_count > 0 %}
+          <div id="" class="featured-products">
+            {% for product in collections[section.settings.featured_collection].products limit: section.settings.home_feature_product_limit %}
+            <div class="{{ section.settings.home_feature_product_grid_layout }} col-sm-4 col-xs-6 mb30"> 
+              {% include 'product-loop' %}
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div id="" class="featured-products">
+            {% include 'onboarding-featured-products' %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="carosel product_c mb30" id="products-{{ section.id }}">
+        <div class="row">
+          {% if section.settings.featured_collection != blank and collections[section.settings.featured_collection].handle == section.settings.featured_collection and collections[section.settings.featured_collection].products_count > 0 %}
+          <div id="featured-products-section-{{ section.id }}" class="owl-carousel owl-theme featured-products {% if settings.align_height %} use_align_height {% else %} use_image_height {% endif %}">
+            {% for product in collections[section.settings.featured_collection].products limit: section.settings.home_feature_product_limit %}
+            {% include 'product-loop' %}
+            {% endfor %}
+          </div>
+          {% else %}
+          <div id="featured-products-section-{{ section.id }}" class="owl-carousel owl-theme featured-products">
+            {% include 'onboarding-featured-products' %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Featured collection",
+    "settings": [
+	  {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured collection"
+      },	 
+	 {
+        "type": "collection",
+        "id": "featured_collection",
+        "label": "Choose collection"
+      },
+      {
+        "type": "select",
+        "id": "home_feature_product_grid_type",
+        "label": "Format",
+        "options": [
+          {
+            "value": "carousel",
+            "label": "Carousel"
+          },
+          {
+            "value": "grid",
+            "label": "Grid"
+          }
+        ],
+        "default": "carousel"
+      },
+	  {
+        "type": "select",
+        "id": "home_feature_product_grid_layout",
+        "label": "Grid layout",
+		"info":"Only applicable if you chose \"Grid\" above",	
+        "options": [
+          {
+            "value": "col-md-6",
+            "label": "Two columns"
+          },
+          {
+            "value": "col-md-4",
+            "label": "Three columns"
+          },
+          {
+            "value": "col-md-3",
+            "label": "Four columns"
+          },
+          {
+            "value": "col-md-2",
+            "label": "Six columns"
+          }
+        ],
+        "default": "col-md-3"
+      },
+	  {
+        "type": "range",
+        "id": "home_feature_product_limit",
+        "label": "Number of products",
+          "min":       2,
+        "max":        24,
+        "step":       1,
+        "default": 12
+      },	
+	  {
+        "type": "checkbox",
+        "id": "show_grid_type",
+        "label": "Show product type"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_sale_badge",
+        "label": "Show sale badge",
+		"default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "collection_overlay",
+        "label": "Enable product quick view"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_product_reviews_stars",
+        "label": "Show review stars",
+		"info": "Shopify product reviews app must be enabled"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Featured collection",
+          "category": "Collection"
+        }
+      ]
+  }
+{% endschema %}

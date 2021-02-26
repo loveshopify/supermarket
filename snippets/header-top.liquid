@@ -1,0 +1,39 @@
+{% if section.settings.heading_content != 'none' or  section.settings.header_phone != blank or section.settings.header_email != blank or settings.show_multiple_currencies %}
+<div class="header_top">
+  <div class="container">
+    <div class="top_menu">
+      {% if section.settings.heading_content != 'none' %}
+      <ul>
+        {% if section.settings.heading_content == 'links' %}
+        {% for link in linklists[section.settings.header_top_linklist].links %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% else %}
+        <li>{{ 'general.header.no_links' | t }}</li>
+        {% endfor %}
+        {% elsif section.settings.heading_content == 'text' and section.settings.header_top_text != blank %}
+        <li><span class="header-top-text">{{ section.settings.header_top_text }}</span></li>
+        {% endif %}
+      </ul>
+      {% endif %}
+    </div>
+   
+    
+  </div>
+</div>
+{% endif %}
+{% if section.settings.header_style == 'header3' %}
+<div class="logo-centered clearfix hidden-ms hidden-xs">
+  {% if section.settings.logo != blank %}
+  <a href="/" style="max-width:{{section.settings.logo_max_width | append: "px"}}">
+    <img src="{{ section.settings.logo | img_url: logo_scale_width }}" 
+         style="display: block;max-width:{{section.settings.logo_max_width | append: "px"}};margin: 0 auto;padding: 10px 0;"
+         alt="{% if  section.settings.logo.alt != blank %} {{ section.settings.logo.alt}} {% else %}{{ shop.name }} {%endif %}" 
+         class="img-responsive" />
+  </a>
+  {% else %}
+  <div class="logo-text">
+    <a class="text-logo" href="/">{{ shop.name }}</a>
+  </div>
+  {% endif %}
+</div> 
+{% endif %}

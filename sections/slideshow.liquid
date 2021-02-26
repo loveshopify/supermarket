@@ -1,0 +1,273 @@
+<div data-section-id="{{ section.id }}"  data-animationspeed="{{section.settings.animation_speed}}" id="flexslider-{{ section.id }}" class="flexslider loading home-slider{% if section.settings.slideshow_width == 'contained' %} container mb30 {% else %} mt-30 {% endif %}" data-section-type="slideshow-section">
+  <ul class="slides">
+  	 {% for block in section.blocks %}
+     <!-- new slide -->  
+         <li {{ block.shopify_attributes }} id="slide-{{block.id}}" data-index="{{forloop.index0}}">{% if block.settings.slideshow_link != blank %}<a href="{{ block.settings.slideshow_link }}">{% endif %}
+           {% if block.settings.slideshow_image %}
+           {%- assign img_url = block.settings.slideshow_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+           <noscript>
+              <img  alt=" {% if block.settings.slideshow_image.alt != blank %} {{ block.settings.slideshow_image.alt }} {% else %} {{ block.settings.title | escape }} {% endif %}" 
+                   src="{{ block.settings.slideshow_image | img_url: '300x300' }}" 
+                   srcset="{{ block.settings.slideshow_image | img_url: '2000x' }} 1x, {{ block.settings.slideshow_image | img_url: '2000x', scale: 2 }} 2x, {{ block.settings.slideshow_image | img_url: '2000x', scale: 3 }} 3x" />           
+           </noscript>
+
+           <img alt=" {% if block.settings.slideshow_image.alt != blank %} {{ block.settings.slideshow_image.alt }} {% else %}  {{ block.settings.title | escape }}{% endif %}" 
+                src="{{ block.settings.slideshow_image | img_url: '300x300' }}"
+                class="lazyload blur-up{% if forloop.index == 1 %} lazypreload{% endif %}"                         
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                data-aspectratio="{{ block.settings.slideshow_image.aspect_ratio }}"
+                data-sizes="auto" />
+           {% else %}
+            {% capture imgCount %}{% cycle 1, 2 %}{% endcapture %}
+       		{% capture svg_name %}lifestyle-{{ imgCount }}{% endcapture %}
+          	{{ svg_name | placeholder_svg_tag: 'placeholder-svg' }}
+           {% endif %}
+           {% if block.settings.slideshow_link != blank %}</a>{% endif %}
+          {% if block.settings.title != blank or block.settings.slideshow_button_text != blank or block.settings.slideshow_subtitle != blank or block.settings.slideshow_subsubtitle != blank %}
+          <div class="flex-caption {{ block.settings.slideshow_caption_position}}" {% if block.settings.slideshow_caption_val != '0' %}style="background: rgba(0,0,0, {% if block.settings.slideshow_caption_val == 100%} 1 {% else %}0.{{block.settings.slideshow_caption_val}} {% endif %});"{% else %}style="background:transparent;"{% endif %}>
+            <div class="banner">
+              <div class="banner_overlay">
+              {% if block.settings.title != blank %}
+              <h2>{{ block.settings.title | escape }}</h2>
+              {% endif %}
+              {% if block.settings.title != blank and block.settings.slideshow_subtitle != blank %}
+              <div class="line_1"></div>
+              {% endif %}
+              {% if block.settings.slideshow_subtitle != blank %}
+              <h4>{{ block.settings.slideshow_subtitle }}</h4>
+              {% endif %}
+              {% if block.settings.slideshow_subsubtitle != blank %}
+              <h5>{{ block.settings.slideshow_subsubtitle }}</h5>
+              {% endif %}
+              {% if block.settings.slideshow_link != blank and block.settings.slideshow_button_text != blank %}
+              <a class="btn_c" href="{{ block.settings.slideshow_link }}">{{ block.settings.slideshow_button_text | escape }}</a>
+              {% endif %}
+            </div>
+            </div>  
+          </div>
+          {% endif %}
+        </li>  
+      <!-- end of slide -->	      
+    {% endfor %}
+  </ul>
+</div>
+
+<style>
+  @media screen and (min-width: 768px) {  
+    #flexslider-{{ section.id }} .banner h2 {
+      font-size:{{section.settings.slider_heading_size}}px;
+      color:{{ section.settings.sd_heading_color }};
+    }
+    #flexslider-{{ section.id }} .banner h4,  #flexslider-{{ section.id }} .banner h4 p {
+      font-size:{{section.settings.slider_sub_heading_size | append: 'px'}};
+    }
+
+    #flexslider-{{ section.id }} .banner h5 p {
+      font-size:{{section.settings.slider_content_size | append: 'px'}};
+    }
+    #flexslider-{{ section.id }} .banner p {
+      font-size:{{section.settings.slider_content_size | append: 'px'}};
+    }
+   
+  }
+  #flexslider-{{ section.id }} .banner h2 {
+    color:{{ section.settings.sd_heading_color }};
+  }
+  #flexslider-{{ section.id }} .banner .line_1 {
+    background:{{ section.settings.sd_line_color }};
+  }
+  #flexslider-{{ section.id }} .banner h4 {
+    color:{{ section.settings.sd_sub_heading_color }};
+  }
+  #flexslider-{{ section.id }} .banner h4 p {
+    color:{{ section.settings.sd_sub_heading_color }};
+  }
+  #flexslider-{{ section.id }} .banner h5 p {
+    color:{{ section.settings.sd_text_color }};
+  }
+  #flexslider-{{ section.id }} .banner p {
+    color:{{ section.settings.sd_text_color }};
+  }
+</style>
+<!--SLIDER END -->
+{% schema %}
+ {
+    "name": "Slideshow",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "select",
+        "id": "slideshow_width",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full-width"
+          },
+          {
+            "value": "contained",
+            "label": "Contained"
+          }
+        ],
+        "default": "full"
+      },
+	  {
+        "type": "range",
+        "id": "animation_speed",
+        "label": "Change slides every",
+          "min":       3,
+        "max":        8,
+        "step":       1,
+        "unit":       "sec",
+        "default": 7
+      },
+	  {
+        "type": "range",
+        "id": "slider_heading_size",
+        "label": "Heading size",
+        "default": 36,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "slider_sub_heading_size",
+        "label": "Subheading size",
+        "default": 24,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "slider_content_size",
+        "label": "Content size",
+        "default": 18,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+	  {
+        "type": "header",
+        "content": "Colors"
+      },
+	   {
+        "type": "color",
+        "id": "sd_heading_color",
+        "label": "Heading text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "sd_line_color",
+        "label": "Separator",
+        "default": "#fbcf00"
+      },
+      {
+        "type": "color",
+        "id": "sd_sub_heading_color",
+        "label": "Subheading text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "sd_text_color",
+        "label": "Caption text",
+        "default": "#ffffff"
+      }
+	],
+     "blocks" : [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+      {
+        "type": "header",
+        "content": "Slide"
+      },
+      {
+        "type": "image_picker",
+        "id": "slideshow_image",
+        "label": "Image",
+		"info": "1600 x 700px jpg recommended"
+      },
+      {
+        "type": "range",
+        "id": "slideshow_caption_val",
+        "label": "Overlay opacity",
+        "info": "Add a darkened overlay over your slide to make text easier to read.  Higher percentages produce darker overlays.",
+          "min":       0,
+        "max":        100,
+        "step":       10,
+        "unit":       "%",
+        "default": 20
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "slideshow_subtitle",
+        "label": "Subheading"
+      },
+      {
+        "type": "richtext",
+        "id": "slideshow_subsubtitle",
+        "label": "Content"
+      },
+      {
+        "type": "text",
+        "id": "slideshow_button_text",
+        "label": "Button text"
+      },
+      {
+        "type": "url",
+        "id": "slideshow_link",
+        "label": "Slide link"
+      },
+      {
+        "type": "select",
+        "id": "slideshow_caption_position",
+        "label": "Text position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "center"
+      	}
+	  ]
+ 	 }
+	],
+  "presets": [{
+    "name": "Slideshow",
+    "category": "Image",
+    "settings": {
+    },
+    "blocks": [
+      {
+        "type": "slide"
+      },
+      {
+        "type": "slide"
+      }
+    ]
+  }]
+ }
+{% endschema %}

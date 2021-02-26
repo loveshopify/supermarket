@@ -1,0 +1,142 @@
+{% assign block_1 = section.blocks[0] %}
+{% assign block_2 = section.blocks[1] %}
+{% assign block_3 = section.blocks[2] %}
+{% assign block_4 = section.blocks[3] %}
+{% assign blockCount =  section.blocks | size %}
+<div id="footer" >
+  <div class="f_mid">
+    <div class="container">
+      <div class="row">
+        {% for block in section.blocks %}
+        {% case block.type %}
+
+          {% when 'linklist' %}
+        	{% assign linklist = linklists[block.settings.linklist] %}
+            <div class="{% if blockCount == 4%} col-sm-3 col-ms-6{% elsif blockCount == 3 %}col-sm-4 col-ms-6{% elsif blockCount == 2 %}col-sm-6 col-ms-6{% else %}col-xs-12{% endif %}">
+              <h4>{{ linklist.title | escape }}</h4>
+              {% if linklist != '' %}
+              <ul>
+                {% for link in linklist.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+
+          {% when 'text' %}
+        	<div class="{% if blockCount == 4%} col-sm-3 col-ms-6{% elsif blockCount == 3 %}col-sm-4 col-ms-6{% elsif blockCount == 2 %}col-sm-6 col-ms-6{% else %}col-xs-12{% endif %}">
+              <h4>{{ block.settings.title | escape }}</h4>
+              <div class="desc">
+                {{ block.settings.text }}
+              </div>
+            </div>
+
+          {% when 'newsletter' %}
+			<div class="{% if blockCount == 4%} col-sm-3 col-ms-6{% elsif blockCount == 3 %}col-sm-4 col-ms-6{% elsif blockCount == 2 %}col-sm-6 col-ms-6{% else %}col-xs-12{% endif %}">
+              <h4>{{ 'layout.footer.newsletter_title' | t }}</h4>
+              <div class="desc">
+                {{ block.settings.text | escape }}
+              </div>
+              {% include 'newsletter-form' %}
+              {% if block.settings.footer_display_social %}
+              	{% if settings.twitter_link != '' or settings.facebook_link != '' or settings.pinterest_link !='' or settings.google_plus_link != '' or  settings.instagram_link != '' or settings.tumblr_link != '' or settings.youtube_link != '' or settings.vimeo_link != '' %}
+              		{% include 'social-profiles' %}
+              	{% endif %}
+              {% endif %}
+            </div>
+
+       	{% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="f_bot">
+    <div class="container">
+      <div class="f_bot_left">&copy; {{ 'now' | date: "%Y" }} {{ shop.name | link_to: '/' }} | <a href="https://www.shopify.com/?ref=minion-made" target="_blank"> Powered by Shopify.</a></div>
+      {% if section.settings.show_payment_methods and shop.enabled_payment_types != empty %}
+      <div class="f_bot_right">
+        <div class="partner">
+          <ul class="list-inline">
+            {% for type in shop.enabled_payment_types %}
+            <li>{{ type | payment_type_svg_tag: class:'payment-icon' }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Footer",
+	"max_blocks": 4,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Bottom bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_payment_methods",
+        "label": "Show payment methods"
+      }
+    ],
+    "blocks" : [
+    {
+      "type": "linklist",
+      "name": "Menu",
+      "settings": [
+        {
+           "type": "link_list",
+           "id": "linklist",
+           "label": "Choose menu",
+           "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter / social icons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Customers who sign up will have an account created for them in Shopify."
+        },
+        {
+           "type": "textarea",
+           "id": "text",
+           "label": "Newsletter description",
+           "default": "Sign up for our newsletter and be the first to know about coupons and special promotions."
+        },
+		{
+           "type": "checkbox",
+           "id": "footer_display_social",
+           "label": "Enable social icons",
+		   "info": "Edit your social settings in the theme settings tab"
+      	}
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Text column"
+        },
+        {
+          "type": "html",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>This is a custom textbox widget that you can use for any content you'd like.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

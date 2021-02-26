@@ -1,0 +1,237 @@
+{% comment %}
+<!--
+
+product-quick-view.liquid
+=========================
+
+This file is used when the quick view option is enabled on the theme.
+Refer to code in scripts.js.liquid for callback functions.
+
+Take note of the special way to load swatches:
+(This is required for the quick view to work on the search page)
+{% include 'swatch' with option qvScope:scope product:qvp %}
+
+
+-->
+{% endcomment %}
+
+{% assign showQuickViewForm = true %}
+
+{% if qvp %}
+{% capture moreDetailsBtn %}<a class=" {% if section.settings.show_smart_checkout and qvp.available %} more_info_smart_checkout{% else %}modal-button2 {% endif %}" href="{{ qvp.url | within: collection }}">{{ 'products.product.more_info' | t }}</a>{% endcapture %}
+{% assign featured_image = qvp.selected_or_first_available_variant.featured_image | default: qvp.featured_image %}
+{% capture scope %}qv-{{ qvp.url | handle | within: collection | replace: '/', '-' }}{% endcapture %}
+<div data-id="{{ qvp.id }}" data-name="product_{{ qvp.handle | replace:'-','_' }}" id="{{ scope }}" class="swatch-product-id-{{qvp.id}} mfp-with-anim mfp-hide mfp-dialog mfp-dialog-big clearfix quick-view-panel">
+  <div class="data-qvp">{{ qvp | json }}</div>
+  <div class="row">
+    <div class="col-md-7">
+      <div class="slider_1 clearfix">
+        {% if qvp.images.size == 0 %}
+        <img src="{{ '' | product_img_url: '1024x' }}" alt="{{ qvp.featured_image.alt | escape }}">
+        {% else %}
+        <div class="slides">
+          <noscript>
+          <img src="{{ qvp.featured_image.src | product_img_url: '1024x' }}" alt="{{ qvp.featured_image.alt | escape }}">
+          </noscript>
+           {% assign img_url = qvp.featured_image.src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+           <img
+             src="{{ featured_image| product_img_url: '300x' }}"  
+             class="lazyload blur-up"
+             data-src="{{ featured_image| product_img_url: '1024x' }}"
+             alt="{{ featured_image.alt | escape }}">
+        </div>
+        {% endif %}                
+      </div>
+    </div>
+    <div class="col-md-5">
+      <h3>{{ qvp.title | escape }}</h3>
+      {% if settings.product_reviews %}
+      <div class="qv-reviews clearfix mb20">
+        <span class="shopify-product-reviews-badge" data-id="{{ qvp.id }}"></span>
+      </div>
+      {% endif %}
+      <p class="product-info-price mb20 mt10">
+         {% unless qvp.price_max == 0 and settings.custom_price0_text != blank %}
+          <span id="productPrice" class="money">{{ qvp.selected_or_first_available_variant.price | money }}</span>
+          {% if on_sale %}<span id="comparePrice" class="compare-price money">{{ qvp.selected_or_first_available_variant.compare_at_price | money }}</span> {% endif %}       
+        {% else %}  
+          <span>{{settings.custom_price0_text }}</span> 
+        {% endunless %}
+        
+      	
+      </p>
+      
+       {% assign descriptionParts = qvp.description | split: "<!-- split -->" %}
+          {% if descriptionParts.size > 1%}
+          	<p class="text-smaller text-muted">{{descriptionParts | first }}</p>
+          {% else %}
+          	<p class="text-smaller text-muted">{{ qvp.description | strip_html | remove: "<!-- TABS -->" | remove: "<!-- /TABS -->" | truncate: 350 }}</p>
+        {% endif %}
+      
+      {% if showQuickViewForm %}
+        {% form 'product', qvp %}
+        {% assign qvpVariantsSize = qvp.variants.size %}
+        {% assign qvpOptionsSize = qvp.options.size %}
+        {% if qvpVariantsSize > 1 %}
+
+        {% for option in product.options_with_values %}
+        <div class="selector-wrapper">
+
+          <label for="product-select-{{ option.name }}">
+            {{ option.name }}
+          </label>
+          <select class="single-option-selector quick-view-selector-{{ qvp.id }}" id="SingleOptionSelector-{{ forloop.index0 }}">
+            {% for value in option.values %}
+            <option {% if option.selected_value == value %}selected{% endif %}>
+              {{ value }}
+            </option>
+            {% endfor %}
+          </select>
+
+        </div>  
+        {% endfor %}  
+
+        <select name="id" id="product-select-{{ qvp.id }}" class="product-variants hidden">
+          {% for variant in qvp.variants %}
+          {% if variant.available %}
+          <option {% if variant == qvp.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title | escape }} - {{ variant.price | money_with_currency }}</option>
+          {% else %}
+          <option disabled="disabled">{{ variant.title | escape }} - {{ 'products.product.sold_out' | t }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+
+        {% if section.settings.show_product_swatches %}
+        {% if qvp.variants.size > 1 %}
+        {% for option in qvp.options %}
+        {% include 'swatch' with option qvScope:scope product:qvp %}
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+        {% else %}
+        <input type="hidden" name="id" id="product-select-{{ qvp.id }}" value="{{ qvp.variants[0].id }}" />
+        {% endif %}
+        <hr>
+        {% if qvp.available %}     
+          {% if section.settings.show_smart_checkout%}
+            {{ moreDetailsBtn }}
+      		{% unless qvp.price_max == 0 and settings.hide_price0_box_and_button %}
+            <div class="product_payments_btns product_payments_btns_qv">
+              <input type="submit" name="add" class="modal-button" id="addToCart" value="{{ 'products.product.add_to_cart' | t }}">
+              {{ form | payment_button }}
+            </div>
+      	   {% endunless %}
+          {% else %}
+      		{% unless qvp.price_max == 0 and settings.hide_price0_box_and_button %}
+              <input type="submit" name="add" class="modal-button" id="addToCart" value="{{ 'products.product.add_to_cart' | t }}">
+       		{% endunless %}        
+      		{{ moreDetailsBtn }}  
+          {% endif %}
+        {% else %}
+      		{% unless qvp.price_max == 0 and settings.hide_price0_box_and_button %}
+            	<input type="submit" name="add" class="modal-button disabled" id="addToCart" value="{{ 'products.product.sold_out' | t }}" disabled>
+      		{% endunless %}      
+      	{{ moreDetailsBtn }}  
+        {% endif %}
+
+
+      {% endform%}
+      {% else %}
+      {{ moreDetailsBtn }}
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% if showQuickViewForm %}
+<script>
+  $(function() {
+    if(typeof app.selectCallback !== 'undefined'){ // make sure the app callback is available
+
+      // get ID string
+      var qvpID = 'qv-{{ qvp.url | handle | within: collection | replace: '/', '-' }}';
+
+      // find the element with the matching string in the DOM
+      var singleQuickViewPanel = $('#'+qvpID);
+
+      // double check that we are not loading a double up
+      if(singleQuickViewPanel.length === 1 && typeof singleQuickViewPanel.data('processed') === 'undefined'){
+
+        // set the panel as processed, so we don't do it again
+        singleQuickViewPanel.data('processed',true);
+
+        // push the date for this product to our global object
+        app.data.product_{{ qvp.handle | replace:"®", "" | replace:'-','_' }} = {{ qvp | json }};
+
+        $(".quick-view-selector-{{ qvp.id }}").on("change", function(){
+          var $form = $(this).closest("form"),
+          productVariantObj = {{ qvp.variants | json }};
+
+        var option1 = $form.find("#SingleOptionSelector-0").val() || null,
+            option2 = $form.find("#SingleOptionSelector-1").val() || null,
+            option3 = $form.find("#SingleOptionSelector-2").val() || null,
+            flag = true;
+        for (var i=0,length=productVariantObj.length; i<length; i++) {
+          var productVar = productVariantObj[i];
+          if(option1==productVar.option1 && option2==productVar.option2 && option3==productVar.option3){
+            flag = false;
+            $('#product-select-{{ qvp.id }}' ).val(productVar.id);
+              app.selectCallback(productVar, {{ qvp.id }});
+            break;
+          }
+        }
+        if(flag){
+          app.selectCallback(null, {{ qvp.id }});
+                             }
+
+                             });
+
+          // BEGIN SWATCHES
+
+          var indexArray=[];
+          var productVariantOptions = {{ qvp.variants | json }};
+          $("[data-id={{ qvp.id }}] .single-option-selector option:selected").each(function() {
+            indexArray.push($(this).index());
+        });
+        var form = jQuery('#product-select-{{ qvp.id }}').closest('form');
+                          var variantIndex = jQuery('#product-select-{{ qvp.id }} option:selected').index(); 
+                          if(variantIndex>=0){      
+          var variant = productVariantOptions[variantIndex];                  
+          for (var i=0,length=variant.options.length; i<length; i++) {
+            var num = indexArray[i];
+            var radioButtonDiv = form.find('.swatch[data-option-index="' + i + '"] div.swatch-element')[num];
+            var radioButton = $(radioButtonDiv).find(":radio");
+            if (radioButton.size()) {
+              radioButton.get(0).checked = true;
+            }
+          }
+        }
+
+        // END SWATCHES
+
+
+        {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+       	 singleQuickViewPanel.find('.selector-wrapper').addClass('hidden');
+        {% endif %}
+
+        // Auto-select first available variant on page load. Otherwise the product looks sold out.
+
+        {% assign found_one_in_stock = false %}
+        {% for variant in qvp.variants %}
+        {% if variant.available and found_one_in_stock == false %}
+        {% assign found_one_in_stock = true %}
+        {% for option in qvp.options %}
+        {% if scope %}
+        singleQuickViewPanel.find('#{{ scope }} .quick-view-selector-{{ qvp.id }}:eq({{ forloop.index0 }})').val({{ variant.options[forloop.index0] | json }}).trigger('change');
+        {% else %}
+        singleQuickViewPanel.find('.quick-view-selector-{{ qvp.id }}:eq({{ forloop.index0 }})').val({{ variant.options[forloop.index0] | json }}).trigger('change');
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+      }
+    }
+  });
+</script>
+{% endif %}
+{% endif %}

@@ -1,0 +1,143 @@
+{% if section.settings.product_grid_layout == 3 %}
+{% assign grid_item_width = '4' %}
+{% elsif section.settings.product_grid_layout == 4 %}
+{% assign grid_item_width = '3' %}
+{% else %}
+{% assign grid_item_width = '6' %}
+{% endif %}
+
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="catalog_c">
+      <div class="title clearfix">
+        <h1>{{ 'collections.general.title' | t }}</h1>
+      </div>
+      <div class="row collection-list-row">
+        <div class="col-sm-12">
+          <div class="product_c">
+            <div class="row view-grid {% if settings.align_height %} use_align_height {% else %} use_image_height {% endif %}" >
+              {% if section.settings.display_type == 'all' %}
+                {% case section.settings.sort %}
+                	{% when 'products_high' or 'products_low' %}
+                		{%- assign collections = collections | sort: 'all_products_count' -%}
+                	{% when 'date' or 'date_reversed' %}
+                		{%- assign collections = collections | sort: 'published_at' -%}
+                {% endcase %}
+              
+                {% if section.settings.sort == 'products_low' or section.settings.sort == 'date' or section.settings.sort == 'alphabetical' %}
+                  {% for collection in collections %}
+                    <div class="col-lg-{{ grid_item_width }} col-md-{{grid_item_width}} col-sm-6 element mb30">
+                      {% include 'collection-loop' %}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% for collection in collections reversed %}
+                    <div class="col-lg-{{ grid_item_width }} col-md-{{grid_item_width}} col-sm-6 element mb30">
+                      {% include 'collection-loop' %}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+                {% else %}
+                  {% for block in section.blocks %}
+                  {%- assign collection = collections[block.settings.collection] -%}
+                  <div class="col-lg-{{ grid_item_width }} col-md-{{grid_item_width}} col-sm-6 element mb30">
+                    {% include 'collection-loop' %}
+                  </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Collections list page",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "All of your collections are listed by default. To customize your list, choose 'Selected' and add collections."
+      },
+      {
+        "type": "radio",
+        "id": "display_type",
+        "label": "Select collections to show",
+        "default": "all",
+        "options": [
+          {
+            "value": "all",
+            "label": "All"
+          },
+          {
+            "value": "selected",
+            "label": "Selected"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "sort",
+        "label": "Sort collections by:",
+        "info": "Sorting only applies when 'All' is selected",
+        "default": "alphabetical",
+        "options": [
+          {
+            "value": "products_high",
+            "label": "Product count, high to low"
+          },
+          {
+            "value": "products_low",
+            "label": "Product count, low to high"
+          },
+          {
+            "value": "alphabetical",
+            "label": "Alphabetically, A-Z"
+          },
+          {
+            "value": "alphabetical_reversed",
+            "label": "Alphabetically, Z-A"
+          },
+          {
+            "value": "date",
+            "label": "Date, old to new"
+          },
+          {
+            "value": "date_reversed",
+            "label": "Date, new to old"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "product_grid_layout",
+        "label": "Collections per row",
+        "min":       2,
+        "max":        4,
+        "step":       1,
+        "default": 4
+      },
+	   {
+        "type": "checkbox",
+        "id": "show_item_count",
+        "label": "Show item count"
+      }	
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

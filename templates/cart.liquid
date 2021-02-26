@@ -1,0 +1,216 @@
+<style>
+  #checkout-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  #min-shipping-cart {
+    margin-bottom: 8px;
+    color: #980000;
+  }
+
+  @media only screen and (max-width: 500px) {
+    #checkout-buttons {
+      align-items: center;
+    }
+  }
+</style>
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="title clearfix">
+      <h1>{{ 'cart.general.title' | t }}</h1>
+    </div>
+    <div class="cart_c">
+      <div class="cart_top">
+        <div class="row">
+          {% if settings.cart_link_list != "" or settings.show_shipping_calculator %}
+          <div class="col-md-9 col-md-push-3 col-sm-8 col-sm-push-4">
+            {% else %}
+            <div class="col-sm-12">
+              {% endif %}
+              <div class="cart_tbl">
+                {% if cart.item_count > 0 %}
+                <form action="/cart" method="post" novalidate>
+                  <div class="clearfix title_row">
+                    <ul>
+                      <li>{{ 'cart.general.photo' | t }}</li>
+                      <li>{{ 'cart.general.name' | t }}</li>
+                      <li>{{ 'cart.general.price' | t }}</li>
+                      <li>{{ 'cart.general.quantity' | t }}</li>
+                      <li>{{ 'cart.general.total' | t }}</li>
+                    </ul>
+                  </div>
+                  <div class="clearfix con_row cart_wrapper">
+                    {% for item in cart.items %}
+                    <ul>
+                      <li><div class="thumb"><span> <a href="{{ item.url }}"><img src="{{ item | img_url: '800x' }}"  alt="{{ item.title | escape }}" /></a></span></div></li>
+                      <li>
+                        <h5><a href="{{ item.url | within: collections.all }}">{{ item.product.title | escape }}</a></h5>
+                        {% if item.product.variants.size != 0 %}
+                        {% unless item.variant.title contains 'Default' %}
+                        <p>{{ item.variant.title | escape}}</p>
+                        {% endunless %}
+                        {% endif %}
+                        
+                        {%- assign property_size = item.properties | size -%}    
+                        
+                        {% if property_size > 0 %}                  
+                        <p>
+                          {% for p in item.properties %}
+                          {% unless p.last == blank %}
+                          {{ p.first }}:
+
+                          {% if p.last contains '/uploads/' %}
+                          <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                          {% else %}
+                          {{ p.last }}
+                          {% endif %}
+
+                          <br>
+                          {% endunless %}
+                          {% endfor %}
+                        </p>
+                        {% endif %}  
+                        <a href="#" data-id="{{ item.id }}" class="remove_item_button">{{ 'cart.general.remove' | t }}</a>
+                      </li>
+                      <li>
+                        <p class="mobile-label-price">{{ 'cart.general.price' | t }}</p>
+                          {%- if item.original_price != item.final_price -%}
+                       	    <span class="price money original_price">{{ item.original_price | money }}</span><br class="clearfix">
+                            <span class="price money">{{ item.final_price | money }}</span><br class="clearfix">
+                          {% else %}
+                         	<span class="price money">{{ item.original_price | money }}</span>
+                          {% endif %}
+                        
+                        {%- if item.line_level_discount_allocations != blank -%}
+                        <div class="order-discount--list">
+                          {%- for discount_allocation in item.line_level_discount_allocations -%}
+                          <span class="order-discount__item">
+                            {%- include 'icon-saletag' -%}{{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+                          </span>
+                          {%- endfor -%}
+                        </div>
+                        {%- endif -%}
+                        
+                      </li>
+                      <li>
+                        <p class="mobile-label-quantity">{{ 'cart.general.quantity' | t }}</p>
+                        <a class="minus_btn"></a>
+                        <input type="text" id="updates_{{ item.id }}" name="updates[]" class="txtbox number_val_input" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
+                        <a class="plus_btn"></a>
+                        <div class="ajaxcart__errors text-center ajaxcart__item__{{ item.id }}__errors">
+                          {{ 'cart.general.error' | t }}
+                        </div>
+                      </li>
+                      <li>
+                        <p class="mobile-label-total">{{ 'cart.general.total' | t }}</p>
+
+                          {%- if item.original_line_price != item.final_line_price -%}
+                            <span class="price money original_price">{{ item.original_line_price | money }}</span><br class="clearfix">
+                            <span class="price money">{{ item.final_line_price | money }}</span><br class="clearfix">
+                          {% else %}
+                          	<span class="price money">{{ item.original_line_price | money }}</span>
+                          {% endif %}
+
+                    </ul>
+                   <hr class="line_items_separator">
+                    {% endfor %}
+                  </div>
+                  <div class="total_row clearfix">
+                    <ul>
+                      <li>
+                        {%- if cart.cart_level_discount_applications != blank -%}
+                        <div class="order-discount-cart-wrapper">
+                          {%- for discount_application in cart.cart_level_discount_applications -%}
+                          <span class="order-discount--cart total_val">
+                            {%- include 'icon-saletag' -%} {{- discount_application.title | strip -}}:
+                          </span>
+                          <span class="order-discount--cart-total" id="discount-cart">(-{{ discount_application.total_allocated_amount | money }})</span>
+                          {%- endfor -%}
+                        </div>
+                        {%- endif -%}
+                        
+                        <span class="total_val">{{ 'cart.general.subtotal' | t }}:</span><span class="total-price money" id="total-price">{{ cart.total_price | money }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  {% if settings.cart_notes %}
+                  <div class="clearfix order_notes">
+                    <label for="cartSpecialInstructions" class="sr-only">{{ 'cart.general.note' | t }}:</label>
+                    <textarea name="note" id="cartSpecialInstructions" placeholder="{{ 'cart.general.note' | t }}">{{ cart.note }}</textarea>
+                  </div>
+                  {% endif %}
+                  {% if settings.show_currency_disclaimer %}
+                  <div class="currency_disclaimer">
+                    {{ 'cart.general.currency_disclaimer_html' | t: shopname: shop.name, currency: shop.currency }}
+                  </div>
+                  {% endif %}
+                  <div class="cart_btn clearfix">
+                    {% if settings.enable_terms_and_conditions %}
+                    <div class='terms_and_conditions_wrapper'>
+                      <input type="checkbox" id="agree" />                      
+                      <div class='for_agree_text'>
+                        {{settings.terms_and_conditions_text}}
+                      </div>  
+                      <div class='error_text'>
+                        {{ 'cart.general.terms_and_conditions_error' | t }}
+                      </div>  
+                    </div>
+                    {% endif %}
+
+                    <div id="checkout-buttons">
+                      <div id="min-shipping-cart"></div>
+                      <a href="#" class="info_btn" id="continue-shopping"><span class="fa fa-chevron-left"></span>{{ 'cart.general.continue_browsing' | t }}</a>
+                      <button id="button_checkout-cart" type="submit" name="checkout" value="{{ 'cart.general.checkout' | t }}" class="next_btn">{{ 'cart.general.checkout' | t }}</button>
+                    </div>
+                    {% if additional_checkout_buttons %}
+                    <div id="addCheckoutBtn" class="additional-checkout additional-checkout-buttons">
+                      {{ content_for_additional_checkout_buttons }}</div>
+                    {% endif %}
+                  </div>
+                </form>
+                {% else %}
+                <div class="empty-cart-message">
+                  <p>{{ 'cart.general.empty' | t }}</p>
+                  <p><a href="#" id="continue-shopping" class="btn_c">{{ 'cart.general.continue_browsing' | t }}</a></p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if settings.cart_link_list != "" or settings.show_shipping_calculator %}
+            {% include 'sidebar-cart' %}
+            {% endif %}
+          </div>
+        </div>     
+      </div>
+    </div>
+  </div>
+
+
+<script>
+  const totalPrice = document.getElementById('total-price');
+  const dscountHideMsg = document.getElementById('discount-cart');
+
+  if (totalPrice) {
+    const num = Number(totalPrice.innerHTML.replace('$', '').trim());
+    const minShipping = document.getElementById('min-shipping-cart');
+    const checkoutButton = document.getElementById('button_checkout-cart');
+    minShipping.innerText = '';
+
+    if (dscountHideMsg && minShipping) {
+      minShipping.innerText = ''
+    } else {
+      if (num < 50) {
+        const diff = (50 - num).toFixed(2);
+        minShipping.innerText = `Spend $${diff} more to qualify for FREE shipping`;
+      } 
+      // } else if (num < 150) {
+      //   const diff = (150 - num).toFixed(2);
+      //   minShipping.innerText = `Spend $${diff} more to get $10 off`;
+      // }
+    }
+  }
+</script>

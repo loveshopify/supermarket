@@ -1,0 +1,154 @@
+<style>
+  .checkout-buttons {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    width: 200px;
+  }
+
+  #min-shipping {
+    margin-bottom: 8px;
+    color: #980000;
+    margin-right: 7px;
+  }
+
+  #button_checkout {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+</style>
+<div class="menu_c cart_menu">
+  <div class="menu_title clearfix">
+    <h4>{{ 'cart.general.title' | t }}</h4>
+  </div>
+  {% if cart.item_count > 0 %}
+  <form action="/cart" method="post" novalidate>
+    <div class="cart_row">
+      <ul>
+        <li>{{ 'cart.general.photo' | t }}</li>
+        <li>{{ 'cart.general.name' | t }}</li>
+        <li>{{ 'cart.general.price' | t }}</li>
+        <li>{{ 'cart.general.quantity' | t }}</li>
+        <li>{{ 'cart.general.total' | t }}</li>
+      </ul>
+      {% for item in cart.items %}
+      <ul>
+        <li>
+          <div class="thumb">
+            <a href="{{ item.url }}">  
+              <img src="{{ item | img_url: '300x' }}" alt="{{ item.title | escape }}" />
+            </a>
+          </div>
+        </li>
+        <li>
+          <h5><a href="{{ item.product.url | within: collections.all }}" class="item-name">{{ item.product.title | escape}}</a></h5>
+          {% unless item.variant.title contains 'Default' %}
+          <p>{{ item.variant.title | escape }}</p>
+          {% endunless %}
+          <a href="#" data-id="{{ item.id }}" class="remove_item_button">{{ 'cart.general.remove' | t }}</a>
+        </li>
+        <li>
+          <p class="mobile-label-price">{{ 'cart.general.price' | t }}</p>
+
+          {% if item.original_price != item.final_price %}
+          <span class="price money original_price">{{ item.original_price | money }}</span><br class="clearfix">
+          <span class="price money">{{ item.final_price | money }}</span><br class="clearfix">
+          {% else %}
+          <span class="price money">{{ item.final_line_price | money }}</span>
+          {% endif %}
+
+          {%- if item.line_level_discount_allocations != blank -%}
+          <div class="order-discount--list">
+            {%- for discount_allocation in item.line_level_discount_allocations -%}
+            <span class="order-discount__item">
+              {%- include 'icon-saletag' -%}{{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+            </span>
+            {%- endfor -%}
+          </div>
+          {%- endif -%}
+        </li>
+        <li>
+          <p class="mobile-label-quantity">{{ 'cart.general.quantity' | t }}</p>
+          <a class="minus_btn"></a>
+          <input type="text" id="updates_{{ item.id }}" name="updates[]" class="txtbox number_val_input" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}"/>
+          <a class="plus_btn"></a>
+          <div class="ajaxcart__errors text-center ajaxcart__item__{{ item.id }}__errors">
+            {{ 'cart.general.error' | t }}
+          </div>
+        </li>
+        <li>
+          <p class="mobile-label-total">{{ 'cart.general.total' | t }}</p>
+          
+          {%- if item.original_line_price != item.final_line_price -%}
+          <span class="price money original_price">{{ item.original_line_price | money }}</span><br class="clearfix">
+          <span class="price money">{{ item.final_line_price | money }}</span><br class="clearfix">
+          {% else %}
+          <span class="price money">{{ item.original_line_price | money }}</span>
+          {% endif %}
+        </li>
+        
+        <hr class="line_items_separator">
+      </ul>
+      {% endfor %}
+    </div>
+    <div class="total_row clearfix">
+      <ul>
+        <li>
+          {%- if cart.cart_level_discount_applications != blank -%}
+          <div class="order-discount-cart-wrapper">
+            {%- for discount_application in cart.cart_level_discount_applications -%}
+            <span class="order-discount--cart total_val">
+              {%- include 'icon-saletag' -%} {{- discount_application.title | strip -}}:
+            </span>
+            <span class="order-discount--cart-total" id="discount">(-{{ discount_application.total_allocated_amount | money }})</span>
+            {%- endfor -%}
+          </div>
+          {%- endif -%}
+          
+          <span class="total_val">{{ 'cart.general.subtotal' | t }}:</span><span class="total-price money" id="total-price-popup">{{ cart.total_price | money }}</span>
+        </li>
+      </ul>
+    </div>
+    {% if settings.cart_notes %}
+    <div class="clearfix order_notes">
+      <label for="cartSpecialInstructions" class="sr-only">{{ 'cart.general.note' | t }}:</label>
+      <textarea name="note" id="cartSpecialInstructions" placeholder="{{ 'cart.general.note' | t }}">{% if cart.note != null %}{{cart.note}}{% endif %}</textarea>
+    </div>
+    {% endif %}
+    {% if settings.show_currency_disclaimer %}
+    {{ 'cart.general.currency_disclaimer_html' | t: shopname: shop.name, currency: shop.currency }}
+    {% endif %}
+    <div class="checkout_row clearfix">
+        {% if settings.enable_terms_and_conditions %}
+      <div class='terms_and_conditions_wrapper'>
+        <input type="checkbox" id="agree" />                      
+        <div class='for_agree_text'>
+          {{settings.terms_and_conditions_text}}
+        </div>  
+        <div class='error_text'>
+         {{ 'cart.general.terms_and_conditions_error' | t }}
+        </div>  
+      </div>
+      {% endif %}
+      
+      <div id="min-shipping"></div>
+      <div class="checkout-buttons">
+        <a href="javascript:void(0)" class="info_btn"><span class="fa fa-chevron-left"></span>{{ 'cart.general.continue_browsing' | t }}</a>
+        <button type="submit" name="checkout" value="{{ 'cart.general.checkout' | t }}" class="btn_c" id="button_checkout">{{ 'cart.general.checkout' | t }}</button>
+      </div>
+    </div>
+    <div id="additional-checkout-block" class="text-right additional-checkout-buttons">
+    </div>
+ </form>
+  {% else %}
+  <div class="cart_row">
+    <div class="empty-cart">{{ 'cart.general.empty' | t }}</div>
+    <p><a href="javascript:void(0)" class="btn_c btn_close">{{ 'cart.general.continue_browsing' | t }}</a></p>
+  </div>
+  {% endif %}
+</div>
+<script>
+  {% if settings.show_currency_disclaimer and settings.show_multiple_currencies %}
+  	var currencyNoteCompiled = '{{ 'cart.general.currency_disclaimer_html' | t: shopname: shop.name, currency: shop.currency }}';
+  {% endif %}
+</script>

@@ -1,0 +1,272 @@
+{% paginate collection.products by section.settings.pagination_limit %}
+ {% assign img_size = "350x"%}
+{% if section.settings.product_grid_layout == 4 %}
+{% assign grid_item_width = '3' %}
+{% elsif section.settings.product_grid_layout == 3 %}
+{% assign grid_item_width = '4' %}
+{% else %}
+{% assign grid_item_width = '6' %}
+ {% assign img_size = "550x"%}
+{% endif %}
+
+{% assign on_sale = false %}
+{% if product.available and product.compare_at_price > product.price %}
+{% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+{% assign sold_out = false %}
+{% endif %}
+
+<style>
+  .expandThis {
+    display: none;
+  }
+
+  .toggleThis {
+    border: 1px solid #129961;
+    border-radius: 8px;
+    padding: 3px;
+    font-size: 14px;
+    color: #129961;
+    cursor: pointer;
+  }
+</style>
+
+
+<div id="content">
+  <div class="container" data-section-id="{{ section.id }}" data-section-type="collection-page-section" data-reviews-stars="{{section.settings.show_product_reviews_stars}}">
+    {% include 'breadcrumb' %}
+    <div class="catalog_c">
+      {% if collection.image  and section.settings.show_featured_image %}
+      	{% assign show_featured_image = true %}
+      {% endif %}
+      
+      <div class="title clearfix">
+        <h1>{{ collection.title | escape }}</h1>
+      </div>
+
+      <div class="row">
+         {% if section.settings.show_collection_sidebar %}
+          <div class="overlapblackbg_sidebar"></div>
+          <div class="col-md-3 col-sm-4 mobile_off_canvas_sidebar">
+          {% include 'sidebar-collection' %}
+          </div>
+        {% endif %}
+         <div class="{% if section.settings.show_collection_sidebar %}col-md-9 col-sm-8{% else %} col-sm-12 {% endif %}">
+          <div class="product_c mobile_pt60">
+            <div class="filter_c">
+              {% include 'collection-views' %}
+              {% include 'collection-sorting' %}
+              <a href="javascript:void(0);" class="visible-xs offcanvas_filter_toggle"><i class="fa fa-filter"></i><small class="filter_text">{{ 'collections.general.filter_button' | t }}</small></a>
+            </div>
+            <div class="dd collection-grid view-grid {% if settings.align_height %} use_align_height {% else %} use_image_height {% endif %}">
+              {% for product in collection.products %}
+              <div class="col-md-{{ grid_item_width }} col-sm-6 col-xs-6 element mb30">
+                {% include 'product-loop' %}
+              </div>
+              {% else %}
+               <p class="no-products">{{ 'collections.general.no_matches' | t }}</p>
+              {% endfor %}
+            </div>
+            
+            {% if section.settings.use_infinite_scroll%}
+              {% if paginate.next.url %}
+                <div class="load-more__icon"></div>
+                <div class="js-load-more load-more">
+                  <a href="{{ paginate.next.url }}" data-no-instant class="load-more__btn action_button continue-button">{{ 'collections.general.load_more' | t }}</a>
+                </div>
+              {% endif %}
+             {% else %}   
+              {% if paginate.pages > 1 %}
+              	{% include 'pagination-custom' %}
+              {% endif %}
+            {% endif %}
+          </div>
+          
+        </div>
+      </div>
+      
+      {% if show_featured_image or collection.description.size > 0 %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="box collection-box" >
+             
+            {% if collection.image  and section.settings.show_featured_image %}
+                     
+             <noscript>
+              <img src="{{ collection.image | img_url:'300x' }}" alt="{{ collection.title | escape }}" srcset="{{ collection | img_url: '1200x' }} 1x, {{ collection | img_url: '1200x', scale: 2 }} 2x, {{ collection | img_url: '1200x', scale: 3 }} 3x" >  
+            </noscript>
+              {%- assign img_url = collection.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img
+                 src="{{ collection.image | img_url:'300x' }}" 
+                 alt="{{  collection.title | escape }}" 
+                 class="lazyload blur-up collection-main-image"                         
+                 data-src="{{ img_url }}"
+                 style="max-width: {{ collection.image.width }}px" 
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ collection.image.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+            
+            {% endif %}
+            {% if collection.description.size > 0 %}
+            <div class="rte">
+              {{ collection.description }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+{% endpaginate %}
+
+<script>
+  const toggleThis = document.getElementsByClassName("toggleThis")[0];
+
+  toggleThis.addEventListener('click', () => {
+    const expandThis = document.getElementsByClassName("expandThis")[0];
+
+    if (toggleThis.innerText === 'Read Less') {
+      expandThis.style.display = 'none';
+      toggleThis.innerText = "Read More";
+    } else {
+      expandThis.style.display = "block";
+      toggleThis.innerText = "Read Less";
+    }
+  });
+</script>
+
+{% schema %}
+   {
+    "name": "Collection",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Display options"
+      },
+      {
+        "type": "range",
+        "id": "product_grid_layout",
+        "label": "Products per row",
+        "min":       2,
+        "max":        4,
+        "step":       1,
+        "default": 4
+      },
+      {
+        "type": "range",
+        "id": "pagination_limit",
+        "label": "Products per page",
+         "min":       4,
+        "max":        48,
+        "step":       4,
+        "default": 12
+      },
+	  {
+        "type": "checkbox",
+        "id": "use_infinite_scroll",
+        "label": "Enable infinite scroll",
+        "info": "Eliminates pagination and loads new products as you scroll down the page."
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_featured_image",
+        "label": "Show featured image",
+  		"default": true
+      },		
+      {
+        "type": "checkbox",
+        "id": "show_grid_type",
+        "label": "Show product type"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_sale_badge",
+        "label": "Show sale badge",
+		"default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "collection_overlay",
+        "label": "Enable product quick view"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_reviews_stars",
+        "label": "Show review stars",
+		"info": "Shopify product reviews app must be enabled"
+      }, 
+	  {
+        "type": "header",
+        "content": "Sidebar"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_collection_sidebar",
+        "label": "Enable"
+      },
+      {
+        "type": "select",
+        "id": "collection_sidebar_filters",
+        "label": "Product filtering method",
+        "options": [
+          {
+            "value": "groups",
+            "label": "Group filtering"
+          },
+          {
+            "value": "simple-tags",
+            "label": "Simple tag list"
+          },
+          {
+            "value": "none",
+            "label": "No filtering"
+          }
+        ],
+        "default": "simple-tags",
+        "info": "[Learn more on group filtering](https:\/\/support.milehighthemes.com\/hc\/en-us\/articles\/360020145033-How-do-I-setup-group-filtering-on-my-collection-pages-)"
+      },
+      {
+        "type": "text",
+        "id": "group_array",
+        "label": "Group titles (comma separated list)",
+        "info": "e.g. Brand,Product,etc."
+      },
+      {
+        "type": "link_list",
+        "id": "collection_link_list",
+        "label": "Custom menu"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_collections",
+        "label": "Show all collections"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_vendors",
+        "label": "Show all vendors"
+      },
+      {
+        "type": "collection",
+        "id": "sidebar_collection_sale_collection",
+        "label": "Featured products collection"
+      },
+      {
+        "type": "range",
+        "id": "sidebar_collection_product_count",
+        "label": "Number of products",
+         "min":       1,
+        "max":        6,
+        "step":       1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

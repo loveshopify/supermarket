@@ -1,0 +1,149 @@
+{% paginate blog.articles by section.settings.blog_count %}
+<div id="content">
+  <div class="container " data-section-id="{{ section.id }}" data-section-type="blog-page-section">
+    {% include 'breadcrumb' %}
+    <div class="title clearfix">
+      {% if current_tags %}
+      <h1>{{ blog.title | escape | link_to: blog.url }} &mdash; {{ current_tags.first | capitalize }}</h1>
+      {% else %}
+      <h1>{{ blog.title | escape }}</h1>
+      {% endif %}
+      <div class="title_right">
+        <a href="{{ blog.url }}.atom" class="rss"><span class="fa fa-rss"></span>RSS</a>
+      </div>
+    </div>
+
+    <div class="blog_c ideas-hover">
+      <div class="row">
+        <div class="{% if section.settings.show_sidebar_recent_posts or section.settings.show_sidebar_blog_tags %}col-md-9 col-sm-8{% else %} col-sm-12 {% endif %}">
+
+          {% unless section.settings.blog_layout == 'full' %}
+          <div class="masonry">  
+            {% endunless %}
+
+            {% for article in blog.articles %}
+            {% if section.settings.blog_layout == '3-column' %}
+            <div class="masonry-post col-md-4 col-sm-6 col-ms-6">
+              {% assign img_size = "420x"%}
+              {% elsif section.settings.blog_layout == '2-column' %}
+              <div class="masonry-post col-sm-6 col-ms-6">
+                {% assign img_size = "550x"%}
+                {% elsif section.settings.blog_layout == 'full' %}    
+                {% assign img_size = "1200x"%}
+                {% endif %}
+
+                <div class="blog_blk red5 clearfix">
+                  {% if article.image %}
+                  <a href="{{ article.url }}">
+                    <div class="box article_img_block">
+                      <!-- <figure class="effect-chico"> -->
+                        <noscript>
+                          <img src="{{ article | img_url:'300x' }}"  alt="{{  article.title | escape }}" srcset="{{ article | img_url: img_size }} 1x, {{ article | img_url: img_size, scale: 2 }} 2x, {{ article | img_url: img_size, scale: 3 }} 3x" >
+                        </noscript>
+                        {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                        <img
+                             src="{{ article | img_url:'300x' }}" 
+                             alt="{{  article.title | escape }}" 
+                             class="lazyload blur-up"                         
+                             data-src="{{ img_url }}"
+                             data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                             data-aspectratio="{{ article.image.aspect_ratio }}"
+                             data-sizes="auto"
+                             />
+                        <figcaption></figcaption>
+                      <!-- </figure> -->
+                    </div> 
+                  </a>
+                  {% endif %}
+                  <div class="rte clearfix">
+                    <h2>{{ article.title | escape }} {% if blog.comments_enabled? %}<span class="pull-right"><a href="{{ article.url }}#comments"><i class="fa fa-comments"></i> {{ article.comments_count }}</a></span>{% endif %}</h2>
+                    {% if article.excerpt.size > 0 %}
+                    {{ article.excerpt }}
+                    {% else %}
+                    {{ article.content | strip_html | truncate: 150 }}
+                    {% endif %}
+                  </div>
+
+                  <div class="read-more"><a href="{{ article.url }}" class="btn_c">{{ 'blogs.article.read_more' | t }}</a></div>
+                  {% assign published_at = article.published_at | date: '%b %d, %Y' %}
+                  <div class="tag_c clearfix">
+                    <ul>
+                      <li><span class="fa fa-calendar"></span><span>{{ 'blogs.article.date_html' | t: date: published_at }}</span></li>
+                      <li><span class="fa fa-user"></span>{{ article.author }}</li>
+                      {% if article.tags.size > 0 %}
+                      {% include 'tags-article' %}
+                      {% endif %}
+                    </ul>
+                  </div>
+                </div>
+                {% unless section.settings.blog_layout == 'full' %}
+              </div>
+              {% endunless %}
+              {% endfor %}
+
+              {% unless section.settings.blog_layout == 'full' %}
+            </div>  
+            {% endunless %}
+
+
+            {% if paginate.pages > 1 %}
+            {% include 'pagination-custom' %}
+            {% endif %}
+          </div>
+          {% include 'sidebar-blog' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endpaginate %}
+
+  {% schema %}
+  {
+  "name": "Blog",
+  "settings": [
+  {
+  "type": "range",
+  "id": "blog_count",
+  "label": "Posts per page",
+  "default": 4,
+  "min": 2,
+  "max": 12,
+  "step": 2
+  },
+  {
+  "type": "select",
+  "id": "blog_layout",
+  "label": "Layout",
+  "options": [
+  {
+  "value": "full",
+  "label": "Full width"
+  },
+  {
+  "value": "2-column",
+  "label": "2-column masonry"
+  },
+  {
+  "value": "3-column",
+  "label": "3-column masonry"
+  }
+  ]
+  },
+  {
+  "type": "header",
+  "content": "Sidebar options"
+  },	
+  {
+  "type": "checkbox",
+  "id": "show_sidebar_recent_posts",
+  "label": "Show recent posts"
+  },
+  {
+  "type": "checkbox",
+  "id": "show_sidebar_blog_tags",
+  "label": "Show tags"
+  }
+  ]
+  }
+  {% endschema %}
+

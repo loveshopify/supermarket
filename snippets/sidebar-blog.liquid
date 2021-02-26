@@ -1,0 +1,50 @@
+<div class="col-md-3 col-sm-4 hidden-xs">
+  <div class="sidebar">
+    {% if section.settings.show_sidebar_recent_posts %}
+    <div class="side_box side_box_2 red5">
+      <h5>{{ 'blogs.sidebar.widget_recent_posts_title' | t }}</h5>
+      <ul>
+        {% for article in blog.articles limit:6 %}
+        {% assign article_has_image = false %}
+        {% assign img_tag = '<' | append: 'img' %}
+        {% if article.excerpt_or_content contains img_tag %}
+          {% assign src = article.excerpt_or_content | split: 'src="' %}
+          {% assign src = src[1] | split: '"' | first %}
+          {% if src %}
+            {% assign article_has_image = true %}
+            {% assign image_src = src %}
+          {% endif %}
+        {% endif %}
+        <li>
+          {% if article.image %}
+          <div class="post_img"><a href="{{ article.url }}"><img src="{{ article | img_url: '300x' }}" alt="{{ article.title | escape }}" /></div>
+          {% elsif article_has_image %} 
+          <div class="post_img"><a href="{{ article.url }}"><img src="{{ image_src }}" alt="{{ article.title | escape }}" /></a></div>
+          {% endif %}
+          <div class="post_detail">
+            <a href="{{ article.url }}">{{ article.title | escape }}</a><br />
+            <span class="date">{{ article.published_at | date: '%b %d, %Y' }}</span>
+          </div>
+        </li>
+        {% else %}
+        <li>{{ 'blogs.sidebar.no_posts' | t }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if section.settings.show_sidebar_blog_tags and blog.tags.size > 0 %}
+    <div class="side_box side_box_3 red5 clearfix">
+      <h5>{{ 'blogs.sidebar.widget_tags_title' | t }}</h5>
+      <ul>
+        {% for tag in blog.tags %}
+        {% if current_tags contains tag %}
+        <li><span class="active-tag">{{ tag }}</span></li>
+        {% else %}
+        <li>{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>

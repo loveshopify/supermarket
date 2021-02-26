@@ -1,0 +1,121 @@
+{% assign on_sale = false %}
+{% if item.available and item.compare_at_price > item.price %}
+{% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if item.available  %}
+{% assign sold_out = false %}
+{% endif %}
+
+
+
+
+<div class="search_result">
+        {% if item.object_type == 'product' %}
+  {% assign max_img_width = item.featured_image.width | append: "px" %}
+{% assign max_img_height = 140 %}
+{% assign product_img_width = item.featured_image.width %}
+{% assign product_img_height = item.featured_image.height%}
+{% assign product_img_ratio = item.featured_image.aspect_ratio %}
+{% if max_img_height < product_img_height %}
+{% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+{% else %}
+{% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+{% endif %}
+  {% if max_img_width == "0px" %}
+  {% assign max_img_width = '100%;width:auto;'%}
+  {% endif %}
+  		<div class="collection-list search-result-list-view">
+          <div class="main_box">
+            <div class="box_1">
+              <div class="col-sm-4">
+                <div class="list-image">
+                  <div class="spinner-cube">
+                   <div class="loadFacebookG"></div>
+                  </div>	
+                  <a href="{{ item.url | within: collection }}">
+                    <noscript>
+                      <img src="{{ item.featured_image.src | product_img_url: '300x'}}" srcset="{{ item.featured_image.src | product_img_url: '600x'}} 1x, {{ item.featured_image.src | product_img_url: '600x', scale:2}} 2x, {{ item.featured_image.src | product_img_url: '600x', scale:3}} 3x" alt="{{ item.featured_image.alt | escape }}" class="img-responsive">
+                    </noscript>
+                    <img class="lazyload img-responsive"
+                         src="{{ item.featured_image.src | product_img_url: '300x'}}"
+                         data-srcset="{{ item.featured_image.src | product_img_url: '600x'}} 1x, {{ item.featured_image.src | product_img_url: '600x', scale:2}} 2x, {{ item.featured_image.src | product_img_url: '600x', scale:3}} 3x"
+                         alt="{{ item.featured_image.alt | escape }}"
+                         style="max-width: {{max_img_width}}"/>  
+                  </a>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="product-details">
+                  {% if on_sale %}
+                  <div class="on-sale">{{ 'products.product.sale' | t }}</div>
+                  {% endif %}
+                  {% if sold_out %}
+                  <div class="sold-out">{{ 'products.product.sold_out' | t }}</div>
+                  {% endif %}
+                  <h2><a href="{{ item.url | within: collection }}">{{ item.title | escape }}</a></h2>
+                  <p>{{ item.description | strip_html | truncatewords:30 }}</p>
+                  <div class="price">
+                    {% unless item.price_max == 0 and settings.custom_price0_text != blank %}
+                    <span class="money">{% if item.price_varies %}{{ 'products.product.price_from' | t }}{% endif %} {{ item.price | money }} {% if on_sale %}</span><span class="compare-price money">{{ item.compare_at_price | money }}</span>{% endif %}
+                    {% else %}  
+                    <span>
+                      {{settings.custom_price0_text }}
+                    </span> 
+                    {% endunless %}	
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  		</div>
+        {% else %}  
+  {% assign max_img_width = item.image.width | append: "px" %}
+{% assign max_img_height = 140 %}
+{% assign product_img_width = item.image.width %}
+{% assign product_img_height = item.image.height%}
+{% assign product_img_ratio = item.image.aspect_ratio %}
+{% if max_img_height < product_img_height %}
+{% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+{% else %}
+{% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+{% endif %}
+  {% if max_img_width == "0px" %}
+  {% assign max_img_width = '100%;width:auto;'%}
+  {% endif %}
+  <div class="collection-list search-result-list-view">
+          <div class="main_box">
+            <div class="box_1">
+              <div class="col-sm-4">
+                <div class="list-image">
+                  <div class="spinner-cube">
+                    <div class="loadFacebookG"></div>
+                  </div>	
+                  <a href="{{ item.url}}">
+                    <noscript>
+                      <img src="{{ item.image.src | img_url: '300x'}}" srcset="{{ item.image.src | img_url: '600x'}} 1x, {{ item.image.src | img_url: '600x', scale:2}} 2x, {{ item.image.src | img_url: '600x', scale:3}} 3x" alt="{{ item.image.alt | escape }}" class="img-responsive">
+                    </noscript>
+                    <img class="lazyload img-responsive"
+                         src="{{ item.image.src | img_url: '300x'}}"
+                         data-srcset="{{ item.image.src | img_url: '600x'}} 1x, {{ item.image.src | img_url: '600x', scale:2}} 2x, {{ item.image.src | img_url: '600x', scale:3}} 3x"
+                         alt="{{ item.image.alt | escape }}"
+                         style="max-width: {{max_img_width}}"/>                    
+                  </a>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="product-details">
+                  <h2><a href="{{ item.url }}">{{ item.title | escape }}</a></h2>
+                  {% if item.object_type == 'article' %}
+                  <p class="published_author">{% if item.published_at %}{{ item.published_at | date: "%b %d, %Y" }} &#8212; {% endif %} {{ item.author }}</p>
+                  {% endif %}
+                  <p>{{ item.content | strip_html | truncate: 200 }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+  		</div>
+    {% endif %}
+    
+</div>

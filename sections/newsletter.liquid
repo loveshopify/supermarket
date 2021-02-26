@@ -1,0 +1,190 @@
+<style>
+  #gdpr_text {
+    display: none;
+  }
+
+  #email_address_field_0 {
+    margin-bottom: 0;
+  }
+
+  #email_address_0 {
+    border-radius: 10px;
+  }
+
+  div.ctct-form-embed div.ctct-form-defaults {
+    padding: 0;
+  }
+
+  .newsletter_email_box button,
+  #footer .f_mid .email_box button {
+    position: relative;
+    margin-top: 5px;
+    padding: 10px 0;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  .ctct-form-footer {
+    display: none;
+  }
+
+  .ctct-form-embed.form_0 .ctct-form-defaults {
+    background-color: transparent;
+  }
+</style>
+
+<div class="home-newsletter-bg home-newsletter mt-30 home-newsletter-{{ section.id }} {% if section.settings.home-cta != blank %} ratio-container lazyload {% endif %} mb30 section-{{ section.id }}" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="text-section"
+      {% if section.settings.home-cta != blank %}
+     data-bgset="{% include 'bgset', image: section.settings.home-cta %}"
+     data-sizes="auto"
+     data-parent-fit="cover"
+     style="background-image: url('{{ section.settings.home-cta | img_url: '300x300' }});"
+     {% endif %}
+     >
+  <div class="cta-overlay">
+  <div class="container">
+    <div class="h_row_content h_row_3 {% if section.settings.home_cta_heading == blank %} no_top_padding_p {% endif %} {% if section.settings.home_cta_subtext == blank and section.settings.home_cta_heading == blank %} no_top_margin_field {% endif %}" >
+      {% if section.settings.home_cta_heading != blank %}
+       <h1>{{ section.settings.home_cta_heading }}</h1>
+      {% endif %}
+      {% if section.settings.home_cta_subtext != blank %}
+       {{ section.settings.home_cta_subtext }}	  
+      {% endif %}
+      <div class="newsletter_email_box">
+        <!-- {% form 'customer' %}
+        {{ form.errors | default_errors }}
+        {% if form.posted_successfully? %}
+        <div class="alert alert-success">{{ 'general.newsletter_form.confirmation' | t }}</div>
+        {% else %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email"  class="txtbox" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+        <button class="btn btn-link" type="submit" value="{{ 'general.newsletter_form.submit' | t }}" name="commit" id="Subscribe"><span class="fa fa-check"></span></button>
+        {% endif %}
+        {% endform %} -->
+
+          <!-- Begin Constant Contact Inline Form Code -->
+          <div class="ctct-inline-form" data-form-id="90b0527f-3371-4857-978f-f434fc1dba16"></div>
+          <!-- End Constant Contact Inline Form Code -->
+      </div>      
+    </div>
+  </div>
+  </div>
+</div>
+<noscript>
+  <style>
+  {% if section.settings.home-cta != blank %}
+      #content .home-newsletter-bg.section-{{ section.id }} {
+    background-image:url('{{ section.settings.home-cta | img_url: '1400x' }}');
+    }
+    {% endif%}
+  </style>
+</noscript>
+<style>
+  {% if section.settings.home-cta != blank %}
+  #content .home-newsletter-bg.section-{{ section.id }} .cta-overlay {
+    background: rgba(0,0,0, {% if section.settings.cta_caption_val == 100%} 1 {% else %}0.{{section.settings.cta_caption_val}} {% endif %});
+  } 
+  {% endif %}
+  
+  #content .home-newsletter-{{ section.id }} p {
+    font-size:{{section.settings.home_newsletter_content_size | append: 'px'}};
+    line-height: 1;
+    color:{{settings.home_newsletter_txt_color}};
+  }
+  #content .home-newsletter-{{ section.id }} h1 {
+    font-size:{{ section.settings.home_newsletter_heading_size | append: 'px'}};
+     color:{{ section.settings.home_newsletter_hd_color }};
+    line-height: 1;
+    
+  }
+  #content .home-newsletter-{{ section.id }} h1 p{
+    font-size:{{ section.settings.home_newsletter_heading_size | append: 'px'}};
+    color:{{ section.settings.home_newsletter_hd_color }}; 
+  }
+  #content .home-newsletter-{{ section.id }}.home-newsletter-bg{
+  background-color:{{section.settings.home_newsletter_bg_color}};
+  }
+</style>  
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "newsletter_section_wrapper",
+    "settings": [
+      {
+        "type": "text",
+        "id": "home_cta_heading",
+        "label": "Heading",
+		"default": "Subscribe to our Newsletter"
+      },
+      {
+        "type": "richtext",
+        "id": "home_cta_subtext",
+        "label": "Text",
+		"default": "<p>A short paragraph describing what someone will receive by subscribing.<\/p>"
+      },
+      {
+        "type": "image_picker",
+        "id": "home-cta",
+        "label": "Background",
+        "info": "1600 x 1200px jpg recommended"
+      },
+	  {
+        "type": "range",
+        "id": "cta_caption_val",
+        "label": "Overlay opacity",
+        "info": "Add a darkened overlay over your image to make text easier to read.  Higher percentages produce darker overlays.",
+         "min":       0,
+        "max":        100,
+        "step":       10,
+        "unit":       "%",
+        "default": 20
+      },
+	        {
+        "type": "range",
+        "id": "home_newsletter_heading_size",
+        "label": "Heading size",
+        "default": 36,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "home_newsletter_content_size",
+        "label": "Text size",
+        "default": 18,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+	  {
+        "type": "color",
+        "label": "Heading text",
+        "id": "home_newsletter_hd_color",
+		"default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Content",
+        "id": "home_newsletter_txt_color",
+		"default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Background",
+        "id": "home_newsletter_bg_color",
+		"default": "#DBDBDB"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Newsletter",
+          "category": "Promotional"
+        }
+      ]
+  }
+{% endschema %}

@@ -1,0 +1,63 @@
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="title clearfix">
+      <h1>{{ page.title | escape }}</h1>
+    </div>
+    <div class="page_content">
+      <div class="row">
+        <div class="{% if section.settings.page_link_list != blank or section.settings.show_sidebar_page_collections or section.settings.show_page_sidebar_sale %}col-md-9 col-md-push-3 col-sm-8 col-sm-push-4{% else %}col-sm-12{% endif %}">
+          <div class="sfbox box-page">
+            <div class="rte">
+              {{ page.content }}
+            </div>
+          </div>
+        </div>
+        {% if section.settings.page_link_list != blank or section.settings.show_sidebar_page_collections or section.settings.show_page_sidebar_sale %}
+          {% include 'sidebar-page' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Page",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Sidebar options"
+      },
+      {
+        "type": "link_list",
+        "id": "page_link_list",
+        "label": "Choose custom menu",
+      	"info": "This menu won't show dropdown items"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_page_collections",
+        "label": "Enable collections"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_page_sidebar_sale",
+        "label": "Enable products"
+      },
+      {
+        "type": "collection",
+        "id": "sidebar_page_sale_collection",
+        "label": "Choose collection"
+      },
+      {
+        "type": "range",
+        "id": "sidebar_page_product_count",
+        "label": "Number of products",
+        "min":       1,
+        "max":        6,
+        "step":       1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

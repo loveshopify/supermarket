@@ -1,0 +1,13 @@
+{% assign product_only_search = settings.search_type_query %}
+
+<form action="/search" method="get" role="search">
+  <div class="menu_c search_menu">
+    <div class="search_box">
+      {% if product_only_search == "search_products_only" %}
+      <input type="hidden" name="type" value="product">
+      {% endif %}
+      <input type="search" name="q" value="{{ search.terms | escape }}" class="txtbox" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.submit' | t }}">
+      <button class="btn btn-link" type="submit" value="{{ 'general.search.submit' | t }}"><span class="fa fa-level-down fa-rotate-90"></span></button>
+    </div>
+  </div>
+</form>

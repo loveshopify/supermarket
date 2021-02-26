@@ -1,0 +1,83 @@
+{% comment %}V4.0.1 - May 2020
+This liquid snippet is used by Discount Ninja, an app from Limoni Apps
+Do not modify or remove this snippet, this snippet can be overwritten when the app is upgraded
+{% endcomment %}
+
+<script>
+  {%- comment -%}Initialize object{%- endcomment -%}
+  window.discountNinjaContext = { Shop: "{{shop.permanent_domain}}", ShopCurrency: "{{shop.currency}}", PresentmentCurrency: "{{cart.currency.iso_code}}", EnabledCurrencies: [], MoneyFormat: "{{shop.money_with_currency_format | replace: '"', "'"}}", Customer: null, Cart: {{ cart | json }}, Product: null, CollectionProducts: [], ProductVariants: null, Labels: { From: "{{ 'discount_ninja.from' | t }}", Here: "{{ 'discount_ninja.here' | t }}", Free: "{{ 'discount_ninja.free' | t }}", SoldOut: "{{ 'discount_ninja.sold_out' | t }}" }, Settings: {% include 'limoniapps-discountninja-context-settings' %}, Flags: {% include 'limoniapps-discountninja-context-flags' %}, Status: {% include 'limoniapps-discountninja-context-status' %} };
+
+  {%- comment -%}Add details about enabled currencies{%- endcomment -%}
+  {% for currency in shop.enabled_currencies %}
+  window.discountNinjaContext.EnabledCurrencies.push({ Name: "{{currency.name}}", IsoCode: "{{currency.iso_code}}", Symbol: "{{currency.symbol}}" });
+  {% endfor %}
+
+  {%- comment -%}If we are on a collection page, get the product details{%- endcomment -%}
+  {%- if collection -%}
+  {% for collectionProduct in collection.products limit: 200 %}
+  {%- assign limoniapps-discountninja-collections = "" -%}{%- for collection in collectionProduct.collections -%}{%- assign limoniapps-discountninja-collections = limoniapps-discountninja-collections | append: collection.handle | append: "," -%}{%- endfor -%}
+  window.discountNinjaContext.CollectionProducts.push({ Collections: "{{ limoniapps-discountninja-collections }}", Available: {{ collectionProduct.available | default: true }}, Handle: "{{ collectionProduct.handle }}", Price: {{ collectionProduct.price | default: 0 }}, CompareAtPrice: {{ collectionProduct.compare_at_price_max | default: 0 }}, PriceVaries: {{ collectionProduct.price_varies | default: false }}, PriceMin: {{ collectionProduct.price_min | default: 0 }} });
+  {%- endfor -%}
+  {%- endif -%}
+
+  {%- comment -%}Add customer details if logged in{%- endcomment -%}
+  {%- if customer -%}
+  window.discountNinjaContext.Customer = { TotalSpent: {{ customer.total_spent | default: 0 }}, NumberOfOrders: {{ customer.orders_count | default: 0 }}, LastOrderDate: "{{ customer.last_order.created_at }}", Email: "{{ customer.email }}", Tags: {{ customer.tags | json }}, FirstName: "{{ customer.first_name }}", LastName: "{{ customer.last_name }}" };
+  {%- endif -%}
+
+  {%- comment -%}If we are on a product page, get the first variant if available{%- endcomment -%}
+  {%- if product -%}
+  {%- if product.selected_or_first_available_variant.id -%}
+  {%- assign variantid = product.selected_or_first_available_variant.id -%}
+  {%- else -%}
+  {%- assign variantid = 'null' -%}
+  {%- endif -%}
+
+  {%- comment -%}If we are on a product page, add the id and first or selected variantid{%- endcomment -%}
+  window.discountNinjaContext.Product = {};
+  window.discountNinjaContext.Product.Id = {{ product.id | default: 0 }};
+  window.discountNinjaContext.Product.VariantId = {{ variantid }};
+
+  {%- comment -%}If we are on a product page, build a list of collection handles of the collections the product belongs to{%- endcomment -%}
+  {%- assign limoniapps_discountninja_collections = "" -%}
+  {%- for collection in product.collections -%} {%- assign limoniapps_discountninja_collections = limoniapps_discountninja_collections | append: collection.handle | append: "," -%} {%- endfor -%}
+
+  {%- comment -%}If we are on a product page, add the collection handles and the featured image{%- endcomment -%}
+  window.discountNinjaContext.Product.Collections = '{{ limoniapps_discountninja_collections }}';
+  window.discountNinjaContext.Product.FeaturedImage = '{{ product.featured_image | img_url: '500x' }}';
+
+  {%- comment -%}If we are on a product page, initialize the list of product variants{%- endcomment -%}
+  window.discountNinjaContext.ProductVariants = [];
+
+  {%- comment -%}Loop through each variant of the product (maximum 200) {%- endcomment -%}
+  {%- for variant in product.variants limit: 200 -%}
+  {%- comment -%}Add inventory quantity if it is tracked{%- endcomment -%}
+  {%- assign inventory_quantity = variant.inventory_quantity -%}
+  {%- if inventory_quantity == nil or inventory_quantity <= 0 -%}
+          {%- assign inventory_quantity_below_zero = 1 -%}
+      {%- else -%}
+          {%- assign inventory_quantity_below_zero = 0 -%}
+      {%- endif -%}
+      {%- if variant.inventory_management and variant.inventory_policy == 'deny' -%}
+          {%- assign inventory_quantity_apply = 1 -%}
+      {%- else -%}
+          {%- assign inventory_quantity_apply = 0 -%}
+      {%- endif -%}
+      {%- if inventory_quantity_below_zero == 1 and inventory_quantity_apply == 0 -%}
+          {%- assign inventory_quantity = 'null' -%}
+      {%- endif -%}      
+       
+      {%- comment -%}Get price and compare at price of the variant{%- endcomment -%}
+      {%- assign variant_price = variant.price -%}
+      {%- assign compare_at_or_product_price = variant.compare_at_price -%}   
+      
+      {%- comment -%}If compare at price if not available, default to price{%- endcomment -%}
+      {%- if compare_at_or_product_price == nil or compare_at_or_product_price < variant_price -%}
+          {%- assign compare_at_or_product_price = variant_price -%}
+      {%- endif -%}
+      
+      {%- comment -%}Add to array{%- endcomment -%}
+      window.discountNinjaContext.ProductVariants.push({ VariantId: {{ variant.id | default: 0 }}, Price: {{ variant_price | default: 0 }}, CompareAtPrice: {{ compare_at_or_product_price | default: 0 }}, Inventory: {{ inventory_quantity | default: 0 }} });                                                               
+    {%- endfor -%}
+  {%- endif -%}
+</script>

@@ -1,0 +1,133 @@
+{% assign on_sale = false %}
+{% if product.available and product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% assign max_img_width = product.featured_image.width | append: "px" %}
+
+
+{% if settings.align_height %} 
+  {% assign max_img_height = settings.collection_height %}
+  {% assign product_img_width = product.featured_image.width %}
+  {% assign product_img_height = product.featured_image.height %}
+  {% assign product_img_ratio = product.featured_image.aspect_ratio %}
+		{% if max_img_height < product_img_height %}
+		{% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+        {% else %}
+		{% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+		{% endif %}
+{% endif %}
+
+
+<div class="main_box{% if section.settings.collection_overlay %} quick-view-overlay {% endif %} wk-col-item" id="product-loop-wrapper">
+  
+  <div class="cs_collection box_1">
+
+    {% comment %} convert our dates to Number of seconds since 1970-01-01 00:00:00 UTC {% endcomment %}
+    {% assign dateStart = product.published_at | date: '%s' %}
+    {% assign nowTimestamp = 'now' | date: '%s' %}
+
+    {% comment %} difference in seconds {% endcomment %}
+    {% assign diffSeconds = nowTimestamp | minus: dateStart %}
+
+    {% comment %} difference in days {% endcomment %}
+    {% assign diffDays = diffSeconds | divided_by: 3600 | divided_by: 24 %}
+
+    {% if diffDays < 30 %}
+    <span id="is_new">New</span>
+    {% endif %}
+    
+    
+    {% if on_sale and section.settings.show_sale_badge %}
+    <div class="on-sale">{{ 'products.product.sale' | t }}</div>
+    {% endif %}
+    {% if sold_out %}
+    <div class="sold-out">{{ 'products.product.sold_out' | t }}</div>
+    {% endif %}
+    <div class="product-image">
+       
+      <a href="{{ product.url | within: collection }}">
+        <noscript>
+        <img  src="{{ product.featured_image.src | product_img_url: "300x"}}" srcset="{{ product.featured_image.src | product_img_url: img_size}} 1x, {{ product.featured_image.src | product_img_url: img_size, scale: 2}} 2x, {{ product.featured_image.src | product_img_url: img_size, scale: 3}} 3x" alt="{{ product.featured_image.alt | escape }}">
+        </noscript>
+        <img class="lazyload"
+             src="{{ product.featured_image.src | product_img_url: "300x"}}"
+             data-srcset="{{ product.featured_image.src | product_img_url: img_size}} 1x, {{ product.featured_image.src | product_img_url: img_size, scale: 2}} 2x, {{ product.featured_image.src | product_img_url: img_size, scale: 3}} 3x"
+             alt="{{ product.featured_image.alt | escape }}"
+ 			 style="{% if max_img_width == '0px' %} width: auto; {% else %} max-width: {{max_img_width}} {% endif %}"/>  
+        
+         <div class="spinner-cube">
+           <div class="loadFacebookG"></div>
+        </div>	
+        
+      </a>
+    </div>
+    {% if section.settings.collection_overlay %}
+      <div class="overlay hidden-sm hidden-xs">
+      {% if sold_out %}
+        <a class="notify_me absolute-pos btn_c cart_btn_1" href="{{ product.url | within: collection }}">Notify Me</a>
+        {% else %}
+        {% include 'product-quick-view-btn' qvp:product %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="desc" id="collection-card">
+    <h5><a href="{{ product.url | within: collection }}">{{ product.title | escape }}</a></h5>
+    {% if section.settings.show_grid_type %}
+    <p>{{ product.type }}</p>
+    {% endif %}    
+    <div id="product-loop-review-wishlist">
+      <div>
+        <div class="price" id="add-product-price-flex-row">
+          {% unless product.price_max == 0 and settings.custom_price0_text != blank %}
+            <div id="from-text">{% if product.price_varies %}{{ 'products.product.price_from' | t }}{% endif %} </div>
+            <span class="money">{{ product.price | money }}</span>
+            {% if on_sale %}<span class="compare-price money">{{ product.compare_at_price | money }}</span>{% endif %}
+          {% else %} 
+            <span>{{settings.custom_price0_text }}</span> 
+          {% endunless %}	
+        </div>
+        {% if section.settings.show_product_reviews_stars %}
+          <!-- <span class="shopify-product-reviews-badge min_height_22" data-id="{{ product.id }}"></span> -->
+          <span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}"
+            data-product-type="{{product.type}}" data-product-title="{{product.title}}"
+            style="display:block;">{{ product.metafields.stamped.badge }}</span>
+          <div class="clearfix"></div>
+        {% endif %}
+      </div>
+      <!-- include 'wishlist-button-collection' with '{{ product.id }}' -->
+    </div>
+
+      <div id="product-loop-add-to-cart-form">
+        {% form 'product', product %}
+          {% if sold_out %}
+            <input type="submit" disabled value="Out of stock" class="btn out-of-stock-collection-btn" />
+        {% else %}
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+            <input type="submit" value="Add to cart" class="btn add-to-cart-collection-btn" />
+          {% endif %}
+        {% endform %}
+      </div>
+  </div>
+</div>
+
+<!-- 
+<style>
+  #is_new{
+    position: absolute;
+    color: #148e5c;
+    z-index: 999;
+    background: white;
+    width: 100px;
+    transform: rotate(-36deg);
+    left: -22px;
+    top: 9px;
+    border: 1px solid #148e5c;
+  }
+</style> -->

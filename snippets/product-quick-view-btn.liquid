@@ -1,0 +1,20 @@
+{% comment %}
+<!--
+
+	product-quick-view-btn.liquid
+	=============================
+
+	This snippet is used for placing a quick view icon into a product grid.
+
+	When using this snippet you must send a product as a variable otherwise it will show nothing. This enables us to set the product from any source.
+
+	Example:
+	{% include 'product-quick-view-btn' qvp:product %}
+
+	
+-->
+{% endcomment %}
+  {% if qvp %}
+    <a class="absolute-pos popup-text quick-view-btn btn_c cart_btn_1" href="{{ qvp.url | within: collection | split: "?" | first}}" data-effect="mfp-move-from-top" data-toggle="tooltip" data-placement="top" title="{{ 'products.product.quick_view' | t }}">{{ 'products.product.quick_view' | t }}</a>
+	<a class="overlay-second-link" href="{{ qvp.url | within: collection | split: "?" | first}}" ></a>  
+{% endif %}

@@ -1,0 +1,56 @@
+{% unless featured_collection_size %}
+  {% assign featured_collection_size = 'large' %}
+{% endunless %}
+
+<div class="main_box">
+  {% if featured != blank %}
+  <div class="box_1">
+    {% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
+    {% capture collection_count %}{{ collections[featured].all_products_count }}{% endcapture %}
+    <a href="{{ collections[featured].url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+       <div class="spinner-cube">
+         <div class="loadFacebookG"></div>
+        </div>	      
+      
+      {% if section.settings.featured_collection_images == 'featured' and collections[featured].image %}
+         <img class="lazyload"
+             src="{{ collections[featured].image | img_url: "300x" }}" 
+             data-src="{{ collections[featured].image | img_url: featured_collection_size }}"
+             alt="{{ collection_title | escape }}"/>        
+      	  <noscript>
+        <img src="{{ collections[featured].image | img_url: featured_collection_size }}" alt="{{ collection_title | escape }}">
+        </noscript>
+      {% else %}
+         <img class="lazyload"
+             src="{{ collections[featured].products.first.featured_image | img_url: "300x" }}"
+             data-src="{{ collections[featured].products.first.featured_image | img_url: featured_collection_size }}"
+             alt="{{ collection_title | escape }}"/>  
+      
+      	 <noscript>
+        <img src="{{ collections[featured].products.first.featured_image  | img_url: featured_collection_size }}" alt="{{ collection_title | escape }}">
+        </noscript>
+      {% endif %}
+    </a>
+  </div>
+  <div class="desc">
+    <h5><a href="{{ collections[featured].url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">{{ collection_title }}</a></h5>
+    {% if section.settings.show_item_count %}
+    	<p>({{ 'collections.general.items_with_count' | t: count: collection_count }})</p>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="box_1">
+      <a href="#">
+        {% capture imgCount %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+        {% capture svg_name %}collection-{{ imgCount }}{% endcapture %}
+        {{ svg_name | placeholder_svg_tag: 'placeholder-svg' }}
+      </a>
+    </div>
+    <div class="desc">
+      <h5><a href="#">Collection Title</a></h5>
+      {% if section.settings.show_item_count %}
+      <p>({{ imgCount | plus:1 }} items)</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

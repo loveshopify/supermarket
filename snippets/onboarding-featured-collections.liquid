@@ -1,0 +1,17 @@
+{% for i in (1..grid_item_count) %}
+<div class="col-md-{{ grid_item_width }} col-sm-4 col-xs-6 mb30">
+  <div class="main_box">
+    <div class="box_1">
+      <a href="#">
+        {% capture imgCount %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+        {% capture svg_name %}collection-{{ imgCount }}{% endcapture %}
+        {{ svg_name | placeholder_svg_tag: 'placeholder-svg' }}
+      </a>
+    </div>
+    <div class="desc">
+      <h5><a href="#">Collection Title</a></h5>
+      <p>({{ imgCount | plus:1 }} items)</p>
+    </div>
+  </div>
+</div>
+{% endfor %}

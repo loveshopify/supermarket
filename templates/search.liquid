@@ -1,0 +1,112 @@
+{% assign product_only_search =  settings.search_type_query %}
+{% assign grid_results = true %}
+{% if product_only_search == "search_products_only" %}
+{% assign grid_results = true %}
+{% else %}
+{% assign grid_results = false %}
+{% endif%}
+
+<div id="content">
+  <div class="container search-page">
+    {% include 'breadcrumb' %}
+
+    {% if search.performed %}
+    {% paginate search.results by 12 %}
+
+    {% if search.results_count == 0 %}
+    <div class="title clearfix">
+      <h1>{{ 'general.search.search_heading' | t }}</h1>
+    </div>
+    <div class="page_content">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div class="sfbox box-search">
+            <div class="rte">
+              <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+              <h2>{{ 'general.search.search_again' | t }}</h2>
+              <form action="/search" method="get" role="search">
+
+                <input type="hidden" name="type" value="product">
+                <div class="frm">
+                  <div class="col-sm-9"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.submit' | t }}" class="txtbox" aria-label="{{ 'general.search.submit' | t }}"></div>
+                  <div class="col-sm-3"><button class="btn_c" type="submit" value="{{ 'general.search.submit' | t }}">{{ 'general.search.submit' | t }}</button></div>
+                </div>
+              </form> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="product_c">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="title clearfix">
+            <h1>{{ 'general.search.search_heading' | t }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        {% if grid_results == false %}
+        <div class="search-list mt20 col-xs-12 search-infinite-wrapper">
+          {% for item in search.results %}
+          {% include 'search-result' %}
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="search-infinite-wrapper">
+        {% for item in search.results %}
+        {% include 'search-result-grid' %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if settings.use_infinite_scroll%}
+        {% if paginate.next.url %}
+        <div class="load-more__icon"></div>
+        <div class="js-load-more load-more">
+          <a href="{{ paginate.next.url }}" data-no-instant class="load-more__btn action_button continue-button">{{ 'collections.general.load_more' | t }}</a>
+        </div>
+        {% endif %}
+        {% endif %}
+        
+      </div>
+      {% endif %}
+
+
+      {% unless settings.use_infinite_scroll%}
+        {% if paginate.pages > 1 %}
+        	{% include 'pagination-custom' %}
+        {% endif %}
+      {% endunless %}
+      
+      {% endpaginate %}
+
+
+      {% else %}
+
+      <div class="title clearfix">
+        <h1>{{ 'general.search.placeholder' | t }}</h1>
+      </div>
+      <div class="page_content search_page_content">
+        <div class="row">
+          <div class="col-sm-8 col-sm-offset-2">
+            <div class="sfbox box-search">
+                <form action="/search" method="get" role="search">
+                  {% if product_only_search == "search_products_only" %}
+                  <input type="hidden" name="type" value="product">
+                  {% endif %}
+                  <div class="frm row">
+                    <div class="col-sm-9 col-xs-8"><input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.submit' | t }}" class="txtbox" aria-label="{{ 'general.search.submit' | t }}"></div>
+                    <div class="col-sm-3 col-xs-4"><button class="btn_c" type="submit" value="{{ 'general.search.submit' | t }}">{{ 'general.search.submit' | t }}</button></div>
+                  </div>
+                </form> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endif %}    
+    </div>
+  </div>
+</div>

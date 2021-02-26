@@ -1,0 +1,388 @@
+{% assign block_1 = section.blocks[0] %}
+{% assign block_2 = section.blocks[1] %}
+{% assign block_3 = section.blocks[2] %}
+{% assign block_4 = section.blocks[3] %}
+{% assign block_5 = section.blocks[4] %}
+{% assign blockCount =  section.blocks | size %}
+{% assign img_size_not_first = "720x" %}
+{% assign img_size_first = "720x" %}
+{%if blockCount == '1' %}
+{% assign img_size_first = "1200x" %}
+{% endif  %}
+<div class="container gallery_container" data-count= "{{blockCount}}" data-section-id="{{ section.id }}" data-section-type="featured-images-section">
+<div class="h_row_content h_row_1 ideas-hover section-{{section.id}}">
+  <div class="row">
+     {% if blockCount >= 1 %}
+    <div {{ block_1.shopify_attributes }} class="{% if blockCount == 3 %}col-sm-4{% elsif blockCount == 2 or blockCount > 3 %}col-sm-6{% elsif blockCount == 1 %}col-sm-12{% endif %}" >
+      <a href="{% if block_1.settings.promo_banner_link != blank and block_1.settings.promo %}{{ block_1.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_1 red5 feature_1">
+          <figure class="effect-chico"> 
+            {% if block_1.settings.promo %}
+            <noscript>
+            <img src="{{block_1.settings.promo | img_url:'300x'}}"  alt="{% if block_1.settings.promo.alt != blank %} {{block_1.settings.promo.alt}} {% else %}{{ block_1.settings.promo_banner_heading | strip_html }} {% endif %}" srcset="{{ block_1.settings.promo | img_url: img_size_first }} 1x, {{ block_1.settings.promo | img_url: img_size_first, scale: 2 }} 2x, {{ block_1.settings.promo | img_url: img_size_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_1.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_1.settings.promo | img_url:'300x'}}" 
+                alt="{% if block_1.settings.promo.alt != blank %} {{block_1.settings.promo.alt}} {% else %}{{ block_1.settings.promo_banner_heading | strip_html }} {% endif %}"
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_1.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+            
+            
+          	{% else %}
+       		{{ "collection-1" | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+            <figcaption> </figcaption>
+        </figure>
+        {% if block_1.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            {% if blockCount == 3 %} 
+             <h5>{{ block_1.settings.promo_banner_heading }}</h5>
+            {% else %}
+             <h2>{{ block_1.settings.promo_banner_heading }}</h2>
+            {% endif %}
+            {{ block_1.settings.promo_banner_subtext }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    {% endif %}
+    {% if blockCount >= 2 %}
+    <div {{ block_2.shopify_attributes }} class="{% if blockCount == 3 %}col-sm-4{% elsif blockCount < 3 or blockCount > 3 %}col-sm-6{% endif %}">
+     <a href="{% if block_2.settings.promo_banner_link != blank and block_2.settings.promo %}{{ block_2.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_2 red5 feature_2">
+        <figure class="effect-chico">
+         {% if block_2.settings.promo %}
+           <noscript>
+            <img  src="{{block_2.settings.promo | img_url:'300x'}}" 
+                 alt="{% if block_2.settings.promo.alt != blank %} {{block_2.settings.promo.alt}} {% else %} {{ block_2.settings.promo_banner_heading | strip_html }} {%endif %}"
+                 srcset="{{ block_2.settings.promo | img_url: img_size_not_first }} 1x, {{ block_2.settings.promo | img_url: img_size_not_first, scale: 2 }} 2x, {{ block_2.settings.promo | img_url: img_size_not_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_2.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_2.settings.promo | img_url:'300x'}}"  
+                 alt="{% if block_2.settings.promo.alt != blank %} {{block_2.settings.promo.alt}} {% else %} {{ block_2.settings.promo_banner_heading | strip_html }} {%endif %}" 
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_2.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+          	{% else %}
+       		{{ "collection-2" | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+            <figcaption> </figcaption>
+        </figure>
+        {% if block_2.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            {% if blockCount == 3 %} 
+             <h5>{{ block_2.settings.promo_banner_heading }}</h5>
+            {% else %}
+             <h2>{{ block_2.settings.promo_banner_heading }}</h2>
+            {% endif %}
+            {{ block_2.settings.promo_banner_subtext }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    {% endif %}
+    {% if blockCount == 3 %}
+    <div {{ block_3.shopify_attributes }} class="col-sm-4">
+      <a href="{% if block_3.settings.promo_banner_link != blank and block_3.settings.promo %}{{ block_3.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_3 red5 feature_3">
+        <figure class="effect-chico "> 
+          {% if block_3.settings.promo %}
+           <noscript>
+               <img src="{{block_3.settings.promo | img_url:'300x'}}"   
+                    alt="{% if block_3.settings.promo.alt != blank %} {{ block_3.settings.promo.alt}} {% else %} {{ block_3.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                    srcset="{{ block_3.settings.promo | img_url: img_size_not_first }} 1x, {{ block_3.settings.promo | img_url: img_size_not_first, scale: 2 }} 2x, {{ block_3.settings.promo | img_url: img_size_not_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_3.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_3.settings.promo | img_url:'300x'}}"  
+                 alt="{% if block_3.settings.promo.alt != blank %} {{ block_3.settings.promo.alt}} {% else %} {{ block_3.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_3.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+          	{% else %}
+       		{{ "collection-3" | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+            <figcaption> </figcaption>
+        </figure>
+        {% if block_3.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            <h5>{{ block_3.settings.promo_banner_heading }}</h2>
+            {{ block_3.settings.promo_banner_subtext }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% if blockCount == 5 or blockCount == 4 %}
+<div class="h_row_content {% if blockCount == 4 %} h_row_1 {% else %}h_row_2 {% endif %}ideas-hover section-{{section.id}}">
+  <div class="row">
+    <div {{ block_3.shopify_attributes }} class="{% if blockCount == 5 %}col-sm-4 {% else %} col-sm-6 {% endif %}">
+      <a href="{% if block_3.settings.promo_banner_link != blank and block_3.settings.promo %}{{ block_3.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_1 red5 feature_3">
+        <figure class="effect-chico ">
+       	  {% if block_3.settings.promo %}
+         	 <noscript>
+                       <img src="{{block_3.settings.promo | img_url:'300x'}}"  
+                            alt="{% if block_3.settings.promo.alt != blank %} {{ block_3.settings.promo.alt}} {% else %} {{ block_3.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                            srcset="{{ block_3.settings.promo | img_url: img_size_not_first }} 1x, {{ block_3.settings.promo | img_url: img_size_not_first, scale: 2 }} 2x, {{ block_3.settings.promo | img_url: img_size_not_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_3.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_3.settings.promo | img_url:'300x'}}"  
+                 alt="{% if block_3.settings.promo.alt != blank %} {{ block_3.settings.promo.alt}} {% else %} {{ block_3.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_3.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+          {% else %}
+         	 {{ "collection-3" | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <figcaption> </figcaption>
+        </figure>
+        {% if block_3.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            {% if blockCount == 4 %} 
+             <h2>{{ block_3.settings.promo_banner_heading }}</h2>
+            {% else %}
+             <h5>{{ block_3.settings.promo_banner_heading }}</h5>
+            {% endif %}
+            {{ block_3.settings.promo_banner_subtext }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    <div {{ block_4.shopify_attributes }} class="{% if blockCount == 5 %}col-sm-4 {% else %}col-sm-6 {% endif %}">
+      <a href="{% if block_4.settings.promo_banner_link != blank and block_4.settings.promo %}{{ block_4.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_2 red5 feature_4">
+        <figure class="effect-chico "> 
+         {% if block_4.settings.promo %}
+         	 <noscript>
+                <img src="{{block_4.settings.promo | img_url:'300x'}}" 
+                     alt="{% if block_4.settings.promo.alt != blank %} {{ block_4.settings.promo.alt}} {% else %} {{ block_4.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                     srcset="{{ block_4.settings.promo | img_url: img_size_not_first }} 1x, {{ block_4.settings.promo | img_url: img_size_not_first, scale: 2 }} 2x, {{ block_4.settings.promo | img_url: img_size_not_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_4.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_4.settings.promo | img_url:'300x'}}"  
+                 alt="{% if block_4.settings.promo.alt != blank %} {{ block_4.settings.promo.alt}} {% else %} {{ block_4.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_4.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+          {% else %}
+         	 {{ "collection-4" | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <figcaption> </figcaption>
+        </figure>
+        {% if block_4.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            {% if blockCount == 4 %} 
+             <h2>{{ block_4.settings.promo_banner_heading }}</h2>
+            {% else %}
+             <h5>{{ block_4.settings.promo_banner_heading }}</h5>
+            {% endif %}
+            {{ block_4.settings.promo_banner_subtext }}
+          </div>        
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    {% if blockCount == 5 %}
+    <div {{ block_5.shopify_attributes }} class="col-sm-4">
+      <a href="{% if block_5.settings.promo_banner_link != blank and block_5.settings.promo %}{{ block_5.settings.promo_banner_link }} {% else %}#{% endif %}" class="div-link">
+      <div class="box box_3 red5 feature_5">
+        <figure class="effect-chico "> 
+         {% if block_5.settings.promo %}
+         	<noscript>
+             <img  src="{{block_5.settings.promo | img_url:'300x'}}"  
+                  alt="{% if block_5.settings.promo.alt != blank %} {{ block_5.settings.promo.alt}} {% else %} {{ block_5.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                  srcset="{{ block_5.settings.promo | img_url: img_size_not_first }} 1x, {{ block_5.settings.promo | img_url: img_size_not_first, scale: 2 }} 2x, {{ block_5.settings.promo | img_url: img_size_not_first, scale: 3 }} 3x" >
+            </noscript>
+              {%- assign img_url = block_5.settings.promo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img 
+                 src="{{block_5.settings.promo | img_url:'300x'}}"  
+                 alt="{% if block_5.settings.promo.alt != blank %} {{ block_5.settings.promo.alt}} {% else %} {{ block_5.settings.promo_banner_heading | strip_html }} {% endif%}" 
+                 class="lazyload blur-up"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block_5.settings.promo.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+          {% else %}
+         	 {{ "collection-5" | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <figcaption> </figcaption>
+        </figure>
+        {% if block_5.settings.promo_banner_heading != blank %}
+        <div class="box_inn">
+          <div class="promo-overlay">
+            <h5>{{ block_5.settings.promo_banner_heading }}</h5>
+            {{ block_5.settings.promo_banner_subtext }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+</div>
+<style>
+#content .h_row_1.section-{{section.id}} .box_1 .box_inn {
+  {{ block_1.settings.promo_banner_position }}:5% !important;
+}
+#content .h_row_1.section-{{section.id}} .box_2 .box_inn {
+  {{ block_2.settings.promo_banner_position }}:5% !important;
+}
+#content .h_row_1.section-{{section.id}} .box_3 .box_inn {
+  {{ block_3.settings.promo_banner_position }}:5% !important;
+}
+#content .h_row_2.section-{{section.id}} {
+  {% if blockCount == '5' or blockCount == '4' %}
+  padding:0 0 0 0;
+  {% else %}
+  padding:0;
+  {% endif %}
+}
+#content .h_row_2.section-{{section.id}} .box_1 .box_inn {
+  {{ block_3.settings.promo_banner_position }}:5%;
+}
+#content .h_row_2.section-{{section.id}} .box_2 .box_inn {
+  {{ block_4.settings.promo_banner_position }}:5%;
+}
+#content .h_row_2.section-{{section.id}} .box_3 .box_inn {
+  {{ block_5.settings.promo_banner_position }}:5%;
+} 
+
+@media (max-width: 768px) {
+  {% if blockCount == 1 %}
+  #content .box_1 {
+    margin-bottom:0 !important;
+  }
+  {% endif %}
+  {% if blockCount == 2 or blockCount == 4 or blockCount == 5 %}
+  #content .box_2 {
+    margin-bottom:0 !important;
+  }
+  {% endif %}
+  {% if blockCount == 3 %}
+  #content .box_3 {
+    margin-bottom:0 !important;
+  }
+  {% endif %}
+  {% if blockCount == 5 %}
+  #content .box_3 {
+    margin-bottom:0 !important;
+  }
+  #content .feature_4 {
+    margin-bottom:20px !important;
+  }
+  {% endif %}
+}
+  
+</style>
+{% schema %}
+  {
+    "name": "Gallery",
+	"max_blocks": 5,
+    
+     "blocks" : [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Image"
+          },
+          {
+            "type": "image_picker",
+            "id": "promo",
+            "label": "Image",
+			"info": "800 x 600px jpg recommended"
+          },   	
+          {
+            "type": "select",
+            "id": "promo_banner_position",
+            "label": "Text position",
+            "options": [
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              },
+              {
+                "value": "top",
+                "label": "Top"
+              }
+            ]
+          },
+          {
+            "type": "richtext",
+            "id": "promo_banner_heading",
+            "label": "Heading",
+			"info": "4-6 words maximum"
+          },
+          {
+            "type": "richtext",
+            "id": "promo_banner_subtext",
+            "label": "Text",
+			"info": "10-12 words maximum"
+          },
+          {
+            "type": "url",
+            "id": "promo_banner_link",
+            "label": "Link"
+          }
+	     ]
+	}
+  ],
+	"presets": [
+    {
+      "name": "Gallery",
+      "category": "Image",
+	  "blocks": [
+	  {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      }
+	]
+    }
+  ]
+  }
+{% endschema %}

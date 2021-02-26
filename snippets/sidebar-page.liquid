@@ -1,0 +1,56 @@
+<div class="col-md-3 col-md-pull-9 col-sm-4 col-sm-pull-8">
+  <div class="sidebar sidebar_1">
+    {% unless section.settings.page_link_list == '' %}
+    <div class="side_box side_box_1 red5">
+      <h5><a href="#" class="tgl_btn">{{ 'pages.sidebar.widget_page_links_title' | t }}</a></h5>
+      <ul class="tgl_c">
+        {% for link in linklists[section.settings.page_link_list].links %}
+        <li><a href="{{ link.url }}">{{ link.title | escape}}</a></li>
+        {% else %}
+        <li>{{ 'pages.sidebar.widget_no_links' | t }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endunless %}
+
+    {% if section.settings.show_sidebar_page_collections %}
+    <div class="side_box side_box_1 red5">
+      <h5><a href="#" class="tgl_btn">{{ 'pages.sidebar.widget_collection_title' | t }}</a></h5>
+      <ul class="tgl_c">
+        {% for collection in collections %}
+        <li>{% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+          <a href="{{ collection.url }}" title="Browse our {{ collection_title }} collection">{{ collection_title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if section.settings.show_page_sidebar_sale %}
+    {% assign sale_collection = collections[section.settings.sidebar_page_sale_collection] %}
+    <div class="side_box side_box_2 red5">
+      <h5><a href="#" class="tgl_btn">{{ sale_collection.title | escape }}</a></h5>
+      <ul class="tgl_c">
+        {% for product in collections[section.settings.sidebar_page_sale_collection].products limit:section.settings.sidebar_page_product_count %}
+        <li>
+          <div class="post_img">
+            <a href="{{ product.url | within: collection }}"><img src="{{ product.featured_image.src | product_img_url: '300x' }}" alt="{{ product.featured_image.alt | escape }}" /></a>
+          </div>
+          <div class="post_detail">
+            <a href="{{ product.url | within: collection }}">{{ product.title | escape }}</a>
+            <br />
+            <span class="price">
+              {{ product.price | money }}
+            </span>
+            {% if product.compare_at_price > product.price %}
+            <br />
+            <span class="compare-price">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>

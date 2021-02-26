@@ -1,0 +1,104 @@
+{% assign blockCount =  section.blocks | size %}
+<div id="call-to-action" class="call-to-action-{{section.id}}" >
+  <div class="f_top">
+    <div class="container">
+      <div class="row">
+        {% for block in section.blocks %}
+          <div {{ block.shopify_attributes }} class="{% if blockCount == 4%} col-lg-3 col-md-3 col-sm-3 col-ms-6 {% elsif blockCount == 3 %} col-lg-4 col-md-4 col-sm-4 col-ms-4{% elsif blockCount == 2 %} col-lg-6 col-md-6 col-sm-6 col-ms-6 {% else %} col-lg-12 col-md-12 col-sm-12 col-ms-12 {% endif %} col-xs-12">
+           <div class="ftop_blk {% if forloop.last == true %} bor_none {% endif %}">
+            <a href="{{ block.settings.cta_link }}"><h5>{{ block.settings.cta_text | escape }} <span class="fa fa-arrow-circle-right"></span></h5></a>
+            <span class="icon"><i class="fa fa-{{ block.settings.cta_icon | escape }}"></i></span> 
+           </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .call-to-action-{{section.id}} .f_top {
+    background:{{ section.settings.ctab_bg_color }};
+  }
+  .call-to-action-{{section.id}} .f_top .ftop_blk {
+    background:{{ section.settings.ctab_bg_color }};
+    border-right:1px solid {{ section.settings.ctab_border_color }};
+  }
+  .call-to-action-{{section.id}} .f_top .ftop_blk h5 {
+    color:{{ section.settings.ctab_heading_color }};
+  }
+  .call-to-action-{{section.id}} .f_top .icon {
+    color:{{ section.settings.ctab_link_color }};
+  }
+  .call-to-action-{{section.id}} .fa-arrow-circle-right {
+    color:{{ section.settings.ctab_link_color }} !important;
+  }
+  @media (max-width: 480px) {
+    .call-to-action-{{section.id}} .f_top .ftop_blk {
+      border-bottom: 1px solid {{ section.settings.ctab_border_color }};
+    }
+  }
+</style>
+{% schema %}
+  {
+    "name": "Icon buttons",
+	"max_blocks": 4,	
+	"settings":[
+	  {
+        "type": "header",
+        "content": "Colors"
+      },
+	  {
+        "type": "color",
+        "id": "ctab_bg_color",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "ctab_heading_color",
+        "label": "Text",
+        "default": "#282727"
+      },
+      {
+        "type": "color",
+        "id": "ctab_link_color",
+        "label": "Icons",
+        "default": "#107FA8"
+      },
+      {
+        "type": "color",
+        "id": "ctab_border_color",
+        "label": "Border",
+        "default": "#ecefef"
+      }	
+	],
+    "blocks" : [
+      {
+        "type": "text",
+        "name": "Call to action box",
+        "settings": [
+      {
+        "type": "text",
+        "id": "cta_text",
+        "label": "Text"
+      },
+	  {
+        "type": "paragraph",
+        "content": "Icon"
+      },
+      {
+        "type": "text",
+        "id": "cta_icon",
+        "label": "fa-",
+		"info": "[See icon choices](https:\/\/fontawesome.com\/v4.7.0\/icons\/)"
+      },
+      {
+        "type": "url",
+        "id": "cta_link",
+        "label": "Link URL"
+      }
+    ]
+   }
+]
+}
+{% endschema %}

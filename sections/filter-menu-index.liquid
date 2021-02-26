@@ -1,0 +1,113 @@
+<style type="text/css">
+  {% if section.settings.dropdown %}
+  .filter-menu {
+    display: inline-block;
+    width: 100%;
+  }
+  .filter-menu .refine-header {
+    display: none !important;
+  }
+
+  .filter-menu .filter-group {
+    margin: 10px 10px;
+    min-width: 150px;
+    max-width: 250px;
+    vertical-align: text-top;
+    position: relative;
+  }
+
+  .filter-menu .filter-group  h4 {
+    margin-top: 0;
+  }
+
+  .filter-menu .pt-mobile-header {
+    margin-bottom: 20px;
+  }
+
+  .filter-menu .pt-display-dropdown {
+    padding: 10px 10px;
+  }
+
+  .filter-menu .pt-display-dropdown h4 {
+    padding-top: 0;
+  }
+  {% endif %}
+  {% if section.settings.headers == false %}
+  	.filter-menu h4 {
+      display: none !important;
+    }
+  {% endif %}
+
+  {% assign hidden_filter_groups = section.settings.hidden_groups | split: ',' %}
+  {% for group in hidden_filter_groups %}
+  .filter-menu .filter-group-{{ group | handle }} {
+  	display: none !important;
+  }
+  {% endfor %}
+
+  .text-center {
+    text-align: center;
+  }
+</style>
+
+{% if section.settings.dropdown %}
+{% assign pt_force_dropdown = true %}
+{% endif %}
+<div class="{{ section.settings.outerclass }}">
+  <div class="{{ section.settings.innerclass }}">
+{% include 'filter-menu' %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Filter Menu",
+    "settings": [
+	  {
+        "id": "dropdown",
+        "type": "checkbox",
+        "label": "Show as drop-downs",
+        "default": true
+      },
+	  {
+        "id": "headers",
+        "type": "checkbox",
+        "label": "Show headers",
+        "default": true
+      },
+	  {
+        "id": "hidden_groups",
+        "type": "text",
+        "label": "Hide these groups (separate by commas)",
+        "default": "none"
+      },
+	  {
+        "id": "outerclass",
+        "type": "text",
+        "label": "Outer CSS class (required for some themes)",
+        "default": "container text-center"
+      },
+	  {
+        "id": "innerclass",
+        "type": "text",
+        "label": "Inner CSS class",
+        "default": "wrapper"
+      }
+	],
+	"presets": [
+      {
+        "name": "Filter Menu",
+        "category": "Filtering",
+         "settings": {
+        }
+      }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+
+
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

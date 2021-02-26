@@ -1,0 +1,131 @@
+{% assign on_sale = false %}
+{% if item.available and item.compare_at_price > item.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if item.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+{% assign img_size = "350x"%}
+
+
+{% assign max_img_width = item.featured_image.width | append: "px" %}
+
+ {% if settings.align_height %}   
+  {% assign max_img_height = settings.collection_height %}
+  {% assign product_img_width = item.featured_image.width %}
+  {% assign product_img_height = item.featured_image.height%}
+  {% assign product_img_ratio = item.featured_image.aspect_ratio %}
+    {% if max_img_height < product_img_height %}
+    {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+    {% else %}
+    {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+    {% endif %}
+  {% if max_img_width == "0px" %}
+  {% assign max_img_width = '100%;width:auto;'%}
+  {% endif %}
+{% endif%}
+
+<div class="col-md-3 col-sm-4 col-ms-6 col-xs-6 mb30 element">
+  <div class="main_box {% if settings.align_height %} use_align_height height_{{settings.collection_height}}px {% else %} use_image_height {% endif %}">
+      
+      
+     {% if item.object_type == 'article' %}
+      {% if item.image %}
+        <div class="box_1">
+          <div class="product-image">
+            <div class="spinner-cube">
+              <div class="loadFacebookG"></div>
+            </div>	
+            <a href="{{ item.url }}">
+              <noscript>
+                <img src="{{ item.image | img_url: "300x"}}" srcset="{{ item.image | img_url: img_size}} 1x, {{ item.image | img_url: img_size, scale: 2}} 2x, {{ item.image | img_url: img_size, scale: 3}} 3x" alt="{{ item.title | escape }}">
+              </noscript>
+              <img class="lazyload"
+                   src="{{ item.image | img_url: "300x"}}"
+                   data-srcset="{{ item.image | img_url: img_size}} 1x, {{ item.image | img_url: img_size, scale: 2}} 2x, {{ item.image | img_url: img_size, scale: 3}} 3x"
+                   alt="{{ item.title | escape }}"
+                    style="max-width: {{max_img_width}}"/>        
+            </a>
+          </div>
+        </div>
+      {% endif %}
+       <div class="desc">
+          <h2><a href="{{ item.url }}">{{ item.title | escape }}</a></h2>
+          <p>{{ item.content | strip_html | truncatewords:20 }}</p>
+<!--           <p><a href="{{ item.url }}" class="btn_c">{{ 'blogs.article.read_more' | t }}</a></p> -->
+        </div>
+      
+    {% elsif item.object_type == 'product'%}
+       <div class="box_1">
+      {% if on_sale %}
+      <div class="on-sale">{{ 'products.product.sale' | t }}</div>
+      {% endif %}
+      {% if sold_out %}
+      <div class="sold-out">{{ 'products.product.sold_out' | t }}</div>
+      {% endif %}
+    
+      <div class="product-image">
+        <div class="spinner-cube">
+           <div class="loadFacebookG"></div>
+        </div>	
+      <a href="{{ item.url | within: collection }}">
+        <noscript>
+        <img srcset="{{ item.featured_image.src | product_img_url: img_size}} 1x, {{ item.featured_image.src | product_img_url: img_size, scale: 2}} 2x, {{ item.featured_image.src | product_img_url: img_size, scale: 3}} 3x" alt="{{ item.featured_image.alt | escape }}">
+        </noscript>
+	    {% assign img_url = item.featured_image.src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+        <img class="lazyload"
+              src="{{ item.featured_image.src | img_url: "300x"}}"
+             data-srcset="{{ item.featured_image.src | product_img_url: img_size}} 1x, {{ item.featured_image.src | product_img_url: img_size, scale: 2}} 2x, {{ item.featured_image.src | product_img_url: img_size, scale: 3}} 3x"
+             alt="{{ item.featured_image.alt | escape }}"
+              style="max-width: {{max_img_width}}"/>        
+      </a>
+     </div>
+       </div>
+      {% if settings.show_collection_overlay and settings.collection_overlay == 'cart-info' %}
+      <form method="post" action="/cart/add">
+        <input type="hidden" name="id" value="{{ item.variants.first.id }}" />
+          <div class="overlay hidden-sm hidden-xs"> 
+            {% if item.available and item.variants.size == 1 %}
+            <input type="submit" value="{{ 'products.product.add_to_cart' | t }}" class="btn_c cart_btn_1" />
+            <a href="{{ item.url | within: collection }}" class="info_btn">{{ 'products.product.more_info' | t }}</a>
+            {% else %}
+            <a href="{{ item.url | within: collection }}" class="btn_c more_btn">{{ 'products.product.select_options' | t }}</a>
+            {% endif %}
+          </div>
+        </form>
+        {% elsif settings.show_collection_overlay and settings.collection_overlay == 'quick-view' %}
+        <div class="overlay hidden-sm hidden-xs">
+          {% include 'product-quick-view-btn' qvp:item %}
+        </div>
+        {% endif %}
+      <div class="desc">
+        <h5><a href="{{ item.url }}">{{ item.title | escape }}</a></h5>
+        {% if settings.show_grid_type %}
+        <p>{{ item.type }}</p>
+        {% endif %}
+         <div class="price">
+        {% unless item.price_max == 0 and settings.custom_price0_text != blank %}
+       {% if item.price_varies %}{{ 'products.product.price_from' | t }}{% endif %} {{ item.price | money }} {% if on_sale %}<span class="compare-price">{{ item.compare_at_price | money }}</span>{% endif %}
+    	 {% else %}  
+          <span>{{settings.custom_price0_text }}</span> 
+        {% endunless %}	
+          </div>
+      </div>
+     {% else %}
+      
+     <div class="desc">
+       <h5><a href="{{ item.url }}">{{ item.title | escape }}</a></h5>
+       <p>{{ item.content | strip_html | truncatewords:50 }}</p>
+<!--        <p><a href="{{ item.url }}" class="btn_c">{{ 'blogs.article.read_more' | t }}</a></p> -->
+     </div>
+    
+    
+        {% endif %}
+  </div>
+      </div>
+  {% if settings.show_collection_overlay and settings.collection_overlay == 'quick-view' %}
+  {% include 'product-quick-view' qvp:item %}
+  {% endif %}
+

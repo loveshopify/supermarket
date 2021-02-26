@@ -1,0 +1,28 @@
+{% layout settings.customer_layout %}
+
+<div class="menu_c acc_menu">
+  <div class="menu_title clearfix">
+    <h4>{{ 'customer.account.title' | t }}</h4>
+    {% if customer %}
+      <a href="/account/logout" class="sign_up">{{ 'layout.customer.log_out' | t }}</a>
+    {% endif %} 
+  </div>
+
+  {% if customer %}
+    <div class="login_frm">
+      <p class="text-center">{{ 'layout.customer.welcome' | t }} <a href="/account">{{ customer.first_name }}</a>!</p>
+      <div class="remember">
+        <a href="/account/orders" class="signin_btn btn_c">{{ 'layout.customer.my_orders' | t }}</a>
+        <a href="/account/addresses" class="signin_btn btn_c">{{ 'layout.customer.address_book' | t }}</a>
+      </div>
+    </div>
+  {% else %}
+    <div class="login_frm">
+      <p class="text-center">{{ 'layout.customer.welcome_to' | t }} {{ shop.name }}!</p>
+      <div class="remember">
+        <a href="/account/login" class="signin_btn btn_c">{{ 'customer.login.title' | t }}</a>
+        <a href="/account/register" class="signin_btn btn_c">{{ 'customer.register.title' | t }}</a>
+      </div>
+    </div>
+  {% endif %}
+</div>

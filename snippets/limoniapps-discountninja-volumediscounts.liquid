@@ -1,0 +1,24 @@
+{% comment %}V4.0.1 - May 2020
+This liquid snippet is used by Discount Ninja, an app from Limoni Apps
+Do not modify or remove this snippet, this snippet can be overwritten when the app is upgraded
+{% endcomment %}
+
+<div id="limoniapps-volumediscounts-template" style="display:none;">
+  <div class="limoniapps-discountninja-volumediscounts-table">
+    <div class="limoniapps-discountninja-volumediscounts-header">
+      <div class="limoniapps-discountninja-volumediscounts-header-col1">[[QUANTITY_LABEL]]</div>
+      <div class="limoniapps-discountninja-volumediscounts-header-col2">[[PRICE_LABEL]]</div>
+    </div>
+    <div class="limoniapps-discountninja-volumediscounts-body">
+      <div class="limoniapps-discountninja-volumediscounts-body-col1">[[TIER_ROW]]</div>
+      <div class="limoniapps-discountninja-volumediscounts-body-col2">[[PRICE]]</div>
+    </div>
+    <div class="limoniapps-discountninja-volumediscounts-footer"></div>
+  </div>
+</div>
+<div id="limoniapps-volumediscounts-tier-template" style="display:none;">
+  <div class="limoniapps-discountninja-volumediscounts-tier [[RECOMMENDED]]">
+    <input class="limoniapps-discountninja-volumediscounts-tier-radiobutton" type="radio" name="limoniapps-discountninja-volumediscounts" value="[[TIER]]">
+    <div class="limoniapps-discountninja-volumediscounts-tier-label">[[LABEL]]</div>
+  </div>
+</div>

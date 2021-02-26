@@ -1,0 +1,33 @@
+{% assign all_filter_tags = '' %}
+{% for link in linklists[filter-by-tag].links %}
+  {% if collection.all_tags contains link.title %}
+    {% capture all_filter_tags %}{{ all_filter_tags }},{{ link.title }},{% endcapture %}
+  {% endif %}
+{% endfor %} 
+{% assign new_tags = '' %}
+{% for tag in current_tags %}
+  {% unless all_filter_tags contains tag %}
+    {% capture new_tags %}{{ new_tags }}+{{ tag | handle }}{% endcapture %}
+  {% endunless %}
+{% endfor %}
+{% capture new_tags %}{{ new_tags | remove_first: '+' }}{% endcapture %}
+{% for link in linklists[filter-by-tag].links %}
+  {% if collection.all_tags contains link.title %}
+    {% if current_tags contains link.title %}
+      <li class="{{ link.title | handle }} active"><span></span>{{ link.title | escape | link_to_remove_tag: link.title }}</li>
+    {% else %}
+      {% if collection.url != '' %}
+        {% capture url %}{{ collection.url }}/{% if new_tags != '' %}{{ new_tags }}+{% endif %}{{ link.title | handle }}{% endcapture %}
+      {% else %}
+        {% capture url %}/collections/all/{% if new_tags != '' %}{{ new_tags }}+{% endif %}{{ link.title | handle }}{% endcapture %}
+      {% endif %}
+      <li class="{{ link.title | handle }}"><span></span>{{ link.title | escape | link_to: url }}</li>
+    {% endif %}
+  {% endif %}
+{% endfor %} 
+{% if collection.url != '' %}
+  {% capture url %}{{ collection.url }}{% if new_tags != '' %}/{{ new_tags }}{% endif %}{% endcapture %}
+{% else %}
+  {% capture url %}/collections/all{% if new_tags != '' %}/{{ new_tags }}{% endif %}{% endcapture %}
+{% endif %}
+<li class="all"><span></span>{{ 'All ' | append: linklists[filter-by-tag].title | escape | link_to: url }}</li>

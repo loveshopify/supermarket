@@ -1,0 +1,389 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "404": {
+      "title": "404 - Page non trouvée",
+      "subtext_html": "<p>Cette page n'est pas disponible. <a href=\"\/collections\/all\">Retourner au magasinage<\/a><\/p>"
+    },
+    "password_page": {
+      "opening_soon": "Bientôt ouvert",
+      "spread_the_word": "Passez le mot:",
+      "login_form_heading": "Accéder à la boutique à l'aide d'un mot de passe:",
+      "login_form_password_label": "Mot de passe",
+      "login_form_password_placeholder": "Votre mot de passe",
+      "login_form_submit": "Entrer",
+      "signup_form_heading": "Soyez le premier informé de notre lancement:",
+      "signup_form_email_label": "Courriel",
+      "signup_form_email_placeholder": "Votre courriel",
+      "signup_form_submit": "Soumettre",
+      "signup_form_success": "Nous vous ferons parvenir un courriel juste avant l'ouverture!",
+      "admin_link_html": "Êtes-vous le propriétaire de la boutique? <a href=\"\/admin\" class=\"text-link\">Connectez-vous ici<\/a>.",
+      "password_link": "Entrer avec un mot de passe",
+      "powered_by_shopify_html": "Cette boutique sera propulsée par {{ shopify }}",
+      "close": "Fermer (Esc)"
+    },
+    "breadcrumbs": {
+      "home": "Accueil"
+    },
+    "forms": {
+      "error": "Erreur",
+      "post_error": "Désolé, il semble y avoir un problème. Tentez de corriger les éléments suivants et soumettez le formulaire à nouveau:",
+      "error_the": "Le",
+      "error_field": "champ"
+    },
+    "newsletter_form": {
+      "newsletter_email": "votre-courriel@exemple.com",
+      "confirmation": "Merci pour votre abonnement",
+      "submit": "S'inscrire"
+    },
+    "search": {
+      "search_heading": "Résultats de la recherche",
+      "no_results_html": "Votre recherche pour \"{{ terms }}\" n'a pas généré de résultats.",
+      "search_again": "Essayez une autre recherche:",
+      "results_for_html": "Votre recherche pour \"{{ terms }}\" a généré les résultats suivants:",
+      "title": "Effectuez une recherche",
+      "placeholder": "Rechercher dans la boutique",
+      "submit": "Recherche"
+    },
+    "header": {
+      "no_links": "Spécifiez la liste de liens dans Theme Settings > Header"
+    }
+  },
+  "blogs": {
+    "article": {
+      "date_html": "<time datetime=\"{{ date }}\">{{ date }}<\/time>",
+      "by": "Par",
+      "tags": "Tags",
+      "older_post": "Article précédent",
+      "newer_post": "Article suivant",
+      "comment_meta_html": "<strong>{{ author }}<\/strong> le <strong><time datetime=\"{{ date }}\">{{ date }}<\/time><\/strong>",
+      "read_more": "Plus"
+    },
+    "comments": {
+      "title": "Laissez un commentaire",
+      "name": "Nom:",
+      "email": "Courriel:",
+      "message": "Message:",
+      "post": "Publier le commentaire",
+      "clear": "Effacer",
+      "moderated": "Veuillez noter que les commentaires doivent être approvés avant d'être affichés",
+      "success_moderated": "Votre commentaire a été soumis avec succès. Nous le publierons sous peu, suite à notre processus de modération.",
+      "success": "Votre commentaire a été publié avec succès!",
+      "required": "Requis",
+      "comments_with_count_html": {
+        "one": "Commentaires <strong>{{ count }}<\/strong>",
+        "other": "Commentaires <strong>{{ count }}<\/strong>"
+      }
+    },
+    "sidebar": {
+      "no_tags": "Ajoutez des tags à vos messages de blog pour qu'ils apparaissent ici.",
+      "no_posts": "Ajouter au moins un blog post pour les messages d'apparaître ici.",
+      "widget_recent_posts_title": "Messages Récents",
+      "widget_tags_title": "Catégories"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Panier",
+      "photo": "Photo",
+      "name": "Nom",
+      "quantity": "Quantité",
+      "price": "Prix",
+      "note": "Instructions spéciales pour la commande",
+      "subtotal": "Sous-total",
+      "total": "Total",
+      "update": "Mettre à jour",
+      "remove": "Retirer",
+      "error": "Tous les stocks disponibles sont dans le panier",
+      "view_cart": "Voir le panier",
+      "checkout": "Procéder au paiement",
+      "empty": "Votre panier est vide.",
+      "continue_browsing": "Continuer vos achats",
+      "currency_disclaimer_html": "<p><strong>Remarque:<\/strong> {{ shopname }} traite toutes les commandes en {{ currency }}. Bien que le contenu de votre panier peut être affiché dans une autre devise, vous devrez remplir votre achat en utilisant {{ currency }} au taux de change le plus courant.<\/p>",
+      "widget_links_title": "Liens utiles",
+      "ajax_add_success": " a été ajouté à votre panier."
+    },
+    "calculator": {
+      "title": "Calculateur d'expédition",
+      "calculate": "Calculer",
+      "shipping_rate": "Un tarif pour du transport maritime",
+      "shipping_rates": "Les tarifs d'expédition disponibles pour",
+      "sorry": "Désolé, nous ne livrons pas à cette destination."
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Catégories de produit",
+      "no_matches": "Il n'y a aucun produit dans cette collection.",
+      "link_title": "Consultez la collection {{ title }}",
+      "list_view": "Liste vue",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "items": {
+        "one": "item",
+        "other": "items"
+      },
+      "load_more": "Charger plus",
+      "items_with_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      }
+    },
+    "sidebar": {
+      "no_tags": "Ajoutez un tag à vos produits pour que cette liste soit automatiquement générée.",
+      "no_vendors": "Ajouter fournisseurs à vos produits de cette liste se construire.",
+      "no_collections": "Ajouter des collections pour cette liste se construire",
+      "everything": "Tout en",
+      "all": "Tous",
+      "widget_menu_title": "Liens utiles",
+      "widget_collection_title": "Catégories",
+      "widget_filter_title": "Filtrer les produits",
+      "widget_vendors_title": "Vendeurs",
+      "widget_tags_title": "Tags",
+      "widget_sale_title": "En vente"
+    },
+    "sorting": {
+      "title": "Trier par",
+      "featured": "En vedette",
+      "best_selling": "Meilleurs vendeurs",
+      "az": "A-Z",
+      "za": "Z-A",
+      "price_ascending": "Prix: faible à élevé",
+      "price_descending": "Prix: élevé à faible",
+      "date_descending": "Date: récent à ancien",
+      "date_ascending": "Date: ancien à récent"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Nom",
+      "email": "Courriel",
+      "phone": "Téléphone",
+      "message": "Message",
+      "send": "Envoyer",
+      "post_success": "Merci de nous avoir avoir contacté. Nous vous reviendrons le plus rapidement possible.",
+      "clear": "Effacer",
+      "required": "Requis"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Mon compte",
+      "details": "Détails du compte",
+      "view_addresses": "Voir les adresses",
+      "return": "Retour au détails du compte"
+    },
+    "activate_account": {
+      "title": "Activer le compte",
+      "subtext": "Créez votre mot de passe pour activer le compte.",
+      "submit": "Activer le compte",
+      "cancel": "Refuser l'invitation",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe"
+    },
+    "addresses": {
+      "title": "Votre adresse",
+      "no_addresses": "Il n'y a actuellement aucune adresse au dossier.",
+      "default": "Par défaut",
+      "add_new": "Ajouter une nouvelle adresse",
+      "edit_address": "Éditer l'adresse",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "company": "Compagnie",
+      "address1": "Adresse 1",
+      "address2": "Adresse 2",
+      "city": "Ville",
+      "country": "Pays",
+      "province": "Province",
+      "zip": "Code postal",
+      "phone": "Téléphone",
+      "set_default": "Définir comme adresse par défaut",
+      "add": "Ajouter l'adresse",
+      "update": "Mettre à jour l'adresse",
+      "cancel": "Annuler",
+      "edit": "Éditer",
+      "delete": "Supprimer"
+    },
+    "login": {
+      "title": "Connexion",
+      "email": "Courriel",
+      "password": "Mot de passe",
+      "forgot_password": "Mot de passe oublié?",
+      "sign_in": "Se connecter",
+      "cancel": "Retourner à la boutique",
+      "guest_title": "Continuer en tant qu'invité",
+      "guest_continue": "Continuer",
+      "new_customer": "Nouveau client?",
+      "sign_up_html": "Créer un compte &rarr;"
+    },
+    "orders": {
+      "title": "Historique des commandes",
+      "order_number": "Commande",
+      "date": "Date",
+      "payment_status": "Statut du paiement",
+      "fulfillment_status": "Statut du traitement de la commande",
+      "total": "Total",
+      "none": "Vous n'avez pas placé de commande à ce jour."
+    },
+    "order": {
+      "title": "Commande {{ name }}",
+      "date": "Placée le {{ date }}",
+      "cancelled": "Commande annulée le {{ date }}",
+      "cancelled_reason": "Motif: {{ reason }}",
+      "billing_address": "Adresse de facturation",
+      "payment_status": "Statut du paiement",
+      "shipping_address": "Adresse de livraison",
+      "fulfillment_status": "Statut du traitement de la commande",
+      "discount": "Rabais appliqué",
+      "shipping": "Livraison",
+      "tax": "Taxes",
+      "details": {
+        "product": "Produit",
+        "sku": "SKU",
+        "price": "Prix",
+        "quantity": "Quantité",
+        "total": "Total",
+        "fulfilled_at": "Traitée le {{ date }}",
+        "subtotal": "Sous-total"
+      },
+      "track_shipment": "Suivi de livraison"
+    },
+    "recover_password": {
+      "title": "Réinitialiser votre mot de passe",
+      "email": "Courriel",
+      "submit": "Soumettre",
+      "cancel": "Annuler",
+      "subtext": "Nous vous ferons parvenir un courriel pour réinitialiser votre mot de passe.",
+      "success": "Nous vous avons fait parvenir un courriel pour réinitialiser votre mot de passe."
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe du compte",
+      "subtext": "Entrez un nouveau mot de passe pour {{ email }}",
+      "submit": "Réinitialiser le mot de passe",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "Courriel",
+      "submit": "Créer",
+      "cancel": "Retour à la boutique",
+      "password": "Mot de passe",
+      "returning": "Déjà client?",
+      "sign_in_html": "Se connecter &rarr;"
+    }
+  },
+  "home_page": {
+    "sections": {
+      "learn_more": "Plus d'informations",
+      "scroll_down": "Défilez vers le bas",
+      "no_page": "Pas de page spécifié. Vous devez choisir une page de contenu à afficher ici. Choisissez votre page dans paramètres de thème sous le titre Home Page.",
+      "featured_products_title": "Coups de Coeur",
+      "no_featured": "Pas de collection spécifié. Vous devez spécifier une collection dans les paramètres de thème au titre de la &quot;Home Page&quot; afin de montrer les produits décrits ici.",
+      "no_featured_collection": "Pas de collections spécifiées. Pour remplir vos collections en vedette, vous devez choisir les collections sous la page d'accueil - collections en vedette rubrique dans les paramètres de thème.",
+      "no_frontpage_products_html": "Vous n'avez pas de produit dans votre collection Frontpage. Ce message apparaitra jusqu'à ce qu'un produit soit <a href=\"\/admin\/custom_collections\">ajouté à cette collection<\/a>.",
+      "featured_collection_title": "Collection en vedette",
+      "video_title": "Vidéos Liées",
+      "recent_post_title": "Post récent",
+      "no_products_html": "Il n'y a aucun produit dans la collection coups de coeur que vous avez spécifié dans les paramètres de thème. Ce message apparaitra jusqu'à ce qu'un produit soit <a href=\"\/admin\/custom_collections\">ajouté à cette collection<\/a>.",
+      "instagram_title": "Instagram"
+    }
+  },
+  "layout": {
+    "cart": {
+      "title": "Panier",
+      "items": {
+        "one": "item",
+        "other": "items"
+      }
+    },
+    "nav": {
+      "search_title": "Recherche",
+      "account_title": "Mon compte"
+    },
+    "customer": {
+      "logged_in_as": "Connecté en tant que",
+      "log_out": "Se déconnecter",
+      "log_in": "Se connecter",
+      "create_account": "Créer un compte",
+      "welcome": "Bienvenue",
+      "welcome_to": "Bienvenue sur",
+      "my_orders": "Mes achats",
+      "address_book": "Carnet d'adresses"
+    },
+    "footer": {
+      "theme_credits_html": "| Theme par <a href=\"http:\/\/www.milehighthemes.com\" target=\"_blank\">Mile High Themes<\/a>",
+      "newsletter_title": "Rester en contact"
+    }
+  },
+  "products": {
+    "general": {
+      "from": "À partir de",
+      "description": "Description du produit",
+      "product_sku": "Sku",
+      "product_vendor": "Vendeur",
+      "product_tags": "Étiquette",
+      "next_product": "Produit Suivant",
+      "previous_product": "Produit Précédent",
+      "related_products": "Produits Connexes",
+      "tab_1_title": "Onglet 1",
+      "tab_2_title": "Onglet 2",
+      "tab_3_title": "Onglet 3",
+      "tab_4_title": "Onglet 4",
+      "tab_no_page": "Pas de page spécifié. Pour remplir cet onglet, choisir quelle page vous souhaitez afficher dans les paramètres de thème sous le titre des Product Pages."
+    },
+    "product": {
+      "sale": "Solde",
+      "sold_out": "Épuisé",
+      "price_from": "De",
+      "unavailable": "Non disponible",
+      "compare_at": "Était:",
+      "quantity": "Quantité",
+      "add_to_cart": "Ajouter au panier",
+      "select_options": "Les Options",
+      "more_info": "Plus d'infos",
+      "quick_view": "Affichage rapide",
+      "product_is_avalable": "Ceci est ce produit disponible",
+      "product_is_sold_out": "Ce produit est vendu"
+    }
+  },
+  "pages": {
+    "sidebar": {
+      "widget_page_links_title": "Liens",
+      "widget_collection_title": "Catégories",
+      "widget_recent_posts_title": "Blog",
+      "widget_sale_title": "En Vente",
+      "widget_no_links": "Choisissez une liste de liens à afficher ici dans les paramètres de thème > Standard Pages"
+    },
+    "contact": {
+      "heading_info_box": "Information",
+      "heading_contact_box": "Contactez-nous"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Votre carte-cadeau {{ shop }} d'une valeur de {{ value }}!",
+      "subtext": "Voici votre carte-cadeau!",
+      "disabled": "Désactivée",
+      "expired": "Expirée le {{ expiry }}",
+      "active": "Expire le {{ expiry }}",
+      "redeem": "Entrez ce code lors du paiement pour utiliser votre carte-cadeau",
+      "shop_link": "Boutique",
+      "print": "Imprimer"
+    }
+  },
+  "date_formats": {
+    "month_day_year": "%d %B, %Y"
+  },
+  "discount_ninja": {
+    "from": "À partir de",
+    "here": "ici",
+    "free": "GRATUIT",
+    "sold_out": "Épuisé"
+  }
+}

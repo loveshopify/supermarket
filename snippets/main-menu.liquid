@@ -1,0 +1,217 @@
+<div id="nav">
+  <nav class="navbar" role="navigation">
+    <div class="navbar-header">
+      <a href="#" class="visible-ms visible-xs pull-right navbar-cart" id="wsnavtoggle"><div class="cart-icon"><i class="fa fa-bars"></i></div></a>
+      {% if shop.customer_accounts_enabled %}
+      <li class="dropdown-grid no-open-arrow visible-ms visible-xs account-icon-mobile navbar-cart">
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle navbar-cart" aria-expanded="true"><span class="icons"><i class="fa fa-user"></i></span></a>
+        <div class="dropdown-grid-wrapper mobile-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      <a href="javascript:void(0);" data-href="/cart" class="visible-ms visible-xs pull-right navbar-cart cart-popup"><div class="cart-icon"><span class="count{% if cart.item_count < 1 %} hidden{% endif %}">{{ cart.item_count }}</span><i class="fa fa-shopping-cart"></i></div></a>
+      
+      <!-- include 'wishlist-link-li' -->
+      
+      {% if section.settings.show_search_bar_mobile %}
+      <div class="visible-mobile-sm mobile-landscape-search">
+        <div class="fixed-search navbar-cart">    
+          {% include 'menu-search' %}
+        </div>
+      </div>
+      {% else %}
+      <a href="/search" class="visible-ms visible-xs pull-right navbar-cart"><div class="cart-icon"><i class="fa fa-search"></i></div></a>
+      {% endif %}
+      {% if section.settings.header_style != 'header1' %}
+      <div class="visible-ms visible-xs">
+        {% endif %}
+        {% if section.settings.logo != blank %}
+
+        {% if template.name == 'index' %} 
+        <h1>
+          {% endif %}
+
+          <a class="navbar-brand" href="/"  style="max-width:{{section.settings.logo_max_width | plus: 15 | append: "px"}}">
+            <img src="{{ section.settings.logo | img_url: logo_scale_width }}" 
+                 alt="{% if  section.settings.logo.alt != blank %} {{ section.settings.logo.alt}} {% else %}{{ shop.name }} {%endif %}" />
+          </a>
+
+          {% if template.name == 'index' %} 
+        </h1>
+        {% endif %}
+        {% else %}
+        {% if template.name == 'index' %} 
+        <h1 class="h1_homepage">
+          {% endif %}
+          <a class="navbar-brand text-logo" href="/">{{ shop.name }}</a>
+          {% if template.name == 'index' %} 
+        </h1>
+        {% endif %}
+        {% endif %}
+        {% if section.settings.header_style != 'header1' %}
+      </div><!-- ./visible-ms visible-xs -->
+      {% endif %}
+    </div>
+    <!-- main menu -->
+    <nav class="wsmenu" role="navigation">
+      <ul class="mobile-sub mega_menu wsmenu-list">
+        {% assign firstLevelMenu = linklists[section.settings.header_main_linklist]%}
+
+        {% for link in firstLevelMenu.links %}
+
+        {% assign useMegaMenu = true %}
+        {% for childlink in link.links %}
+        {% if childlink.levels != 1%}
+        {% assign useMegaMenu = false %}
+        {% break %}
+        {% endif %}
+        {% endfor %}
+
+        {% if link.levels == 2 and useMegaMenu == true %}
+
+
+        {% assign child_list_handle_size = link.links.size %}
+
+        {% assign size_of_grand_child = "" %}
+        {% assign size_of_grand_child_sum = 0 %}
+
+        {% for childlink_toget_count in link.links %}        	
+        {% assign size_of_grand_child = size_of_grand_child | append : childlink_toget_count.links.size %}
+        {% assign size_of_grand_child_sum = size_of_grand_child_sum | plus: childlink_toget_count.links.size %}
+        {% if forloop.last == false %}
+        {% assign size_of_grand_child = size_of_grand_child | append : "|" %}
+        {% endif %}      
+        {% endfor %}
+
+        {% if child_list_handle_size == 1 %}
+        {% assign class_menu = "singlemenu" %} 
+        {% elsif child_list_handle_size == 2 %}
+        {% assign class_menu = "halfmenu" %}
+        {% assign class_child_menu = "col-lg-6 col-md-6 col-sm-6 mb20d" %}
+        {% elsif child_list_handle_size == 3 %}
+        {% assign class_menu = "quartermenu" %}
+        {% assign class_child_menu = "col-lg-4 col-md-4 col-sm-4 mb20d" %}
+        {% elsif child_list_handle_size >= 4 %}
+        {% assign class_menu = "" %}
+        {% assign class_child_menu = "col-lg-3 col-md-3 col-sm-3 mb20d" %}
+        {% endif %}
+
+        {% if link.links != blank %}
+        <li class="mega_menu_container"><a href="{{ link.url }}"{% if link.links != blank %}class="twin"{% endif %} aria-controls="megamenu_items-{{link.handle}}" aria-haspopup="true" aria-expanded="false">{{ link.title | escape }}<span class="arrow"></span></a>
+          {% if size_of_grand_child_sum == 0 %}
+          <ul class="wsmenu-submenu" id="megamenu_items-{{link.handle}}">
+            {% for childlink in link.links %}
+            <li><a data-delay="500" href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="megamenu clearfix {% if child_list_handle_size > 4 and child_list_handle_size == 2 %}halfdiv{% else %}{{class_menu}}{% endif %}">
+            <ul class="wsmenu-sub-list" id="megamenu_items-{{link.handle}}">
+              {% for childlink in link.links %}
+              <li class="{{class_child_menu}} link-list"><h5><a href="{{ childlink.url }}" aria-controls="megamenu_items-{{childlink.handle}}" aria-haspopup="true" aria-expanded="false">{{ childlink.title | escape }}</a></h5>
+                {% if childlink.links != blank %}
+                <ul id="megamenu_items-{{childlink.handle}}">
+                  {% for grandchildlink in childlink.links %}
+                  <li class="col-lg-12 col-md-12 col-sm-12 link-list"><a href="{{ grandchildlink.url }}" >{{ grandchildlink.title | escape }}</a>
+                    {% if grandchildlink.links != blank %}
+                    <ul class="level hidden-mu">
+                      {% for grandgrandchildlink in grandchildlink.links %}
+                      <li class="{{class_child_menu}} link-list"><a href="{{ grandgrandchildlink.url }}">{{ grandgrandchildlink.title | escape }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+                </ul>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}   
+        </li>
+        {% else %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% endif %}
+
+        {% else %}
+
+        {% if link.links != blank %}
+        <li  class="mega_menu_simple_container has-submenu"><a href="{{ link.url }}" aria-controls="megamenu_items-{{link.handle}}" aria-haspopup="true" aria-expanded="false">{{ link.title | escape }}<span class="arrow"></span></a>
+          <ul id="megamenu_items-{{link.handle}}" class="wsmenu-submenu">
+            {% for childlink in link.links %}
+            {% if childlink.links != blank %}
+            <li class="has-submenu-sub"><a href="{{ childlink.url }}" aria-controls="megamenu_items-{{childlink.handle}}" aria-haspopup="true" aria-expanded="false">{{ childlink.title | escape }}<span class="left-arrow"></span></a>
+              <ul class="wsmenu-submenu-sub" id="megamenu_items-{{childlink.handle}}">
+                {% for grandchildlink in childlink.links %}  
+                {% if grandchildlink.links != blank %}
+                <li class="has-submenu-sub-sub"><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | escape }}<span class="left-arrow"></span></a>
+                  <ul class="wsmenu-submenu-sub-sub">
+                    {% for grandgrandchildlink in grandchildlink.links %}
+                    <li><a href="{{ grandgrandchildlink.url }}">{{ grandgrandchildlink.title | escape }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | escape }}</a></li>
+                {%endif%} 
+                {% endfor %}
+              </ul>
+            </li>
+            {% else %}
+            <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+            {%endif%}
+            {% endfor %}
+          </ul>  
+        </li>
+        {% else %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {%endif%}
+
+
+        {%endif%}  
+        {% endfor %}
+        
+      </ul>
+    </nav>
+    {% comment %}
+    <ul class="hidden-xs nav navbar-nav navbar-right">
+      <li class="dropdown-grid no-open-arrow ">
+        <a data-toggle="dropdown" data-href="/cart" href="javascript:void(0);" class="dropdown-toggle cart-popup" aria-expanded="true"><div class="cart-icon"><span class="count{% if cart.item_count < 1 %} hidden{% endif %}">{{ cart.item_count }}</span><i class="fa fa-shopping-cart"></i></div></a>
+        <div class="dropdown-grid-wrapper hidden">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-9 col-md-7" role="menu">
+            {% include 'menu-cart' %}
+          </div>
+        </div>
+      </li>
+      {% if shop.customer_accounts_enabled %}
+      <li class="dropdown-grid no-open-arrow">
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="true"><span class="icons"><i class="fa fa-user"></i></span></a>
+        <div class="dropdown-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5 col-md-4 col-lg-3" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      <li class="dropdown-grid no-open-arrow">
+        {% if section.settings.search_style == 'bar' %}
+        <div class="fixed-search">    
+          {% include 'menu-search' %}
+        </div>
+        {% else %}
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="false"><span class="icons"><i class="fa fa-search"></i></span></a>
+        <div class="dropdown-grid-wrapper" role="menu">
+          <div class="dropdown-menu fixed_menu col-sm-4 col-lg-3 pl-pr-15">
+            {% include 'menu-search' %}
+          </div>
+        </div>
+        {% endif %}
+      </li>
+    </ul>
+    {% endcomment %}
+  </nav>
+</div>

@@ -1,0 +1,43 @@
+<div class="container">
+  {% if section.settings.page_title != blank and section.settings.show_page_title %}
+   <h3 class="mb20">
+    {{ pages[section.settings.page_title].title | escape }}
+   </h3>
+  {% endif %}
+<div class="h_row_content">
+  <div class="rte mb30 no-padding">
+    {% if section.settings.page_title != blank %}
+    {{ pages[section.settings.page_title].content }}
+    {% else %}
+    <p>{{ 'home_page.sections.no_page' | t }}</p>
+    {% endif %}
+  </div>
+</div>
+</div>
+{% schema %}
+  {
+    "name": "Page content",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This section allows you to show the content of any page you have created directly on your home page."
+      },
+      {
+        "type": "page",
+        "id": "page_title",
+        "label": "Choose page"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_page_title",
+        "label": "Show page title"
+      }	
+    ],
+    "presets": [
+        {
+          "name": "Page",
+          "category": "Text"
+        }
+      ]
+  }
+{% endschema %}

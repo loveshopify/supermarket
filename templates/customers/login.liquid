@@ -1,0 +1,132 @@
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="title clearfix">
+          <h1>{{ 'customer.login.title' | t }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row mt20">
+      <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+        <div class="sfbox box-login">
+
+          <div class="alert alert-success" id="resetSuccess" style="display:none;">{{ 'customer.recover_password.success' | t }}</div>
+
+          {% form 'customer_login' %}
+
+          {% include 'form-errors-custom' %}
+          <div class="frm">
+            <label for="customer_email" class="lbltxt">{{ 'customer.login.email' | t }}</label>
+            <input type="email" value="" name="customer[email]" id="customer_email" class="txtbox" {% if form.errors contains "email" %} class="error"{% endif %} autofocus>
+          </div>
+
+
+          {% if form.password_needed %}
+          <div class="frm">
+            <label for="customer_password" class="lbltxt">{{ 'customer.login.password' | t }}</label>
+            <input type="password" value="" name="customer[password]" id="customer_password" class="txtbox" {% if form.errors contains "password" %} class="error"{% endif %}>
+            <p class="text-right"><a href="#" id="forgot_password" onclick="showRecoverPasswordForm();return false;">{{ 'customer.login.forgot_password' | t }}</a></p>
+          </div>
+          {% endif %}
+
+          <div class="row">
+            <div class="col-sm-5 col-ms-6 col-xs-4 log-buttons-wrapper"><p><input type="submit" class="btn_c" value="{{ 'customer.login.sign_in' | t }}"></p></div>
+<!--             <a href="/account/logout" class="btn_c logout">Log out</a> -->
+            <div class="col-sm-7 col-ms-6 col-xs-8 text-right sign-in">{{ 'customer.login.new_customer' | t }} <a href="/account/register">{{ 'customer.login.sign_up_html' | t }}</a></div>
+          </div>
+
+          {% endform %}
+
+
+
+          <div id="recover_password" style="display: none;">
+            <h2>{{ 'customer.recover_password.title' | t }}</h2>
+            <p class="recover-notice">{{ 'customer.recover_password.subtext' | t }}</p>
+
+            {% form 'recover_customer_password' %}
+
+            {% include 'form-errors-custom' %}
+
+            {% if form.posted_successfully? %}
+            {% assign reset_success = true %}
+            {% endif %}
+
+            <div class="frm reset-password">
+              <label for="recover-email" class="lbltxt">{{ 'customer.recover_password.email' | t }}</label>
+              <input type="email" value="" name="email" id="recover-email" class="txtbox">
+            </div>
+
+            <div class="submit-form submit-password">
+              <p><input type="submit" class="btn_c" value="{{ 'customer.recover_password.submit' | t }}">
+
+                <a class="info_btn" href="#" onclick="hideRecoverPasswordForm();return false;">{{ 'customer.recover_password.cancel' | t }}</a></p>
+
+              {% endform %}
+
+              {% if shop.checkout.guest_login %}
+              <hr>
+
+              <h2>Continue as a guest</h2>
+
+              {% form 'guest_login' %}
+              <input type="submit" class="btn_c" value="{{ 'customer.login.guest_continue' | t }}">
+              {% endform %}
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .log-buttons-wrapper p{
+	display: flex;
+	flex-direction: row;
+	width: 300px;
+  }
+  .log-buttons-wrapper .logout{
+	margin-left: 20px !important;
+  }
+{% endstyle %}
+
+<script>
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+
+  // reset_success is only true when the reset form is
+  {% if reset_success %}
+  document.getElementById('resetSuccess').style.display = 'block';
+  {% endif %}
+  //Logout Redirection
+  $('.btn_c.logout').on('click', function (e) {
+      var now = new Date();
+    var expires_date = new Date( now.getTime() + 30000 );
+//     document.cookie = 'logoutredirecturl=' + window.location.href  + ';expires=' + expires_date.toGMTString()+';path=/';
+  });
+  $(document).ready(function (){
+      cks = document.cookie.split( ';' );
+    for(i=0;i<cks.length;i++) {
+      parts = cks[i].split('=');
+      if( parts[0].indexOf('logoutredirecturl')!= -1 ){
+          document.cookie = parts[0] + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          window.location.replace(parts[1]);
+
+      }
+    }
+  });
+</script>

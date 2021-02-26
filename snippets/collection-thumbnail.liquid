@@ -1,0 +1,108 @@
+{%- if col == "2_col" -%}
+  {% assign col_class = 6 %}
+{%- elsif col == "3_col" -%}
+  {% assign col_class = 4 %}
+{%- elsif col == "4_col" -%}
+  {% assign col_class = 3 %}
+{%- elsif col == "6_col" -%}
+  {% assign col_class = 2 %}
+{%- endif -%}
+
+
+{%- if collection.products_count != 1 -%}
+	{% assign product_counter = "products" %}
+{%- else -%}
+	{% assign product_counter = "product" %}
+{%- endif -%}
+
+
+{%- if collection.title != blank -%}
+  {% assign collection_title = collection.title | escape %}
+  {% assign collection_count = collection.products_count | escape %}
+{%- else -%}
+  {% assign collection_title = "Collection " | append: index %}
+  {% assign collection_count = 0 %}
+{%- endif -%}
+
+
+
+
+<div class="col-md-{{col_class}} col-lg-{{col_class}} col-sm-6 col-xs-6 mb30 element">
+  <div class="main_box">
+    <div class="box_1">
+      <div class="product-image">
+       
+        <a href="{{ collection.url }}" title="Browse our {{ collection_title }} collection">  
+  		 </a>
+           {%- if collection.title == blank -%}
+   			 {{ 'collection-' | append: svg_index | placeholder_svg_tag }}
+  			{%- else -%}
+
+          {%- if image_type == 'featured' -%}
+
+          {% assign max_img_width = collection.image.width | append: "px" %}
+          {% assign max_img_height = 200 %}
+          {% assign product_img_width = collection.image.width %}
+          {% assign product_img_height = collection.image.height%}
+          {% assign product_img_ratio = collection.image.aspect_ratio %}
+          {% if max_img_height < product_img_height %}
+          {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+          {% else %}
+          {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+          {% endif %}
+          {% if max_img_width == "0px" %}
+          {% assign max_img_width = '100%;width:auto;'%}
+          {% endif %}
+
+          <img class="lazyload blur-up"
+               src="{{ collection | img_url: '600x' }}"
+               data-srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x"Z
+               alt="{{ collection_title | escape }}"
+               style="max-width: {{max_img_width}}"/>  
+          <noscript>
+            <img alt="{{ collection_title | escape }}" srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x" >
+          </noscript>
+          {% else %}
+
+          {% assign max_img_width = collection.products.first.featured_image.width | append: "px" %}
+          {% assign max_img_height = 200 %}
+          {% assign product_img_width = collection.products.first.featured_image.width %}
+          {% assign product_img_height = collection.products.first.featured_image.height%}
+          {% assign product_img_ratio = collection.products.first.featured_image.aspect_ratio %}
+          {% if max_img_height < product_img_height %}
+          {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+          {% else %}
+          {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+          {% endif %}
+          {% if max_img_width == "0px" %}
+          {% assign max_img_width = '100%;width:auto;'%}
+          {% endif %}
+
+          <img class="lazyload blur-up"
+               src="{{ collection.products.first.featured_image  | img_url: '600x' }}"
+               data-srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}"
+               alt="{{ collection_title | escape }}"
+               style="max-width: {{max_img_width}}"/>  
+          <noscript>
+            <img srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}">
+          </noscript>
+          {% endif %}
+          
+         
+
+          <div class="spinner-cube">
+            <div class="loadFacebookG"></div>
+          </div>	
+           {%- endif -%}
+
+     
+      </div>
+    </div>
+    <div class="desc">
+      <h5><a href="{{ collection.url }}" class="collection-item__title">{{ collection_title }}</a></h5>
+      {%- if count_products -%}
+      <p class="collection-thumb-count">{{ collection_count }} {{ product_counter }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

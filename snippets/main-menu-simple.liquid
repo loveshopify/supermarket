@@ -1,0 +1,128 @@
+<div id="nav">
+  <nav class="navbar" role="navigation">
+    <div class="navbar-header">
+      <a href="#" class="visible-ms visible-xs pull-right navbar-cart" id="wsnavtoggle"><div class="cart-icon"><i class="fa fa-bars"></i></div></a>
+      {% if shop.customer_accounts_enabled %}
+      <li class="dropdown-grid no-open-arrow visible-ms visible-xs account-icon-mobile navbar-cart">
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle navbar-cart" aria-expanded="true"><span class="icons"><i class="fa fa-user"></i></span></a>
+        <div class="dropdown-grid-wrapper mobile-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      <a href="/cart" data-href="/cart" class="visible-ms visible-xs pull-right navbar-cart cart-popup"><div class="cart-icon"><span class="count{% if cart.item_count < 1 %} hidden{% endif %}">{{ cart.item_count }}</span><i class="fa fa-shopping-cart"></i></div></a>
+       {% if section.settings.show_search_bar_mobile %}
+        <div class="visible-mobile-sm mobile-landscape-search"> 
+          <div class="fixed-search navbar-cart">    
+          {% include 'menu-search' %}
+          </div>
+        </div>
+      {% else %}
+      <a href="/search" class="visible-ms visible-xs pull-right navbar-cart"><div class="cart-icon"><i class="fa fa-search"></i></div></a>
+      {% endif %}
+      {% if section.settings.header_style != 'header1' %}
+      <div class="visible-ms visible-xs">
+        {% endif %}
+        {% if section.settings.logo != blank %}
+        
+        {% if template.name == 'index' %} 
+        	<h1>
+        {% endif %}
+
+              <a class="navbar-brand" href="/" style="max-width:{{section.settings.logo_max_width | plus: 15 | append: "px"}}">
+                <img src="{{ section.settings.logo | img_url: logo_scale_width }}"
+                     alt="{% if  section.settings.logo.alt != blank %} {{ section.settings.logo.alt}} {% else %}{{ shop.name }} {%endif %}" />
+              </a>
+
+          {% if template.name == 'index' %} 
+              </h1>
+          {% endif %}
+        {% else %}
+          {% if template.name == 'index' %} 
+              <h1 class="h1_homepage">
+          {% endif %}
+         <a class="navbar-brand text-logo" href="/">{{ shop.name }}</a>
+           {% if template.name == 'index' %} 
+             </h1>
+          {% endif %}
+        {% endif %}
+        {% if section.settings.header_style != 'header1' %}
+      </div><!-- ./visible-ms visible-xs -->
+      {% endif %}
+    </div>
+    <!-- code here -->
+    <nav class="wsmenu clearfix multi-drop" role="navigation">
+      <ul class="mobile-sub wsmenu-list mega_menu_simple_menu">
+        {% for link in linklists[section.settings.header_main_linklist].links %}
+        {% if link.links != blank %}
+        <li  class="has-submenu"><a href="{{ link.url }}" aria-controls="megamenu_items-{{link.handle}}" aria-haspopup="true" aria-expanded="false">{{ link.title | escape }}<span class="arrow"></span></a>
+          <ul id="megamenu_items-{{link.handle}}" class="wsmenu-submenu">
+            {% for childlink in link.links %}
+              {% if childlink.links != blank %}
+              <li class="has-submenu-sub"><a href="{{ childlink.url }}" aria-controls="megamenu_items-{{childlink.handle}}" aria-haspopup="true" aria-expanded="false">{{ childlink.title | escape }}<span class="left-arrow"></span></a>
+                <ul class="wsmenu-submenu-sub" id="megamenu_items-{{childlink.handle}}">
+                  {% for grandchildlink in childlink.links %}  
+                    {% if grandchildlink.links != blank %}
+                      <li class="has-submenu-sub-sub"><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | escape }}<span class="left-arrow"></span></a>
+                        <ul class="wsmenu-submenu-sub-sub">
+                          {% for grandgrandchildlink in grandchildlink.links %}
+                          <li><a href="{{ grandgrandchildlink.url }}">{{ grandgrandchildlink.title | escape }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                      {% else %}
+                      <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | escape }}</a></li>
+                    {%endif%} 
+                  {% endfor %}
+                </ul>
+              </li>
+              {% else %}
+         	   <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+         	  {%endif%}
+            {% endfor %}
+          </ul>  
+        </li>
+        {% else %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {%endif%}
+        {% endfor %}
+      </ul>
+    </nav>
+    <ul class="hidden-xs nav navbar-nav navbar-right">
+      <li class="dropdown-grid no-open-arrow">
+        <a data-toggle="dropdown" href="/cart" data-href="/cart" class="dropdown-toggle cart-popup" aria-expanded="true"><div class="cart-icon"><span class="count{% if cart.item_count < 1 %} hidden{% endif %}">{{ cart.item_count }}</span><i class="fa fa-shopping-cart"></i></div></a>
+        <div class="dropdown-grid-wrapper hidden">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-9 col-md-7" role="menu">
+            {% include 'menu-cart' %}
+          </div>
+        </div>
+      </li>
+      {% if shop.customer_accounts_enabled %}
+      <li class="dropdown-grid no-open-arrow">
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="true"><span class="icons"><i class="fa fa-user"></i></span></a>
+        <div class="dropdown-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5 col-md-4 col-lg-3" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      <li class="dropdown-grid no-open-arrow">
+        {% if section.settings.search_style == 'bar' %}
+        <div class="fixed-search">    
+          {% include 'menu-search' %}
+        </div>
+        {% else %}
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="false"><span class="icons"><i class="fa fa-search"></i></span></a>
+        <div class="dropdown-grid-wrapper" role="menu">
+          <div class="dropdown-menu fixed_menu col-sm-4 col-lg-3 pl-pr-15">
+            {% include 'menu-search' %}
+          </div>
+        </div>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+</div>

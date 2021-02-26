@@ -1,0 +1,38 @@
+{% assign number_of_related_products_to_show = 12 %}
+{% assign img_size = "350x"%}
+{% assign number_of_related_products_to_fetch = number_of_related_products_to_show | plus: 1 %}
+
+{% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
+{% assign found_a_collection = false %}
+{% for c in product.collections %}
+{% if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 %}
+{% assign found_a_collection = true %}
+{% assign collection = c %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if collection and collection.products_count > 1 %}
+<div class="h_row_4">
+  <div class="clearfix">
+    <h3>{{ 'products.general.related_products' | t }}</h3>
+    {% assign current_product = product %}
+    {% assign current_product_found = false %}
+  </div>
+  <div class="carosel product_c">
+    <div class="row"> 
+      <div id="featured-products-section-{{ section.id }}" class="owl-carousel owl-theme {% if settings.align_height %} use_align_height {% else %} use_image_height {% endif %}">
+        {% for product in collection.products limit: number_of_related_products_to_fetch %}
+        {% if product.handle == current_product.handle %}
+        {% assign current_product_found = true %}
+        {% else %}
+        {% unless current_product_found == false and forloop.last %}
+        {% include 'product-loop' %}
+        {% endunless %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

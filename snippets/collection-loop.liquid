@@ -1,0 +1,69 @@
+{% unless grid_item_width %}
+{% assign grid_item_width = '4' %}
+{% endunless %}
+
+
+{% if settings.align_height %} 
+  {% assign max_img_height = settings.collection_height %}
+{% endif %}
+
+{% if collection.image %}
+  {% assign collection_img_width = collection.image.width %}
+  {% assign collection_img_height = collection.image.height %}
+  {% assign collection_img_ratio = collection.image.aspect_ratio %}
+  {% if max_img_height < collection_img_height %}
+  	{% assign max_img_width = max_img_height | times: collection_img_ratio | append:"px"%}
+	{% else %}
+	{% assign max_img_width = collection_img_height | times: collection_img_ratio | append:"px"%}
+	{% endif %}
+{% else %}
+  {% assign product_img_width = collection.products.first.featured_image.width %}
+  {% assign product_img_height = collection.products.first.featured_image.height %}
+  {% assign product_img_ratio = collection.products.first.featured_image.aspect_ratio %}
+  {% if max_img_height < product_img_height %}
+    {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+    {% else %}
+    {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+  {% endif %}
+
+{% endif %}
+
+
+<div class="main_box">
+  <div class="box_1">
+    {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+    <a href="{{ collection.url }}" title="Browse our {{ collection_title }} collection">  
+       
+      
+      {% if collection.image %}
+         <img class="lazyload blur-up"
+             src="{{ collection | img_url: '300x' }}" 
+             data-srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x"Z
+             alt="{{ collection_title | escape }}"
+              style="max-width: {{max_img_width}}"/>        
+      	  <noscript>
+            <img src="{{ collection | img_url: '300x' }}"  alt="{{ collection_title | escape }}" srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x" >
+        </noscript>
+      {% else %}
+         <img class="lazyload blur-up"
+             src="{{ collection.products.first.featured_image  | img_url: '300x' }}"
+             data-srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}"
+             alt="{{ collection_title | escape }}"
+              style="{% if max_img_width == '0px' %} width: auto; {% else %} max-width: {{max_img_width}} {% endif %}"/>       
+      	 <noscript>
+        <img src="{{ collection.products.first.featured_image  | img_url: '300x' }}" srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}">
+        </noscript>
+      {% endif %}
+      <div class="spinner-cube">
+           <div class="loadFacebookG"></div>
+        </div>	      
+      
+      </a>
+  </div>
+  <div class="desc">
+    <h5><a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">{{ collection.title | escape }}</a></h5>
+    {% if section.settings.show_item_count %}
+    	<p>({{ 'collections.general.items_with_count' | t: count: collection.all_products_count }})</p>
+ 	{% endif %}
+  </div>
+</div>

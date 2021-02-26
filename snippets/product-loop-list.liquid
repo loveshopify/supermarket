@@ -1,0 +1,91 @@
+{% assign on_sale = false %}
+{% if product.available and product.compare_at_price > product.price %}
+{% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+{% assign sold_out = false %}
+{% endif %}
+
+{% assign max_img_width = product.featured_image.width | append: "px" %}
+{% assign max_img_height = 200 %}
+{% assign product_img_width = product.featured_image.width %}
+{% assign product_img_height = product.featured_image.height%}
+{% assign product_img_ratio = product.featured_image.aspect_ratio %}
+{% if max_img_height < product_img_height %}
+{% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+{% else %}
+{% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+{% endif %}
+{% if max_img_width == "0px" %}
+{% assign max_img_width = '100%;width:auto;'%}
+{% endif %}
+
+<div class="main_box">
+  <div class="box_1">
+    <div class="col-sm-4">
+      <div class="list-image">
+           <div class="spinner-cube">
+           <div class="loadFacebookG"></div>
+        </div>	
+      <a href="{{ product.url | within: collection }}">
+        <noscript>
+        <img src="{{ product.featured_image.src | product_img_url: '300x'}}" srcset="{{ product.featured_image.src | product_img_url: '600x'}} 1x, {{ product.featured_image.src | product_img_url: '600x', scale:2}} 2x, {{ product.featured_image.src | product_img_url: '600x', scale:3}} 3x" alt="{{ product.featured_image.alt | escape }}" class="img-responsive">
+        </noscript>
+        <img class="lazyload img-responsive"
+             src="{{ product.featured_image.src | product_img_url: '300x'}}"
+             data-srcset="{{ product.featured_image.src | product_img_url: '600x'}} 1x, {{ product.featured_image.src | product_img_url: '600x', scale:2}} 2x, {{ product.featured_image.src | product_img_url: '600x', scale:3}} 3x"
+             alt="{{ product.featured_image.alt | escape }}"
+             style="max-width: {{max_img_width}}"/>  
+        </a>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="product-details">
+        {% if on_sale %}
+        <div class="on-sale">{{ 'products.product.sale' | t }}</div>
+        {% endif %}
+        {% if sold_out %}
+        <div class="sold-out">{{ 'products.product.sold_out' | t }}</div>
+        {% endif %}
+        <h2><a href="{{ product.url | within: collection }}">{{ product.title | escape }}</a></h2>
+        {% if section.settings.show_grid_type %}
+ 		   <p>{{ product.type }}</p>
+   		{% endif %}
+        <p>{{ product.description | strip_html | truncatewords:30 }}</p>
+        <div class="price">
+          {% unless product.price_max == 0 and settings.custom_price0_text != blank %}
+          	<span class="money">{% if product.price_varies %}{{ 'products.product.price_from' | t }}{% endif %} {{ product.price | money }} {% if on_sale %}</span><span class="compare-price money">{{ product.compare_at_price | money }}</span>{% endif %}
+          {% else %}  
+          <span>
+            {{settings.custom_price0_text }}
+          </span> 
+        {% endunless %}	
+        </div>
+
+        {% form 'product', product %}
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}" /> 
+          {% if product.available and product.variants.size == 1 %}         
+            {% if section.settings.show_smart_checkout%}
+            <a href="{{ product.url | within: collection }}" class="collection_list_smart_more_info">{{ 'products.product.more_info' | t }}</a>
+             {% unless product.price_max == 0 and settings.hide_price0_box_and_button %} 
+        	<div class="product_payments_btns product_payments_btns_coll_list  {% if section.settings.show_collection_sidebar %} sidebar_enabled_row{% endif %}">
+              <input type="submit" value="{{ 'products.product.add_to_cart' | t }}" class="btn_c" />
+              {{ form | payment_button }}
+            </div>
+              {% endunless %}
+            {% else %}
+         	{% unless product.price_max == 0 and settings.hide_price0_box_and_button %} 
+            	<input type="submit" value="{{ 'products.product.add_to_cart' | t }}" class="btn_c" />
+        	{% endunless %}   
+          <a href="{{ product.url | within: collection }}" class="btn_c info_btn">{{ 'products.product.more_info' | t }}</a>            
+            {% endif %}
+          {% else %}
+          <a href="{{ product.url | within: collection }}" class="btn_c">{{ 'products.product.more_info' | t }}</a>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>

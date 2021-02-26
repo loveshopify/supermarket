@@ -1,0 +1,94 @@
+<section id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="title clearfix">
+          <h1>{{ 'customer.account.title' | t }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-8">
+        {% paginate customer.orders by 20 %}
+        <div class="sfbox box-order-history">
+          <h4 class="sfbox-title">{{ 'customer.orders.title' | t }}</h4>
+          {% if customer.orders.size != 0 %}
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{ 'customer.orders.order_number' | t }}</th>
+                <th>{{ 'customer.orders.date' | t }}</th>
+                <th>{{ 'customer.orders.payment_status' | t }}</th>
+                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                <th>{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in customer.orders %}
+              <tr>
+                <td>{{ order.name | link_to: order.customer_url }}</td>
+                <td>{{ order.created_at | date: "%b %d, %Y" }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_price | money }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {% else %}
+
+          <p>{{ 'customer.orders.none' | t }}</p>
+
+          {% endif %}
+        </div>
+          {% if paginate.pages > 1 %}
+            {% include 'pagination-custom' %}
+            {% endif %}
+        {% endpaginate %}
+      </div>
+      <div class="col-sm-4">
+        <div class="sfbox box-account-details">
+          <h4 class="sfbox-title">{{ 'customer.account.details' | t }}</h4>
+          <p><strong>{{ customer.name }}</strong></p>
+
+          {% if customer.default_address != nil %}
+          <p>
+            {{ customer.default_address.address1 }}<br>
+
+            {% if customer.default_address.address2 != "" %}
+            {{ customer.default_address.address2 }}<br>
+            {% endif %}
+
+            {% if customer.default_address.city != "" %}
+            {{ customer.default_address.city }}<br>
+            {% endif %}
+
+            {% if customer.default_address.province_code != "" %}
+            {{ customer.default_address.province_code | upcase }}<br>
+            {% endif %}
+
+            {% if customer.default_address.zip != "" %}
+            {{ customer.default_address.zip | upcase }}<br>
+            {% endif %}
+
+            {% if customer.default_address.country != "" %}
+            {{ customer.default_address.country }}<br>
+            {% endif %}
+
+            {% if customer.default_address.phone != "" %}
+            {{ customer.default_address.phone }}
+            {% endif %}
+          </p>
+          {% endif %}
+
+          <p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+          
+          <a href="#" class="change-password">Change password</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

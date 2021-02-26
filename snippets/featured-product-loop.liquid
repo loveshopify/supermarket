@@ -1,0 +1,43 @@
+{% assign on_sale = false %}
+{% if product.available and product.compare_at_price > product.price %}
+{% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+{% assign sold_out = false %}
+{% endif %}
+
+<li class="element">
+  <div class="main_box">
+    <div class="box_1"> 
+      {% if on_sale %}
+      <div class="on-sale">Sale</div>
+      {% endif %}
+      {% if sold_out %}
+      <div class="sold-out">Sold Out</div>
+      {% endif %}
+      <a href="{{ product.url | within: collection }}">
+        <img src="{{ product.featured_image.src | product_img_url: '800x' }}" alt="{{ product.featured_image.alt | escape }}" />
+      </a>
+      <form method="post" action="/cart/add">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+        <div class="overlay"> 
+          {% if product.available and product.variants.size == 1 %}
+          <input type="submit" value="Add to cart" class="btn_c cart_btn_1" /> 
+          {% elsif product.available and product.variants.size > 1 %}
+          <a href="{{ product.url | within: collection }}" class="btn_c cart_btn_1">Select Options</a>
+          {% else %}
+          <input type="submit" value="Sold Out" class="btn_c cart_btn_1 disabled" />
+          {% endif %}
+          <a href="{{ product.url | within: collection }}" class="btn_c info_btn">More info</a>
+        </div>
+      </form>
+    </div>
+    <div class="desc">
+      <h5><a href="{{ product.url | within: collection }}">{{ product.title | escape }}</a></h5>
+      <p>{{ product.type }}</p>
+      <div class="price">{% if on_sale %}<span class="compare-price">{{ product.compare_at_price | money }}</span>{% endif %} {{ product.price | money }}</div>
+    </div>
+  </div>
+</li>

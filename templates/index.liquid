@@ -1,0 +1,7 @@
+{% if settings.use_slider and settings.slideshow_width == 'full' %}
+{% include 'home-slider' %}
+{% endif %}
+
+<div id="content">
+{{ content_for_index }}
+</div>

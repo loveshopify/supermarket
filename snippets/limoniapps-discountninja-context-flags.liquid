@@ -1,0 +1,106 @@
+{% comment %}V4.0.1 - May 2020
+This liquid snippet is used by Discount Ninja, an app from Limoni Apps
+Do not modify or remove this snippet, this snippet can be overwritten when the app is upgraded
+{% endcomment %}
+
+{
+    //Version
+    Version: "v4.0.1",
+
+    //VariantPriceUpdateRequiresDelay
+    //Default: false
+    //If set the app waits before updating the variant price after a new variant is selected
+    //This is useful if the shop's theme executes JavaScript immediately after a new variant is selected
+    //that updates the variant price html
+    VariantPriceUpdateRequiresDelay: false,
+
+    //ProductsAreLoadedAsynchronously
+    //Default: false
+    //If set the app waits for prices on the collection page 
+    //This is useful if the shop loads products (or prices for products) asynchronously (search and filter apps)
+    ProductsAreLoadedAsynchronously: false,
+
+    //ThemeOverridesReloadPageAfterCartAdjustments
+    //Default: true
+    //Instructs the app to override the ReloadPageAfterCartAdjustments flags based on the default settings of the theme
+    ThemeOverridesReloadPageAfterCartAdjustments: true,
+
+    //ReloadPageAfterCartAdjustmentsOnCart
+    //Default: true
+    //Instructs the app to reload the cart page when a gift has been added to the cart or the rows of a cart are split
+    ReloadPageAfterCartAdjustmentsOnCart: true,
+
+    //ReloadPageAfterCartAdjustments
+    //Default: true
+    //Instructs the app to reload the page when a gift has been added to the cart or the rows of a cart are split
+    ReloadPageAfterCartAdjustments: true,
+
+    //CallbackAfterReloadPageForCartAdjustments
+    //Default: null
+    //Instructs the app to execute a callback after reloading the page when a gift has been added to the cart or the rows of a cart are split
+    CallbackAfterReloadPageForCartAdjustments: null,
+
+    //DrawerCartRefreshMethod
+    //Default: null
+    //Instructs the app to execute this method when a gift has been added to the cart or the rows of a cart are split
+    DrawerCartRefreshMethod: null,
+
+    //EnableAddToCartHook
+    //Default: false
+    //Instructs the app to replace the implementation of the add to cart button on the product page with logic to capture the event
+    EnableAddToCartHook: false,
+
+    //UnregisterThirdPartyCheckoutClickEvents
+    //Default: false
+    //Instructs the app to remove any event handlers listening to the submit event of checkout forms
+    //This can help Discount Ninja to redirect to the advanced checkout when other apps are also subscribed to the submit of the checkout form
+    //Note: the event handlers are removed before the app registers its own event handler
+    //      other apps can register other event handlers after this
+    UnregisterThirdPartyCheckoutClickEvents: false,
+
+    //ReplaceDefaultCheckoutEventsOnButtons
+    //Default: false
+    //Instructs the app to remove any event handlers listening to the click or touch events of checkout buttons
+    //Note: the event handlers are removed before the app registers its own event handler
+    //      other apps can register other event handlers after this
+    ReplaceDefaultCheckoutEventsOnButtons: false,
+
+    //ReplaceDefaultCheckoutEventsOnLinks
+    //Default: true
+    //Instructs the app to remove any event handlers listening to the click or touch events of checkout links
+    //Note: the event handlers are removed before the app registers its own event handler
+    //      other apps can register other event handlers after this
+    ReplaceDefaultCheckoutEventsOnLinks: true,
+
+    //CustomCheckoutButton
+    //Default: false
+    //Instructs the app to hide checkout buttons marked with the limoniapps-discountninja-checkoutbutton-hide css class
+    //and show those with the limoniapps-discountninja-checkoutbutton-show css class
+    //This can be useful if the standard checkout button is redirecting to the standard checkout because the app
+    //is unable to cancel the standard behavior of the checkout button
+    CustomCheckoutButton: false,
+
+    //StickyBarShouldPushSelectors
+    //Default: null
+    //Instructs the app to move custom elements down when the sticky bar is positioned at the top
+    //Expects a comma separated list with the jQuery selectors for those elelements.
+    //Example: '#fsb_background, .privy-tab-container' 
+    StickyBarShouldPushSelectors: null,
+
+    //DelayCheckoutMilliseconds
+    //Default: 0
+    //The app polls Shopify services to ensure the checkout is ready before redirecting.
+    //Use this setting to set a delay in milliseconds if the above mentioned system fails (e.g. 500).
+    DelayCheckoutMilliseconds: 0,
+
+    //AllowCancelCheckoutByForm
+    //Default: true
+    //If set to true, this instructs the app to cancel submit events on forms when a Discount Ninja checkout is in progress.
+    AllowCancelCheckoutByForm: true,
+
+    //WaitForProductCards
+    //Default: false
+    //If set to true, this instructs the app to wait for product cards in a collection to be available before changing prices.
+    //This helps to show correct prices for dynamically loaded collection pages
+    WaitForProductCards: false
+}

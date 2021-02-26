@@ -1,0 +1,87 @@
+{% include 'advanced-tag-loop' %}
+
+{% unless template == 'index' or template == 'cart' %}
+<ol class="breadcrumb">
+  <li><a href="/" title="{{ 'general.breadcrumbs.home' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+
+  {% if template contains 'product' %}
+
+  {% if collection %}
+  {% if collection.handle %}
+  {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+  <li>{{ collection.title | escape | link_to: url }}</li>
+  {% endif %}
+  {% endif %}
+  <li>{{ product.title | escape }}</li>
+
+  {% elsif template contains 'collection' and collection.handle %}
+
+  {% if current_tags %}
+  {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+  <li>{{ collection.title | escape | link_to: url }}</li>
+  {% for tag in current_tags %}
+  {% assign is_advanced_tag = false %}
+  {% assign additional_tag = true %}
+  {% if forloop.first %}
+  {% assign additional_tag = false %}
+  {% endif %}
+
+
+  {% assign found_tag = false %}
+  {% assign found_tag_text = false %}	
+  
+  {% for cat_item in cat_array %}
+  {% unless cat_item == '' %}
+
+  {% if tag contains cat_item and tag != found_tag_text %}
+  {% assign is_advanced_tag = true %}
+  {% if additional_tag %}
+  <span>+</span>
+  {% endif %}
+  {% assign found_tag = true %}
+  {% assign found_tag_text = tag %}
+  <li>
+    {{ tag | remove_first: cat_item | remove: '_' }}
+  </li>
+  {% endif %}
+  {% endunless %}
+  {% endfor %}
+
+  {% comment %}
+  We have a regular tag that wasn't printed, so print it now
+  {% endcomment %}
+  {% unless found_tag %}
+  <li>{{ tag }}</li>
+  {% endunless %}
+
+  {% endfor %}
+
+  {% else %}
+  <li>{{ collection.title | escape }}</li>
+  {% endif %}
+
+  {% elsif template == 'blog' %}
+
+  {% if current_tags %}
+  <li>{{ blog.title | escape | link_to: blog.url }}</li>
+  <li>{{ current_tags | join: " + " }}</li>
+  {% else %}
+  <li>{{ blog.title | escape }}</li>
+  {% endif %}
+
+  {% elsif template == 'article' %}
+
+  <li>{{ blog.title | escape | link_to: blog.url }}</li>
+  <li>{{ article.title | escape }}</li>
+
+  {% elsif template contains 'page' %}
+
+  <li>{{ page.title | escape }}</li>
+
+  {% else %}
+
+  <li>{{ page_title }}</li>
+
+  {% endif %}
+</ol>
+{% endunless %}

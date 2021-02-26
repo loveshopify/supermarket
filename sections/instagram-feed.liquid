@@ -1,0 +1,121 @@
+{% case section.settings.instagram_grid_width %}
+{% when 2 %}
+{% assign grid_item_width = 6 %}
+{% when 3 %}
+{% assign grid_item_width = 4 %}
+{% when 4 %}
+{% assign grid_item_width = 3 %}
+{% when 5 %}
+{% assign grid_item_width = 15 %}
+{% else %}
+{% assign grid_item_width = 2 %}
+{% endcase %}
+{% case section.settings.instagram_grid_width_tablet %}
+{% when 2 %}
+{% assign grid_item_width_tablet = 6 %}
+{% when 3 %}
+{% assign grid_item_width_tablet = 4 %}
+{% else %}
+{% assign grid_item_width_tablet = 3 %}
+{% endcase %}
+{% case section.settings.instagram_grid_width_mobile %}
+{% when 2 %}
+{% assign grid_item_width_mobile = 6 %}
+{% when 3 %}
+{% assign grid_item_width_mobile = 4 %}
+{% else %}
+{% assign grid_item_width_mobile = 3 %}
+{% endcase %}
+
+<div data-section-id="{{ section.id }}" data-section-type="instagram-feed-section" class="instagram-container">
+<div class="container">
+<div class="h_row_content h_row_5 mb15">
+  <div class="clearfix">
+    <h3 class="mb30">{{ section.settings.title | escape }}</h3>   
+  </div>
+    {% if section.settings.instagram_client_id != blank %}
+	 <div id="Instafeed-{{ section.id }}" class="instagram-grid" data-count="{{ section.settings.instagram_number | strip }}" data-access-token="{{ section.settings.instagram_client_id | escape }}" data-grid="instagram-image col-md-{{grid_item_width}} col-sm-{{ grid_item_width_tablet }} col-xs-{{grid_item_width_mobile}}"></div>
+  {% else %}
+  	<div class="instagram-grid">
+  	  {% capture imgCount %}{{ section.settings.instagram_number }}{% endcapture %}
+   	  {% for i in (1..imgCount) %}	
+    <div class="col-md-{{grid_item_width}} col-sm-{{grid_item_width_tablet}} col-xs-{{grid_item_width_mobile}} intagram-placeholder">
+      <a href="#">
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+       <i class="fa fa-instagram" aria-hidden="true"></i> 
+      </a>
+    </div>
+	  {% endfor %}
+   </div>
+    {% endif %}
+  </div>
+</div>
+</div>
+{% schema %}
+  {
+    "name": "Instagram feed",
+    "settings": [
+	  {
+        "type": "text",
+        "id": "title",
+        "label": "Heading text",
+        "default": "Instagram"
+      },	
+      {
+        "type": "text",
+        "id": "instagram_client_id",
+        "label": "Access token",
+        "info": "[Get your access token](http:\/\/www.milehighthemes.com\/pages\/instagram-integration)"
+      },
+      {
+        "type": "range",
+        "id": "instagram_number",
+        "label": "Total images",
+        "min":       3,
+        "max":        25,
+        "step":       1,
+        "default": 8
+      },
+	  {
+        "type": "header",
+        "content": "Photo grid"
+      },
+      {
+      "type": "range",
+      "id": "instagram_grid_width",
+      "label": "Desktop",
+      "min":       2,
+      "max":        6,
+      "step":       1,
+      "unit":       "col",
+      "default": 3
+      },
+	 {
+      "type": "range",
+      "id": "instagram_grid_width_tablet",
+      "label": "Tablet",
+      "min":       2,
+      "max":        4,
+      "step":       1,
+      "unit":       "col",
+      "default": 3
+    },
+	{
+      "type": "range",
+      "id": "instagram_grid_width_mobile",
+      "label": "Mobile",
+      "min":       2,
+      "max":        4,
+      "step":       1,
+      "unit":       "col",
+      "default": 3
+    }
+    ],
+    "presets": [
+        {
+          "name": "Instagram feed",
+          "category": "Social media"
+        }
+      ]
+  }
+{% endschema %}

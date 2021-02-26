@@ -1,0 +1,303 @@
+<div data-section-id="{{ section.id }}" data-section-type="video-section" class="mb30 {% if section.settings.video_width == 'contained' %}  container{% endif %} video-section-{{ section.id }}"  data-videotype="{{section.settings.video_link.type}}" data-videodisplay="{{section.settings.video_play_option}}"  >
+{% if section.settings.video_play_option == "autoplay_banner" %}
+<div class="{% if section.settings.video_link.type == 'vimeo' %} hidden-ms hidden-xs {% endif %} hero-video-wrapper home-video section-{{ section.id }} hero--{{ section.settings.hero_size }}" id="hero-video-{{ section.id }}">
+  
+  {% if section.settings.video_link != blank %}
+  <div class="vidcover"></div> 
+    {% if section.settings.video_link.type == 'youtube' %}
+        <div class="fullvid" id="video-iframe-mobile-{{section.id}}" data-video-id="{{section.settings.video_link.id}}" ></div>
+    {% else %}
+     <iframe id="video-iframe-{{section.id}}" class="fullvid" src="https://player.vimeo.com/video/{{section.settings.video_link.id}}?muted=1&amp;autoplay=1&amp;autopause=0&amp;loop=1" width="1280" height="720" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+      
+    {% endif %}
+  {% endif %}
+  
+  <div class="{{ section.settings.text_align }} hero-video-caption hero-video-caption-{{section.id}} container">
+    {% if section.settings.title != blank %}
+      <h3 class="mb30 video-title video-title-{{section.id}} ">{{ section.settings.title | escape }}</h3>
+    {% endif %}
+    {% if section.settings.description != blank %}
+    <h4 class="video-description video-description-{{section.id}}">
+   	 {{section.settings.description}}
+    </h4>
+    {% endif %}
+  </div>
+</div>
+  
+   {% if section.settings.video_link.type == 'vimeo' %}
+  <div class="home-video mb30 mt-30 section-{{ section.id }} hero--{{ section.settings.hero_size }}  visible-ms visible-xs">
+    <div class="video-overlay">
+      <div class="">
+        <div class="home-video-wapper hero--{{ section.settings.hero_size }} centered-video-content">
+          <div class="col-md-11 col-md-push-05 col-sm-12 col-xs-12 p_all-15 block-video video__inner">    	   
+            <div class="videoWrapper" style="display:none">         
+              {%- if section.settings.video_link.type == 'vimeo' -%}
+              <a href="javascript:void(0);" class="fa fa-times-circle close-video-btn close-video-btn-{{section.id}} {% if section.settings.video_link.type == 'vimeo' %} close-vimeo-video-btn{% endif %}"></a>             
+              <iframe id="video-iframe-{{section.id}}" src="https://player.vimeo.com/video/{{ section.settings.video_link.id }}?title=0" width="640" height="360" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+              {%- endif -%}
+            </div>
+
+            <div class="{{ section.settings.text_align }} mt30 video_section_text">
+              <h3 class="mb30 video-title">{{ section.settings.title | escape }}</h3>
+              <h4 class="mb30 video-description">{{ section.settings.description }}</h4>
+              <a href="javascript:void(0);" class="popupVideo homepage-video-icon mb30 play-video-btn-{{section.id}}">
+                <span class="icon icon-play">
+                  <svg x="0px" y="0px"
+                       width="97px" height="97px" viewBox="0 0 97 97" enable-background="new 0 0 97 97" >
+                    <path d="M49.084,1.131C22.804,1.131,1.5,22.435,1.5,48.714c0,26.279,21.304,47.583,47.584,47.583
+                             c26.279,0,47.582-21.304,47.582-47.583C96.667,22.435,75.364,1.131,49.084,1.131z M38.118,62.52V34.908l25.93,13.807L38.118,62.52z"
+                          />
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </div>
+    
+   {% endif %}
+  
+  
+{% else %}
+
+<div class="home-video mb30 mt-30 section-{{ section.id }} hero--{{ section.settings.hero_size }}">
+ <div class="video-overlay">
+  <div class="">
+    <div class="home-video-wapper hero--{{ section.settings.hero_size }} centered-video-content">
+        <div class="col-md-11 col-md-push-05 col-sm-12 col-xs-12 p_all-15 block-video video__inner">    	   
+          <div class="videoWrapper" style="display:none">
+          {% if section.settings.video_link != blank %}
+           <a href="javascript:void(0);" class="fa fa-times-circle close-video-btn close-video-btn-{{section.id}}"></a>
+            {%- if section.settings.video_link.type == 'youtube' -%}
+            	<iframe id="video-iframe-{{section.id}}" width="640" height="360" src="https://www.youtube.com/embed/{{ section.settings.video_link.id }}?enablejsapi=1&rel=0&showinfo=0&autoplay=1&loop=1&mute=1" allowfullscreen></iframe>       
+            {%- elsif section.settings.video_link.type == 'vimeo' -%}
+            	<iframe id="video-iframe-{{section.id}}" src="https://player.vimeo.com/video/{{ section.settings.video_link.id }}?title=0" width="640" height="360" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            {%- endif -%}
+          {% else %}
+         	 <iframe width="640" height="360" src="https://www.youtube.com/embed/_9VUPq3SxOc?enablejsapi=1&rel=0&showinfo=0&autoplay=1&loop=1&mute=1" allowfullscreen></iframe>
+          {% endif %}
+        </div>
+          
+          <div class="{{ section.settings.text_align }} mt30 video_section_text">
+            <h3 class="mb30 video-title">{{ section.settings.title | escape }}</h3>
+            <h4 class="mb30 video-description">{{ section.settings.description }}</h4>
+           <a href="javascript:void(0);" class="popupVideo homepage-video-icon mb30 play-video-btn-{{section.id}}">
+            <span class="icon icon-play">
+              <svg x="0px" y="0px"
+                   width="97px" height="97px" viewBox="0 0 97 97" enable-background="new 0 0 97 97" >
+              		<path d="M49.084,1.131C22.804,1.131,1.5,22.435,1.5,48.714c0,26.279,21.304,47.583,47.584,47.583
+                  c26.279,0,47.582-21.304,47.582-47.583C96.667,22.435,75.364,1.131,49.084,1.131z M38.118,62.52V34.908l25.93,13.807L38.118,62.52z"
+                  />
+              </svg>
+             </span>
+           </a>
+          </div>
+        </div>
+    </div>
+  </div>     
+ </div>
+</div>
+{% endif %}  
+</div>
+
+<style>
+  {% if section.settings.home_video_bg != blank %}
+  #content .home-video.section-{{ section.id }} {
+    background-image:url('{{ section.settings.home_video_bg | img_url: '1400x' }}');
+      }
+  #content .home-video.section-{{ section.id }} .video-overlay {
+    background: rgba(0,0,0, {% if section.settings.video_caption_val == 100%} 1 {% else %}0.{{section.settings.video_caption_val}} {% endif %});
+  }
+  {% endif %}
+  #hero-video-{{section.id}} .vidcover{
+    opacity:  0.{{section.settings.video_caption_val}};
+  }
+
+  #content .video-section-{{ section.id }} .home-video h3 {
+    font-size: {{ section.settings.video_heading_size | append: 'px'}};
+    color: {{ section.settings.home_video_hd_color }};  
+  }
+  #content .video-section-{{ section.id }} .home-video h1 {
+    font-size: {{ section.settings.video_heading_size | append: 'px'}}; 
+      color: {{ section.settings.home_video_hd_color }};  
+  }
+  #content .video-section-{{ section.id }} .home-video h4 p {
+    color: {{ section.settings.home_video_description_color }};
+    font-size: {{ section.settings.video_description_size | append: 'px'}}; 
+  }
+  #content .video-section-{{ section.id }}  .homepage-video-icon svg{
+    fill: {{section.settings.home_video_play_icon_color}};  
+  }
+  #content .video-section-{{ section.id }} .home-video{
+    background-color:{{ section.settings.home_video_bg_color }};
+  }
+</style> 
+{% schema %}
+  {
+    "name": "Video",
+    "class": "home-video-section",
+    "settings": [
+    {
+      "type": "video_url",
+      "id": "video_link",
+      "label": "YouTube or Vimeo link",
+     "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "info": "https://www.youtube.com/watch?v=123456789"
+	 },
+	  {
+        "type": "select",
+        "id": "video_width",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full-width"
+          },
+          {
+            "value": "contained",
+            "label": "Contained"
+          }
+        ],
+        "default": "full"
+      },	
+	  {  
+         "type":"select",
+         "id":"hero_size",
+         "label":"Section height",
+         "default":"medium",
+         "options":[  
+            {  
+               "label":"Small",
+               "value":"small"
+            },
+            {  
+               "label":"Medium",
+               "value":"medium"
+            },
+            {  
+               "label":"Large",
+               "value":"large"
+            },
+            {  
+               "label":"Extra Large",
+               "value":"x-large"
+            }			
+         ]
+      },
+	  {
+        "type": "select",
+        "id": "video_play_option",
+        "label": "Display options",
+        "default": "autoplay_banner",
+        "options": [
+          { "value": "modal", "label": "Open on click"},
+          {"label":"Autoplay", "value":"autoplay_banner" }
+        ]
+      },	
+      {
+        "type": "image_picker",
+        "label": "Image",
+        "id": "home_video_bg",
+        "info": "1600 x 1200px jpg recommended"
+      },
+	   {
+        "type": "range",
+        "id": "video_caption_val",
+        "label": "Overlay opacity",
+        "info": "Add a darkened overlay over your image to make text easier to read.  Higher percentages produce darker overlays.",
+        "min":       0,
+        "max":        100,
+        "step":       10,
+        "unit":       "%",
+        "default": 20
+      },
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured video"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Text",
+		"info": "This description will only show if you select \"Open on click\" above."
+      },
+      {
+        "type": "select",
+        "id": "text_align",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          { "value": "text-left", "label": "Left"},
+          { "value": "text-center", "label": "Center"},
+          { "value": "text-right", "label": "Right"}
+        ]
+      },
+	  {
+        "type": "range",
+        "id": "video_heading_size",
+        "label": "Heading size",
+        "default": 24,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "video_description_size",
+        "label": "Text size",
+        "default": 16,
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px"
+      },
+	 {
+        "type": "header",
+        "content": "Colors"
+      },
+	 {
+        "type": "color",
+        "label": "Heading text",
+        "id": "home_video_hd_color",
+		"default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Description text",
+        "id": "home_video_description_color",
+		"default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Play icon",
+        "id": "home_video_play_icon_color",
+		"default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Background",
+        "id": "home_video_bg_color",
+		"default": "#9A9A9A"
+      }	
+    ],
+    "presets": [
+        {
+          "name": "Featured Video",
+          "category": "Video",
+		   "settings": {
+           "title": "Featured video"
+       	 }
+        }
+      ]
+  }
+{% endschema %}

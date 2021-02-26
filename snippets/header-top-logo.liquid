@@ -1,0 +1,68 @@
+<div class="dd header_top">
+  <div class="container">
+    <div class="top_menu hidden-ms hidden-xs">
+      {% if section.settings.logo != blank %}
+      <a class="navbar-brand" href="/" style="max-width:{{section.settings.logo_max_width | plus: 15  | append: "px"}}">
+        <img src="{{ section.settings.logo | img_url: logo_scale_width }}" 
+             alt="{% if  section.settings.logo.alt != blank %} {{ section.settings.logo.alt}} {% else %}{{ shop.name }} {%endif %}"               
+             class="img-responsive"  />
+      </a>
+      {% else %}
+      <a class="navbar-brand text-logo" href="/">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+
+    <ul class="hidden-xs nav navbar-nav navbar-right">
+      <li class="search dropdown-grid no-open-arrow">
+        {% if section.settings.search_style == 'bar' %}
+        <div class="fixed-search">    
+          {% include 'menu-search' %}
+        </div>
+        {% else %}
+        <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="false"><span class="icons"><i class="fa fa-search"></i></span></a>
+        <div class="dropdown-grid-wrapper" role="menu">
+          <div class="dropdown-menu fixed_menu col-sm-4 col-lg-3 pl-pr-15">
+            {% include 'menu-search' %}
+          </div>
+        </div>
+        {% endif %}
+      </li>
+      <li class="dropdown-grid no-open-arrow ">
+        <a data-toggle="dropdown" data-href="/cart" href="javascript:void(0);" class="dropdown-toggle cart-popup" aria-expanded="true"><div class="cart-icon"><span class="count{% if cart.item_count < 1 %} hidden{% endif %}">{{ cart.item_count }}</span><i class="fa fa-shopping-cart"></i></div></a>
+        <div class="dropdown-grid-wrapper hidden">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-9 col-md-7" role="menu">
+            {% include 'menu-cart' %}
+          </div>
+        </div>
+      </li>
+      {% if shop.customer_accounts_enabled %}
+      <li class="dropdown-grid no-open-arrow">
+        <a href="/account"><span class="icons"><i class="fa fa-user"></i></span></a>
+        <div class="dropdown-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5 col-md-4 col-lg-3" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+
+      <!-- include 'wishlist-link-li' -->
+      {% if customer.id != blank %}
+      <li class="dropdown-grid logout-wrapper">
+        <a href="/account/logout">
+          <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384.971 384.971" style="enable-background:new 0 0 384.971 384.971;" xml:space="preserve"><g><g id="Sign_Out"><path d="M180.455,360.91H24.061V24.061h156.394c6.641,0,12.03-5.39,12.03-12.03s-5.39-12.03-12.03-12.03H12.03 C5.39,0.001,0,5.39,0,12.031V372.94c0,6.641,5.39,12.03,12.03,12.03h168.424c6.641,0,12.03-5.39,12.03-12.03 C192.485,366.299,187.095,360.91,180.455,360.91z"/><path d="M381.481,184.088l-83.009-84.2c-4.704-4.752-12.319-4.74-17.011,0c-4.704,4.74-4.704,12.439,0,17.179l62.558,63.46H96.279 c-6.641,0-12.03,5.438-12.03,12.151c0,6.713,5.39,12.151,12.03,12.151h247.74l-62.558,63.46c-4.704,4.752-4.704,12.439,0,17.179 c4.704,4.752,12.319,4.752,17.011,0l82.997-84.2C386.113,196.588,386.161,188.756,381.481,184.088z"/></g></g></svg>
+        </a>
+        <div class="dropdown-grid-wrapper">
+          <div class="dropdown-menu no-padding col-xs-12 col-sm-5 col-md-4 col-lg-3" role="menu">
+            {% include 'menu-account' %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+
+    </ul>
+  </div>
+</div>
+<script>
+//   /account/login
+</script>

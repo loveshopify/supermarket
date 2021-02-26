@@ -1,0 +1,263 @@
+<div class="h_row_content home_product" data-animation="fadeInUp">
+{% assign product_name = settings.home_single_product %}
+{% assign product = all_products[product_name] %}
+<div class="clearfix">
+    <h3>{{product.title | escape }}</h3>
+  </div>
+<div class="pro_main_c home-single-product">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 product_grid">
+            {% include 'product-gallery' %}
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 product_grid">
+            <div>
+              <form class="form-add-to-cart form-horizontal" action="/cart/add" method="post" enctype="multipart/form-data" id="addToCartForm">
+
+                <div class="desc_blk">
+                  <h5>{{ 'products.general.description' | t }}</h5>
+                  
+				<!-- variations section  -->
+                  
+                  {% if settings.show_product_cart_postion == "top" %}
+                  <div class="variations">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <select name="id" id="product-select-{{ product.id }}" class="product-variants form-control">
+                          {% for variant in product.variants %}
+                          {% if variant.available %}
+                          <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title | escape }} - {{ variant.price | money_with_currency }}</option>
+                          {% else %}
+                          <option disabled="disabled">
+                            {{ variant.title | escape }} - {{ 'products.product.sold_out' | t }}
+                          </option>
+                          {% endif %}
+                          {% endfor %}
+                        </select>
+                        {% if settings.show_product_swatches %}
+                          {% if product.variants.size > 1 %}
+                          {% for option in product.options %}
+                          {% include 'swatch' with option %}
+                          {% endfor %}
+                          {% endif %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+	
+                  <div class="desc_blk_bot clearfix">
+                    <div class="qty"> <a class="minus_btn" ></a>
+                      <input type="text" id="quantity" name="quantity" class="txtbox" value="1" min="1">
+                      <a class="plus_btn" ></a> 
+                    </div>
+                    <div class="price">
+                      <span id="productPrice">
+                        {{ product.selected_or_first_available_variant.price | money }}
+                      </span>
+
+                      {% if product.selected_or_first_available_variant.price < product.selected_or_first_available_variant.compare_at_price %}
+                      <span id="comparePrice">
+                        {{ product.selected_or_first_available_variant.compare_at_price | money }}
+                      </span>
+                     {% endif %}
+                      </div>
+                    <input type="submit" name="add" class="btn_c" id="addToCart" value="{{ 'products.product.add_to_cart' | t }}">
+                  </div>
+                  {% endif %}
+
+				<!-- cart section end -->
+                  
+                  <div class="rte">
+                    {{ product.description | truncatewords : 100}}
+                  </div>
+                  
+				<!-- bottom variations section  -->
+                  
+                  {% if settings.show_product_cart_postion == "bottom" %}
+                  <div class="variations">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <select name="id" id="product-select-{{ product.id }}" class="product-variants form-control">
+                          {% for variant in product.variants %}
+                          {% if variant.available %}
+                          <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title | escape }} - {{ variant.price | money_with_currency }}</option>
+                          {% else %}
+                          <option disabled="disabled">
+                            {{ variant.title | escape }} - {{ 'products.product.sold_out' | t }}
+                          </option>
+                          {% endif %}
+                          {% endfor %}
+                        </select>
+                        {% if settings.show_product_swatches %}
+                          {% if product.variants.size > 1 %}
+                          {% for option in product.options %}
+                          {% include 'swatch' with option %}
+                          {% endfor %}
+                          {% endif %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  
+				<!-- bottom variations section end  -->
+                  {% if settings.show_product_cart_postion == "bottom" %} 
+                  <div class="desc_blk_bot clearfix">
+                    <div class="qty"> <a class="minus_btn" ></a>
+                      <input type="text" id="quantity" name="quantity" class="txtbox" value="1" min="1">
+                      <a class="plus_btn" ></a> 
+                    </div>
+                    <div class="price">
+                      <span id="productPrice">
+                        {{ product.selected_or_first_available_variant.price | money }}
+                      </span>
+
+                      {% if product.selected_or_first_available_variant.price < product.selected_or_first_available_variant.compare_at_price %}
+                      <span id="comparePrice">
+                        {{ product.selected_or_first_available_variant.compare_at_price | money }}
+                      </span>
+                      {% endif %}
+                    </div>
+                    <input type="submit" name="add" class="btn_c" id="addToCart" value="{{ 'products.product.add_to_cart' | t }}">
+                  </div>
+                  {% endif %}
+         
+				<!-- bottom cart section end -->
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+</div>
+<script>
+
+  selectCallback = function (variant, selector) {
+    
+    /* for the variant sku change */
+    {% if settings.show_product_sku %}
+    if (jQuery.type( variant ) === "null")
+    {
+     	$('.variant-sku').empty();
+      console.log("woring")
+    } 
+    else {
+      console.log(variant)
+         if (variant.sku ) 
+         {
+          $('.variant-sku').html("<b>{{'products.general.product_sku' | t}}: </b>"+ variant.sku);
+        }
+        else {
+          $('.variant-sku').empty();
+        }
+      }
+    
+    {% endif %}
+     /* end of variant sku change  */
+    
+    var $product = $('#product-' + selector.product.id +'-gallery');
+    if (variant && variant.featured_image && $product.is(":visible")) {
+      var original_image = $(".flex-active-slide img", $product), new_image = variant.featured_image;
+      Shopify.Image.switchImage(new_image, original_image[0], function (new_image_src, original_image, element) {
+        $product.flexslider($('[data-image-id="' + variant.featured_image.id + '"]').data('index'));
+      });
+    }
+
+    {% if settings.show_product_swatches %}
+    // BEGIN SWATCHES
+    if (variant) {
+      var form = jQuery('#' + selector.domIdPrefix).closest('form');
+      for (var i=0,length=variant.options.length; i<length; i++) {
+        var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+        if (radioButton.size()) {
+          radioButton.get(0).checked = true;
+        }
+      }
+    }
+    // END SWATCHES
+    {% endif %}
+
+    var addToCart = $('#addToCart'),
+        productPrice = $('#productPrice'),
+        comparePrice = $('#comparePrice');
+
+    if (variant) {
+      if (variant.available) {
+        // We have a valid product variant, so enable the submit button
+        addToCart.removeClass('disabled').prop('disabled', false).val('{{ "products.product.add_to_cart" | t }}');
+
+      } else {
+        // Variant is sold out, disable the submit button
+        addToCart.val('{{ "products.product.sold_out" | t }}').addClass('disabled').prop('disabled', true);
+      }
+
+      // Regardless of stock, update the product price
+      productPrice.html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}"));
+
+    // Also update and show the product's compare price if necessary
+    if ( variant.compare_at_price > variant.price ) {
+    comparePrice
+    .html(Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}"))
+    .show();
+    } else {
+      comparePrice.hide();
+    }
+
+  } else {
+    // The variant doesn't exist, disable submit button.
+    // This may be an error or notice that a specific variant is not available.
+    addToCart.val('{{ "products.product.unavailable" | t }}').addClass('disabled').prop('disabled', true);
+    }
+  };
+
+  jQuery(function($) {
+    $product = $('#product-' + {{ product.id }});
+    new Shopify.OptionSelectors("product-select-{{ product.id }}", { product: {{ product | json }}, onVariantSelected: selectCallback{% if product-form == 'product' %}, enableHistoryState: true{% endif %} });
+
+    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+    {% if product.options.size == 1 and product.options.first != 'Title' %}
+    $('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first }}</label>');
+    {% endif %}
+
+   // Hide selectors if we only have 1 variant and its title contains 'Default'.
+   {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+   $('.selector-wrapper').hide();
+    {% endif %}
+
+    // Auto-select first available variant on page load. Otherwise the product looks sold out.
+    {% assign found_one_in_stock = false %}
+    {% for variant in product.variants %}
+    {% if variant.available and found_one_in_stock == false %}
+    {% assign found_one_in_stock = true %}
+    {% for option in product.options %}
+    $('.single-option-selector:eq({{ forloop.index0 }})').val({{ variant.options[forloop.index0] | json }});
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+  });
+ 
+  jQuery(document).ready(function($){
+
+    // Initialize popup as usual
+    $('.slides').magnificPopup({
+    delegate: 'a',
+    type: 'image',
+    closeOnContentClick: false,
+    closeBtnInside: false,
+    mainClass: 'mfp-with-zoom mfp-img-mobile',
+    image: {
+      verticalFit: true
+    },
+    gallery: {
+      enabled: true
+    },
+    zoom: {
+      enabled: true,
+      duration: 300, // don't foget to change the duration also in CSS
+      opener: function(element) {
+        return element.find('img');
+        }
+      }
+    });
+  });
+</script>

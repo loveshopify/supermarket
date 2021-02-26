@@ -1,0 +1,61 @@
+<div class="email_box">
+  <!-- {% form 'customer' %}
+  
+   <div class="footer_email_errors alert alert-danger">
+  	{{ form.errors | default_errors }}
+   </div>
+  
+  {% if form.posted_successfully? %}
+  	<div class="alert alert-success">{{ 'general.newsletter_form.confirmation' | t }}</div>
+  {% else %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email"  class="txtbox" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+    <button class="btn btn-link" type="submit" value="{{ 'general.newsletter_form.submit' | t }}" name="commit" id="Subscribe"><span class="fa fa-check"></span></button>
+  {% endif %}
+  {% endform %} -->
+  <!-- Begin Constant Contact Inline Form Code -->
+  <div class="ctct-inline-form" data-form-id="90b0527f-3371-4857-978f-f434fc1dba16"></div>
+  <!-- End Constant Contact Inline Form Code -->
+</div>
+
+<style>
+  #gdpr_text {
+    display: none;
+  }
+
+  #email_address_field_0 {
+    margin-bottom: 0;
+  }
+
+  #email_address_0 {
+    border-radius: 10px;
+  }
+
+  div.ctct-form-embed div.ctct-form-defaults {
+    padding: 0;
+  }
+
+  #footer .f_mid .email_box button {
+    position: relative;
+    margin-top: 5px;
+    padding: 10px 0;
+    right:0px;
+    bottom:0px;
+  }
+
+  #email_address_label_0 {
+    display: none;
+  }
+</style>
+
+<script>
+  setTimeout(() => {
+    const emailInput = document.getElementsByClassName('ctct-form-element');
+    if (emailInput[0]) {
+      emailInput[0].placeholder = 'email@example.com'
+    }
+    if (emailInput[1]) {
+      emailInput[1].placeholder = 'email@example.com'
+    }
+  }, 10000)
+</script>

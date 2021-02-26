@@ -1,0 +1,99 @@
+
+<div class="container logo-bar mb30" data-section-id="{{ section.id }}" data-section-type="logo-section" data-block-qty="{{section.blocks.size}}">
+  {%if section.settings.title != blank %}
+  <div class="clearfix">
+    <h3 class="mb30">{{ section.settings.title | escape }}</h3>   
+  </div>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    <div class="logos_wrapper">
+      <div id="logo-container-{{section.id}}" class="owl-carousel owl-theme  {% if section.settings.use_border_for_logo %} bordered-logo {% endif %}"> 
+      {% for block in section.blocks %}
+        <div class="logo-bar__item" {{ block.shopify_attributes }}>
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" class="logo-bar__link">
+          {% endif %}
+          {% if block.settings.image != blank %}
+              <div class="logo-bar__item_inner">
+                
+                {% if block.settings.image.alt != blank %}
+                {% assign logo_alt_title = block.settings.image.alt %}
+                {% else %}
+                {% assign logo_alt_title = "Logo image" %}
+                {% endif %}
+                {{ block.settings.image | img_url: '160x160', scale: 2 | img_tag: logo_alt_title, 'logo-bar__image' }}
+              </div> 
+          {% else %}
+              <div class="logo-bar__item_inner">
+            {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+          {% endif %}
+          {% if block.settings.link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% schema %}
+  {
+    "name": "Logo list",
+    "class": "index-section",
+    "max_blocks": 20,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Logo list"
+      },
+	 {  
+         "type":"checkbox",
+         "id":"use_border_for_logo",
+         "label":"Show borders"
+     }
+    ],
+    "blocks": [
+      {
+        "type": "logo_image",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link",
+            "info": "Optional"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Logo list",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

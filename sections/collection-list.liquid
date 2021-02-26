@@ -1,0 +1,193 @@
+{% paginate collection.products by section.settings.pagination_limit %}
+
+<div id="content">
+  <div class="container" data-section-id="{{ section.id }}" data-section-type="collection-list-page-section">
+    {% include 'breadcrumb' %}
+    <div class="catalog_c">
+      {% if collection.image  and section.settings.show_featured_image %}
+      {% assign show_featured_image = true %}
+      {% endif %}
+      {% if show_featured_image or collection.description.size > 0 %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="box collection-box" >
+            {% if collection.image  and section.settings.show_featured_image %}
+            <noscript>
+              <img alt="{{ collection.title | escape }}" srcset="{{ collection | img_url: '1200x' }} 1x, {{ collection | img_url: '1200x', scale: 2 }} 2x, {{ collection | img_url: '1200x', scale: 3 }} 3x" >  
+            </noscript>
+              {%- assign img_url = collection.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+             <img
+                 src="{{ collection.image | img_url:'100x100' }}" 
+                 alt="{{  collection.title | escape }}" 
+                 class="lazyload blur-up collection-main-image"                         
+                 data-src="{{ img_url }}"
+                 style="max-width: {{ collection.image.width }}px" 
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ collection.image.aspect_ratio }}"
+                 data-sizes="auto"
+                 />
+            {% endif %}
+            {% if collection.description.size > 0 %}
+            <div class="rte">
+              {{ collection.description }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="title clearfix">
+        <h1>{{ collection.title | escape }}</h1>
+      </div>
+
+      <div class="row">
+         {% if section.settings.show_collection_sidebar %}
+          <div class="col-md-3 col-sm-4">
+          {% include 'sidebar-collection' %}
+          </div>
+        {% endif %}
+         <div class="{% if section.settings.show_collection_sidebar %}col-md-9 col-sm-8{% else %} col-sm-12 {% endif %}">
+          <div class="product_c mobile_pt60">
+            <div class="filter_c">
+              {% include 'collection-views' %}
+              {% include 'collection-sorting' %}
+            </div>
+            <div class="row collection-view-list">
+              {% for product in collection.products %}
+              <div class="collection-list">
+                {% include 'product-loop-list' %}
+              </div>
+              {% else %}
+              <p class="no-products">{{ 'collections.general.no_matches' | t }}</p>
+              {% endfor %}
+            </div>
+            {% if section.settings.use_infinite_scroll%}
+              {% if paginate.next.url %}
+                <div class="load-more__icon"></div>
+                <div class="js-load-more load-more">
+                  <a href="{{ paginate.next.url }}" data-no-instant class="load-more__btn action_button continue-button">{{ 'collections.general.load_more' | t }}</a>
+                </div>
+              {% endif %}
+             {% else %}   
+              {% if paginate.pages > 1 %}
+              	{% include 'pagination-custom' %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endpaginate %}
+{% schema %}
+   {
+    "name": "Collection List",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Display options"
+      },
+      {
+        "type": "range",
+        "id": "pagination_limit",
+        "label": "Products per page",
+        "min":       4,
+        "max":        48,
+        "step":       4,
+        "default": 12
+      },
+	  {
+        "type": "checkbox",
+        "id": "use_infinite_scroll",
+        "label": "Enable infinite scroll",
+        "info": "Eliminates pagination and loads new collections as you scroll down the page."
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_featured_image",
+        "label": "Show featured image",
+  		"default": true
+      },			
+	  {
+        "type": "checkbox",
+        "id": "show_grid_type",
+        "label": "Show product type"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_smart_checkout",
+        "label": "Show dynamic checkout button",
+        "info": "Lets customers check out directly using a familiar payment method. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/change-the-layout\/dynamic-checkout)",
+	    "default": true
+      },	
+	  {
+        "type": "header",
+        "content": "Sidebar"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_collection_sidebar",
+        "label": "Enable"
+      },
+      {
+        "type": "select",
+        "id": "collection_sidebar_filters",
+        "label": "Product filtering method",
+        "options": [
+          {
+            "value": "groups",
+            "label": "Group filtering"
+          },
+          {
+            "value": "simple-tags",
+            "label": "Simple tag list"
+          },
+          {
+            "value": "none",
+            "label": "No filtering"
+          }
+        ],
+        "default": "simple-tags",
+        "info": "[Learn more on group filtering](https:\/\/support.milehighthemes.com\/hc\/en-us\/articles\/360020145033-How-do-I-setup-group-filtering-on-my-collection-pages-)"
+      },
+      {
+        "type": "text",
+        "id": "group_array",
+        "label": "Group titles (comma separated list)",
+        "info": "e.g. Brand,Product,etc."
+      },
+      {
+        "type": "link_list",
+        "id": "collection_link_list",
+        "label": "Custom menu"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_collections",
+        "label": "Show all collections"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_vendors",
+        "label": "Show all vendors"
+      },
+      {
+        "type": "collection",
+        "id": "sidebar_collection_sale_collection",
+        "label": "Featured products collection"
+      },
+      {
+        "type": "range",
+        "id": "sidebar_collection_product_count",
+        "label": "Number of products",
+         "min":       1,
+        "max":        6,
+        "step":       1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

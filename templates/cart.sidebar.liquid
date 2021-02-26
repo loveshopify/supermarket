@@ -1,0 +1,108 @@
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="title clearfix">
+      <h1>{{ 'cart.general.title' | t }}</h1>
+    </div>
+    <div class="cart_c">
+      <div class="cart_top">
+        <div class="row">
+          {% if settings.show_cart_sidebar %}
+          <div class="col-md-9 col-md-push-3 col-sm-8 col-sm-push-4">
+            {% else %}
+            <div class="col-sm-12">
+              {% endif %}
+              <div class="cart_tbl">
+                {% if cart.item_count > 0 %}
+                <form action="/cart" method="post" novalidate>
+                  <div class="clearfix title_row">
+                    <ul>
+                      <li>{{ 'cart.general.photo' | t }}</li>
+                      <li>{{ 'cart.general.name' | t }}</li>
+                      <li>{{ 'cart.general.quantity' | t }}</li>
+                      <li>{{ 'cart.general.price' | t }}</li>
+                    </ul>
+                  </div>
+                  <div class="clearfix con_row">
+                    {% for item in cart.items %}
+                    <ul>
+                      <li><div class="thumb"><span> <a href="{{ item.url }}"><img src="{{ item | img_url: '800x' }}"  alt="{{ item.title | escape }}" /></a></span></div></li>
+                      <li>
+                        <h5><a href="{{ item.url | within: collections.all }}">{{ item.product.title | escape }}</a></h5>
+                        {% if item.product.variants.size != 0 %}
+                        {% unless item.variant.title contains 'Default' %}
+                        <p>{{ item.variant.title | escape }}</p>
+                        {% endunless %}
+                        {% endif %}
+                        {% if item.properties.size > 0 %}
+                        <p>
+                          {% for p in item.properties %}
+                          {% unless p.last == blank %}
+                          {{ p.first }}:
+
+                          {% if p.last contains '/uploads/' %}
+                          <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                          {% else %}
+                          {{ p.last }}
+                          {% endif %}
+
+                          <br>
+                          {% endunless %}
+                          {% endfor %}
+                        </p>
+                        {% endif %}                  
+                      </li>
+                      <li>
+                        <a class="minus_btn"></a>
+                        <input type="text" id="updates_{{ item.id }}" name="updates[]" class="txtbox" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
+                        <a class="plus_btn"></a>
+                      </li>
+                      <li>
+                        <div class="price">{{ item.price | money }}</div>
+                        <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}" class="del_btn"></a>
+                      </li>
+                    </ul>
+                    {% endfor %}
+                  </div>
+                  <div class="total_row clearfix">
+                    <ul>
+                      <li>
+                        <span class="total_val">{{ 'cart.general.subtotal' | t }}:</span><span class="total-price">{{ cart.total_price | money }}</span>
+                      </li>
+                      <li><button type="submit" name="update" value="{{ 'cart.general.update' | t }}" class="refresh_btn"></button></li>
+                    </ul>
+                  </div>
+                  {% if settings.cart_notes %}
+                  <div class="clearfix order_notes">
+                    <label for="cartSpecialInstructions" class="sr-only">{{ 'cart.general.note' | t }}:</label>
+                    <textarea name="note" id="cartSpecialInstructions" placeholder="{{ 'cart.general.note' | t }}">{{ cart.note }}</textarea>
+                  </div>
+                  {% endif %}
+                  {% if settings.show_currency_disclaimer %}
+                  {{ 'cart.general.currency_disclaimer_html' | t: shopname: shop.name, currency: shop.currency }}
+                  {% endif %}
+                  <div class="cart_btn clearfix">
+                    <a href="/collections/all" class="info_btn"><span class="fa fa-chevron-left"></span>{{ 'cart.general.continue_browsing' | t }}</a>
+                    <button type="submit" name="checkout" value="{{ 'cart.general.checkout' | t }}" class="next_btn">{{ 'cart.general.checkout' | t }}</button>
+                    {% if additional_checkout_buttons %}
+                    <div class="additional-checkout">
+                      {{ content_for_additional_checkout_buttons }}</div>
+                    {% endif %}
+                  </div>
+                </form>
+                {% else %}
+                <div class="empty-cart-message">
+                  <p>{{ 'cart.general.empty' | t }}</p>
+                  <p><a href="/collections/all" class="btn_c">{{ 'cart.general.continue_browsing' | t }}</a></p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if settings.show_cart_sidebar %}
+            {% include 'sidebar-cart' %}
+            {% endif %}
+          </div>
+        </div>     
+      </div>
+    </div>
+  </div>

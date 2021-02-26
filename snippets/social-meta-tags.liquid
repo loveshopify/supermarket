@@ -1,0 +1,70 @@
+ <meta property="og:url" content="{{ canonical_url }}">
+ <meta property="og:site_name" content="{{ shop.name }}">
+{% if template contains 'product' %}
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.title | strip_html | escape }}">
+  {% for image in product.images limit:3 %}
+  <meta property="og:image" content="http:{{ image.src | img_url: '800x' }}">
+  <meta property="og:image:secure_url" content="https:{{ image.src | img_url: '800x' }}">
+  {% endfor %}
+  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html | escape }}">
+  <meta property="og:price:currency" content="{{ shop.currency }}">
+{% elsif template contains 'article' %}
+  <meta property="og:title" content="{{ article.title | strip_html | escape }}">
+  <meta property="og:description" content="{{ page_description | escape }}">	  
+  <meta property="og:type" content="article"> 
+
+  {% assign img_tag = '<' | append: 'img' %}
+  {% if article.image %}
+  <meta property="og:image" content="http:{{ article | img_url: '800x' }}">
+  <meta property="og:image:secure_url" content="https:{{ article | img_url: '800x' }}">
+  {% elsif article.content contains img_tag %}
+    {% assign src = article.content | split: 'src="' %}
+    {% assign src = src[1] | split: '"' | first | remove: 'https:' | remove: 'http:' %}
+    {% if src %}
+  <meta property="og:image" content="http:{{ src }}">
+  <meta property="og:image:secure_url" content="https:{{ src }}">
+    {% endif %}
+  {% endif %}
+{% else %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:image" content="http:{{ settings.share_image | img_url: '1200x1200' }}">
+  <meta property="og:image:secure_url" content="https:{{ settings.share_image | img_url: '1200x1200' }}">
+{% endif %}
+{% if page_description %}
+	{% unless template contains 'article'%}
+  		<meta property="og:description" content="{{ page_description | escape }}">
+	{% endunless %}
+{% endif %}
+ 
+
+
+
+{% if settings.twitter_link != blank %}
+  <meta name="twitter:site" content="@{{ settings.twitter_link | remove: "https://twitter.com/" }}">
+{% endif %}
+<meta name="twitter:card" content="summary">
+{% if template contains 'product' %}
+  <meta name="twitter:title" content="{{ product.title }}">
+  <meta name="twitter:description" content="{{ product.description | strip_html | truncatewords: 140, '' | escape }}">
+  <meta name="twitter:image" content="https:{{ product.featured_image.src | img_url: '800x' }}">
+  <meta name="twitter:image:width" content="240">
+  <meta name="twitter:image:height" content="240">
+{% elsif template contains 'article' %}
+  <meta name="twitter:title" content="{{ article.title }}">
+  <meta name="twitter:description" content="{{ article.excerpt_or_content | strip_html | truncatewords: 140, '' | escape }}">
+  {% comment %}
+    Check if content contains an image to add to the card
+      - Source: http://blog.viralica.com/2013/09/twitter-product-cards-on-shopify/
+  {% endcomment %}
+  {% if article.image %}
+  <meta property="twitter:image" content="https:{{ article | img_url: '800x' }}">
+  {% elsif article.content contains "<img" %}
+    {% assign src = article.content | split: 'src="' %}
+    {% assign src = src[1] | split: '"' | first | replace: '//cdn', 'http://cdn' | replace: 'http:http://', 'http://' | remove: 'https:' %}
+    {% if src %}
+  <meta property="twitter:image" content="{{ src }}">
+    {% endif %}
+  {% endif %}
+{% endif %}

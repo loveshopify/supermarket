@@ -1,0 +1,86 @@
+{% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+
+<div class="slider_1 clearfix" data-featured="{{featured_image.id}}" data-image="{{image.id}}">
+  {% if product.images.size == 0 %}
+  <img src="{{ '' | product_img_url: '1024x' }}" alt="Product Image">
+  
+  {% else %} 
+  <div id="image-block" data-zoom="{% if section.settings.show_product_zoom %}disabled{% else %}enabled{% endif %}">
+    <noscript>
+      <img alt="{{ product.title | escape }}" 
+           src="{{ product.featured_image | img_url: '700x' }}"
+           srcset="{{ product.featured_image | img_url: '700x' }} 1x, {{ product.featured_image | img_url: '700x', scale: 2 }} 2x, {{ product.featured_image | img_url: '700x', scale: 3 }} 3x"
+           />
+    </noscript>
+    <div class="flexslider product_gallery {% if product-images == blank %}product_images{% endif %}" id="product-{{ product.id }}-gallery">
+      <ul class="slides">
+        {% for image in product.images %}
+        <li data-thumb="{{ image | product_img_url: '150x', scale: 2 }}" {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}data-title="{{ product.title | escape }}" class="video_slide"{% else %}data-title="{{ image.alt | escape }}"{% endif %}>
+          {% if image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+          {% assign video = image.alt | split: 'src="' %}
+          {% assign video = video[1] | split: '"' | first %}
+
+          {% if video contains '?' %}
+          {% assign video = video | append: '&amp;autoplay=1' %}
+          {% else %}
+          {% assign video = video | append: '?autoplay=1' %}
+          {% endif %}
+
+          <div class="video-container {% if image.alt contains 'vimeo' %}vimeo{% else %}youtube{% endif %}">
+            <div>
+              <a href="{{ video | strip_html | replace: '/embed/', '/watch?v=' | remove: '?feature=player_detailpage&amp;autoplay=1' }}" title="{{ product.title | escape }}" class="mfp-iframe">
+                {{ image.alt }}
+              </a>
+            </div>
+          </div>
+          {% else %}
+          
+          {% comment %} This is value for slider max-height {% endcomment %}
+          {% if section.settings.enable_images_limit%}
+          	{% assign max_img_height =  section.settings.images_limit_height %}    
+          {% else %}
+          	{% assign max_img_height = 500 %}        
+          {% endif %}
+          
+          {% assign product_img_width = image.width %}
+          {% assign product_img_height = image.height %}
+          {% assign product_img_ratio = image.aspect_ratio %}
+          {% if max_img_height < product_img_height %}
+          	{% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+          {% else %}
+          	{% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+          {% endif %}
+          
+          {%- assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <a class="image-slide-link" href="{{ image | product_img_url: '1400x' }}" title="{{ image.alt | escape }}">
+            <img src="{{ image | img_url: '300x' }}" 
+                 alt="{{ image.alt | escape }}" 
+                 data-index="{{ forloop.index0 }}" 
+                 data-image-id="{{ image.id }}" 
+                 class="lazyload blur-up{% if featured_image.id == image.id %}featured_image lazypreload{% endif %}"                         
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ image.aspect_ratio }}"
+                 data-sizes="auto"
+                 style="max-width:{{max_img_width}}"
+                 />
+          </a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+   {% if section.settings.product_additional_img == "carousel" %}
+    <div id="carousel" class="flexslider">
+      <ul class="slides">
+        {% for image in product.images %}
+        <li data-image-id="{{ image.id }}">
+          <img src="{{ image | product_img_url: '150x', scale: 2  }}" />
+        </li>
+        {% endfor %}
+      </ul>
+      </div>
+    {% endif %}
+  </div>
+  {% endif %}                
+</div>

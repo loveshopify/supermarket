@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="entry-popup   {% if settings.popup_logo == blank %} only_description_content {% endif %}">
+    <div class="modal-dialog">
+      <div class="modal-content {% if settings.popup_image_position == 'left'%} flex-revers{% endif %}">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
+        <div class="description-content">
+          <div class="modal-header no_border">
+            <h2 class="modal-title text-center" id="myModalLabel">{{ settings.entry_popup_heading | escape }}</h2>
+          </div>
+          <div class="modal-body no_padding">
+            {{ settings.entry_popup_text }}
+            {% if settings.entry_popup_newsletter %}
+              <div>
+                {% include 'newsletter-form' %}
+              </div>
+            {% endif %}
+            {% if settings.entry_popup_social %}
+                {% include 'social-profiles' %}
+            {% endif %}
+          </div>
+        </div>
+        {% if settings.popup_logo != blank %}        
+        <div class="image-content lazyload blur-up visible_lazy"
+             data-bgset="{% include 'bgset', image: settings.popup_logo %}"
+             data-sizes="auto"
+             data-parent-fit="cover"
+             style="background-image: url('{{ settings.popup_logo | img_url: '100x100' }});"
+             >       
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#myModalLabel {
+    font-size:{{settings.popup_heading_size}}px;
+  }
+  .modal-body p{
+    font-size:{{settings.popup_text_size}}px;
+  }
+</style>
+
+<script type="text/javascript">
+  $(document).ready(function() {    
+    var cookie = "{{settings.popup_return}}",
+    	delay = {{settings.popup_delay}}*1000;
+        
+            function show_modal(){
+              $('#myModal').modal();
+            }
+    
+            $('#myModal').on('hidden.bs.modal', function () {
+              $('body').attr('tabindex', '0');
+              $('body').focus();
+            });
+      
+            if ($.cookie('pop') == null || cookie  == "use_test_popup") {           
+              window.setTimeout(show_modal, delay); // delay before it calls the modal function
+              if (cookie  != "use_test_popup") {
+                var cookieTime = cookie*1;
+                $.cookie('pop', 'modal', { expires: cookieTime });
+              }
+            }
+    });
+</script>

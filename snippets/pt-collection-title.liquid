@@ -1,0 +1,62 @@
+{%- capture collection_title -%}
+{%- comment -%} Use this or similar for the title element:
+    {%- if template == '404' -%}
+    <title>Page Not Found &nbsp;|&nbsp;{{ shop.name }}</title>
+   
+    {%- elsif template contains 'collection' and current_tags -%}
+    <title>{%- include 'pt-collection-title' -%}&nbsp;|&nbsp;{{ shop.name }}</title>
+    {%- else -%}
+  
+    <title>{{ page_title }}&nbsp;|&nbsp;{{ shop.name }}</title>
+    {%- endif -%}
+{%- endcomment -%}
+{%- assign default_product_title = 'All' -%}
+{%- assign filter_handles_ordered = '' -%}
+{%- for menu_header in shop.metafields.pt_filter_menu reversed -%}
+    {%- capture filter_handles_ordered -%}{{filter_handles_ordered }}|{{ menu_header.first }}|{%- endcapture -%}
+{%- endfor -%}
+{%- comment -%} By default the order is the reverse order of your filter menu filters, as this how most titles read the best - most specific to least specific. You can remove the above for-loop and define your own order using the 'filter_handles_ordered' variable. Print it out below to see the current values. It is delimited by double pipes || with leading and trailing single pipes {%- endcomment -%}
+{%- comment -%}{{ filter_handles_ordered }}{%- endcomment -%}
+{%- assign primary_sort_collection = collection -%}
+{%- if collection.metafields.sort_primary.collection_handle -%}
+  {%- assign primary_sort_collection = collections[collection.metafields.sort_primary.collection_handle] -%}
+{%- endif -%}
+{%- assign filter_header = nil -%}
+{%- assign seen_tags = nil -%}
+{%- assign non_filter_collection = true -%}
+{%- assign ordered_header_list = filter_handles_ordered | split: '||' -%}
+{%- for ordered_header in ordered_header_list -%}
+  {%- assign ordered_header_handle = ordered_header | remove: '|' -%}
+  {%- for menu_header in shop.metafields.pt_filter_menu -%}
+    {%- assign current_selected = '|' -%}
+    {%- assign menu_items = menu_header.last | split: ',' -%}
+    {%- for menu_item in menu_items -%}
+      {%- if current_tags contains menu_item or collection.handle == menu_item -%}
+      {%- assign seen_tags = seen_tags | append: '##' | append: menu_item -%}
+          {%- if collection.handle == menu_item -%}
+              {%- assign non_filter_collection = false -%}
+          {%- endif -%}
+          {%- if filter_handles_ordered contains menu_header.first -%}
+              {%- if ordered_header_handle == menu_header.first -%}          
+                {%- assign filter_collection = collections[menu_item] -%}
+                {% capture filter_header %}{{ filter_header }} {{ filter_collection.title }}{% endcapture %}
+              {%- endif -%}
+          {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- for tag in current_tags -%}
+{%- assign tag_comma = '##' | append: tag -%}
+{%- unless seen_tags contains tag_comma -%}
+{%- assign filter_collection = collections[tag] -%}
+{%- if filter_collection -%}
+{% capture filter_header %}{{ filter_header }} {{ filter_collection.title }}{% endcapture %}
+{%- else -%}
+{% capture filter_header %}{{ filter_header }} {{ tag | replace: '-', ' ' | capitalize }}{% endcapture %}
+{%- endif -%}
+{%- endunless -%}
+{%- endfor -%}
+{% capture header_formatted %}{{ filter_header }}{% if non_filter_collection and primary_sort_collection.handle != 'all' %} {{ collection.title }}{% endif %}{% endcapture %}
+{%- if header_formatted == '' -%}{{ default_product_title }}{%- else -%}{{ header_formatted }}{%- endif -%}
+{%- endcapture -%}{{ collection_title | strip_newlines | strip }}

@@ -1,0 +1,44 @@
+<div class="bar_wrap">
+<div class="promo-bar">
+  {% if section.settings.promo_bar_link != blank %}
+  <a href="{{section.settings.promo_bar_link}}">
+  {% endif %}
+  
+  	{{ section.settings.promo_bar_text }}
+  
+  {% if section.settings.promo_bar_link != blank %}
+  </a>
+  {% endif %}
+  
+</div>
+<div class="hed_right">
+      {% if section.settings.heading_content != 'none' or settings.show_multiple_currencies %}
+      <ul>
+        {% if section.settings.heading_content == 'links' %}
+        {% for link in linklists[section.settings.header_top_linklist].links %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% else %}
+        <li>{{ 'general.header.no_links' | t }}</li>
+        {% endfor %}
+        {% elsif section.settings.heading_content == 'text' and section.settings.header_top_text != blank %}
+        <li><span class="header-top-text">{{ section.settings.header_top_text }}</span></li>
+        {% endif %}
+        {% if settings.show_multiple_currencies %}
+        {% include 'currencies-switcher' %}
+        {% endif %}
+      </ul>
+      {% endif %}
+      {% if section.settings.header_phone != blank or section.settings.header_email != blank %}
+      <div class="header-contact">
+        <ul>
+          {% if section.settings.header_phone != blank %}
+          <li><a href="tel:{{ section.settings.header_phone | escape }}"><span class="fa fa-phone"></span>{{ section.settings.header_phone | escape }}</a></li>
+          &nbsp;|{% endif %}
+          {% if section.settings.header_email != blank %}
+          <li><a href="mailto:{{ section.settings.header_email | escape }}"><span class="fa fa-envelope"></span>{{ section.settings.header_email | escape }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+</div>

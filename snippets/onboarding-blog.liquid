@@ -1,0 +1,44 @@
+<div class="container" data-section-id="{{ section.id }}" data-section-type="blog-section">
+<div class="h_row_content">
+  <div class="clearfix">  
+    <h3>{{ 'home_page.sections.recent_post_title' | t }}</h3>
+  </div>
+  <div class="blog_c home_recentpost ideas-hover">
+    <div class="row">
+      {% for i in (1..6) limit : section.settings.home_post_count%}
+      <div class="col-sm-{{ grid_item_width }}">
+        <div class="blog_blk red5 clearfix">
+          <a href="#">
+            <div class="box">
+              <figure class="effect-chico">
+                 {% capture imgCount %}{% cycle 1, 2 %}{% endcapture %}
+        		 {% capture svg_name %}lifestyle-{{ imgCount }}{% endcapture %}
+                 {{ svg_name | placeholder_svg_tag: 'placeholder-svg' }}
+                <figcaption></figcaption>
+              </figure>
+            </div> 
+          </a>
+
+          <div class="rte clearfix">
+            <h2><a href="#">Blog Post</a></h2>
+            {% if section.settings.home_blog_excerpt %}
+             This is the text from your article
+            {% endif %}
+          </div>
+          {% if section.settings.home_blog_excerpt %}
+          <div class="read-more"><a href="#" class="btn_c">{{ 'blogs.article.read_more' | t }}</a></div>
+          {% endif %}
+          {% assign published_at = '2017-01-15' | date: '%b %d, %Y' %}
+          <div class="tag_c clearfix">
+            <ul>
+              <li><span class="fa fa-calendar"></span><span>{{ 'blogs.article.date_html' | t: date: published_at }}</span></li>
+              <li><span class="fa fa-user"></span>Author</li>
+            </ul>
+          </div><!-- /.tags_c -->
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>

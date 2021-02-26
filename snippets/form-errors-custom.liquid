@@ -1,0 +1,22 @@
+{% if form.errors %}
+<a name="add-comment-title"></a>
+<div class="alert alert-danger" role="alert">
+  <p>{{ 'general.forms.post_error' | t }}</p>
+
+  <ul>
+    {% for field in form.errors %}
+
+    {% if field == 'form' %}
+    <li>
+      {{ form.errors.messages[field] }}
+    </li>
+    {% else %}
+    <li>
+      {{ 'general.forms.error_the' | t }} <strong>{{ field | replace: 'body', 'Message' }}</strong> {{ 'general.forms.error_field' | t }} {{ form.errors.messages[field] }}
+    </li>
+    {% endif %}
+
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

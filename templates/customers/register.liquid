@@ -1,0 +1,44 @@
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="title clearfix">
+          <h1>{{ 'customer.register.title' | t }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row mt20">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="sfbox box-registration">
+          {% form 'create_customer' %}
+
+          {% include 'form-errors-custom' %}
+
+          <div class="frm">
+            <label for="first_name" class="lbltxt">{{ 'customer.register.first_name' | t }}</label>
+            <input type="text" value="" name="customer[first_name]" id="first_name" class="txtbox" {% if form.errors contains "first_name" %} class="error"{% endif %} autocapitalize="words" autofocus>
+          </div>
+          <div class="frm">
+            <label for="last_name" class="lbltxt">{{ 'customer.register.last_name' | t }}</label>
+            <input type="text" value="" name="customer[last_name]" id="last_name" class="txtbox" {% if form.errors contains "last_name" %} class="error"{% endif %} autocapitalize="words">
+          </div>  
+          <div class="frm">
+            <label for="email" class="lbltxt">{{ 'customer.register.email' | t }}</label>
+            <input type="email" value="" name="customer[email]" id="email" class="txtbox" {% if form.errors contains "email" %} class="error"{% endif %}>
+          </div>
+          <div class="frm">
+            <label for="password" class="lbltxt">{{ 'customer.register.password' | t }}</label>
+            <input type="password" value="" name="customer[password]" id="create_password" class="txtbox" {% if form.errors contains "password" %} class="error"{% endif %}>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4 col-ms-6"><p><input type="submit" class="btn_c" value="{{ 'customer.register.submit' | t }}"></p></div>
+            <div class="col-sm-8 col-ms-6 text-right sign-in">{{ 'customer.register.returning' | t }} <a href="/account/login">{{ 'customer.register.sign_in_html' | t }}</a></div>
+          </div>
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

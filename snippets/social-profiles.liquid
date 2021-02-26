@@ -1,0 +1,44 @@
+<div class="social">
+  <ul>
+    {% if settings.twitter_link != '' %}
+    <li class="twitter">
+      <a href="{{ settings.twitter_link | escape }}" target="_blank" title="Twitter"><span class="fa fa-twitter"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.facebook_link != '' %}
+    <li class="facebook">
+      <a href="{{ settings.facebook_link | escape }}" target="_blank" title="Facebook"><span class="fa fa-facebook"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.pinterest_link != '' %}
+    <li class="pinterest">
+      <a href="{{ settings.pinterest_link | escape }}" target="_blank" title="Pinterest"><span class="fa fa-pinterest"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.google_plus_link != '' %}
+    <li class="google">
+      <a href="{{ settings.google_plus_link | escape }}" target="_blank" title="Pinterest"><span class="fa fa-google-plus"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.instagram_link != '' %}
+    <li class="instagram">
+      <a href="{{ settings.instagram_link | escape }}" target="_blank" title="Instagram"><span class="fa fa-instagram"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.tumblr_link != '' %}
+    <li class="tumblr">
+      <a href="{{ settings.tumblr_link | escape }}" target="_blank" title="Tumblr"><span class="fa fa-tumblr"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.youtube_link != '' %}
+    <li class="youtube">
+      <a href="{{ settings.youtube_link | escape }}" target="_blank" title="YouTube"><span class="fa fa-youtube"></span></a>
+    </li>
+    {% endif %}
+    {% if settings.vimeo_link != '' %}
+    <li class="vimeo">
+      <a href="{{ settings.vimeo_link | escape }}" target="_blank" title="Vimeo"><span class="fa fa-vimeo-square"></span></a>
+    </li>
+    {% endif %}
+  </ul>
+</div>

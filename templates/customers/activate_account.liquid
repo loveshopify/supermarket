@@ -1,0 +1,39 @@
+<section id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="title clearfix">
+          <h1>{{ 'customer.activate_account.title' | t }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row mt20">
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="sfbox box-activate-account">
+          <p>{{ 'customer.activate_account.subtext' | t }}</p>
+
+          {% form 'activate_customer_password' %}
+
+          {% include 'form-errors-custom' %}
+
+          <div class="frm">
+            <label for="customer_password" class="lbltxt">{{ 'customer.activate_account.password' | t }}</label>
+            <input type="password" value="" name="customer[password]" id="customer_password" class="txtbox">
+          </div>
+
+          <div class="frm">
+            <label for="customer_password_confirmation" class="lbltxt">{{ 'customer.activate_account.password_confirm' | t }}</label>
+            <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation" class="txtbox">
+          </div>
+
+          <div class="submit-form">
+            <input type="submit" class="btn_c" value="{{ 'customer.activate_account.submit' | t }}">
+            <input type="submit" class="info_btn" name="decline" id="customer_decline" value="{{ 'customer.activate_account.cancel' | t }}">
+          </div>  
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

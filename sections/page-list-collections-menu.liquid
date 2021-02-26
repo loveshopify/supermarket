@@ -1,0 +1,147 @@
+<div id="content">
+  <div class="container">
+    {% include 'breadcrumb' %}
+    <div class="title clearfix">
+      <h1>{{ page.title }}</h1>
+    </div>
+    <div class="page_content">
+      <div class="row">
+        <div class="{% if section.settings.page_link_list != blank or section.settings.show_sidebar_page_collections or section.settings.show_page_sidebar_sale %}col-md-9 col-md-push-3 col-sm-8 col-sm-push-4{% else %}col-sm-12{% endif %}">
+          <div class="row">
+            
+            {% if linklists[page.handle].links.size > 0 %}
+            	{% assign number_of_links = 0 %}
+  
+            	{% for link in linklists[page.handle].links %}
+                 {% if link.url contains 'pages' %}
+                  {% assign collection_name = link.url | remove: "/pages/" %}
+                  {% assign collection = collections[collection_name] %}            
+            	 {% else %} 
+              	  {% assign collection = link.object %}           
+            	 {% endif %}
+ 
+            {% assign number_of_links = number_of_links | plus: 1 %}
+            
+            <div class="col-sm-4 mb30 element">
+              <div class="main_box">
+                <div class="box_1">
+                    <div class="product-image">
+                      {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+                      <a href="{{ collection.url }}" title="Browse our {{ collection_title }} collection">  
+                        
+
+                        {% if collection.image %}
+                        
+                        {% assign max_img_width = collection.image.width | append: "px" %}
+                        {% assign max_img_height = 200 %}
+                        {% assign product_img_width = collection.image.width %}
+                        {% assign product_img_height = collection.image.height%}
+                        {% assign product_img_ratio = collection.image.aspect_ratio %}
+                        {% if max_img_height < product_img_height %}
+                        {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+                        {% else %}
+                        {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+                        {% endif %}
+                        {% if max_img_width == "0px" %}
+                        {% assign max_img_width = '100%;width:auto;'%}
+                        {% endif %}
+                        
+                        <img class="lazyload blur-up"
+                             src="{{ collection | img_url: '600x' }}"
+                             data-srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x"Z
+                             alt="{{ collection_title | escape }}"
+                             style="max-width: {{max_img_width}}"/>  
+                        <noscript>
+                          <img alt="{{ collection_title | escape }}" srcset="{{ collection | img_url: '600x' }} 1x, {{ collection | img_url: '600x', scale: 2 }} 2x, {{ collection | img_url: '600x', scale: 3 }} 3x" >
+                        </noscript>
+                        {% else %}
+                        
+                          {% assign max_img_width = collection.products.first.featured_image.width | append: "px" %}
+                          {% assign max_img_height = 200 %}
+                          {% assign product_img_width = collection.products.first.featured_image.width %}
+                          {% assign product_img_height = collection.products.first.featured_image.height%}
+                          {% assign product_img_ratio = collection.products.first.featured_image.aspect_ratio %}
+                          {% if max_img_height < product_img_height %}
+                          {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+                          {% else %}
+                          {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+                          {% endif %}
+                          {% if max_img_width == "0px" %}
+                          {% assign max_img_width = '100%;width:auto;'%}
+                          {% endif %}
+                        
+                        <img class="lazyload blur-up"
+                             src="{{ collection.products.first.featured_image  | img_url: '600x' }}"
+                             data-srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}"
+                             alt="{{ collection_title | escape }}"
+                             style="max-width: {{max_img_width}}"/>  
+                        <noscript>
+                          <img srcset="{{ collection.products.first.featured_image  | img_url: '600x' }} 1x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 2 }} 2x, {{ collection.products.first.featured_image  | img_url: '600x', scale: 3 }} 3x," alt="{{ collection_title | escape }}">
+                        </noscript>
+                        {% endif %}
+                        
+                        <div class="spinner-cube">
+                         <div class="loadFacebookG"></div>
+                        </div>	      
+
+                      </a>
+                    </div>
+                </div>
+                <div class="desc">
+                  <h5><a href="{{ link.url }}" class="collection-item__title">{{ link.title }}</a></h5>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        {% if section.settings.page_link_list != blank or section.settings.show_sidebar_page_collections or section.settings.show_page_sidebar_sale %}
+          {% include 'sidebar-page' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Page",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Sidebar options"
+      },
+      {
+        "type": "link_list",
+        "id": "page_link_list",
+        "label": "Choose custom menu",
+      	"info": "This menu won't show dropdown items"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sidebar_page_collections",
+        "label": "Enable collections"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_page_sidebar_sale",
+        "label": "Enable products"
+      },
+      {
+        "type": "collection",
+        "id": "sidebar_page_sale_collection",
+        "label": "Choose collection"
+      },
+      {
+        "type": "range",
+        "id": "sidebar_page_product_count",
+        "label": "Number of products",
+        "min":       1,
+        "max":        6,
+        "step":       1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

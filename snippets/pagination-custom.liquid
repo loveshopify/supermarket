@@ -1,0 +1,27 @@
+<div class="page_c clearfix red5">
+  {% if paginate.previous %}
+  <a href="{{ paginate.previous.url }}" class="prev"><span class="fa fa-chevron-left"></span>{{ 'collections.general.previous' | t }}</a>
+  {% else %}
+  <a href="" class="prev disabled"><span class="fa fa-chevron-left"></span>{{ 'collections.general.previous' | t }}</a>
+  {% endif %}
+  <ul>
+    {% for part in paginate.parts %}
+    {% if part.is_link %}
+    <li>
+      <a href="{{ part.url }}" title="">{{ part.title }}</a>
+    </li>
+    {% else %}
+    {% if part.title == paginate.current_page %}
+    <li class="active"><a href="{{ part.url }}">{{ part.title }}</a></li>
+    {% else %}
+    <li><a href="{{ part.url }}">{{ part.title }}</a></li>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+  </ul>
+  {% if paginate.next %}
+  <a href="{{ paginate.next.url }}" title="{{ paginate.next.title }}" class="next">{{ 'collections.general.next' | t }}<span class="fa fa-chevron-right"></span></a>
+  {% else %}
+  <a href="" class="next disabled">{{ 'collections.general.next' | t }}<span class="fa fa-chevron-right"></span></a>
+  {% endif %}
+</div>

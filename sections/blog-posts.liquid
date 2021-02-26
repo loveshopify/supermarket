@@ -1,0 +1,118 @@
+{% case section.settings.home_post_count %}
+{% when 1 %}
+{% assign grid_item_width = 12 %}
+ {% assign img_size = "1200x"%}
+{% when 2 %}
+{% assign grid_item_width = 6 %}
+ {% assign img_size = "720x"%}
+{% when 3 %}
+{% assign grid_item_width = 4 %}
+ {% assign img_size = "720"%}
+{% else %}
+{% assign grid_item_width = 3 %}
+ {% assign img_size = "720x"%}
+{% endcase %}
+
+{% if section.settings.recent-post-blog != blank %}
+<div class="container" data-section-id="{{ section.id }}" data-section-type="blog-section">
+<div class="h_row_content">
+  <div class="clearfix">  
+      <h3>{{ section.settings.title | escape }}</h3>   
+  </div>
+  <div class="blog_c home_recentpost ideas-hover">
+    <div class="row">
+      {% for article in blogs[section.settings.recent-post-blog].articles limit : section.settings.home_post_count %}
+      <div class="col-sm-{{ grid_item_width }}">
+        <div class="blog_blk red5 clearfix" >
+          {% if article.image %}
+          <a href="{{ article.url }}">
+            <div class="box article_img_block">
+              <!-- <figure class="effect-chico"> -->
+                <noscript>
+                 <img alt="{{  article.title | escape }}" srcset="{{ article | img_url: img_size }} 1x, {{ article | img_url: img_size, scale: 2 }} 2x, {{ article | img_url: img_size, scale: 3 }} 3x" >
+                </noscript>
+                {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                <img
+                     src="{{ article | img_url:'300x' }}" 
+                     alt="{{  article.title | escape }}" 
+                     class="lazyload blur-up"                         
+                     data-src="{{ img_url }}"
+                     data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                     data-aspectratio="{{ article.image.aspect_ratio }}"
+                     data-sizes="auto"
+                     />
+                <figcaption></figcaption>
+              <!-- </figure> -->
+            </div> 
+          </a>
+          {% endif %}
+
+          <div class="rte clearfix">
+            <h2><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+            {% if section.settings.home_blog_excerpt %}
+            {% if article.excerpt.size > 0 %}
+            {{ article.excerpt }}
+            {% else %}
+            {{ article.content | strip_html | truncate: 150 }}
+            {% endif %}
+            {% endif %}
+          </div>
+          {% if section.settings.home_blog_excerpt %}
+          <div class="read-more"><a href="{{ article.url }}" class="btn_c">{{ 'blogs.article.read_more' | t }}</a></div>
+          {% endif %}
+          {% assign published_at = article.published_at | date: '%b %d, %Y' %}
+          <div class="tag_c clearfix">
+            <ul>
+              <li><span class="fa fa-calendar"></span><span>{{ 'blogs.article.date_html' | t: date: published_at }}</span></li>
+              <li><span class="fa fa-user"></span>{{ article.author }}</li>
+            </ul>
+          </div><!-- /.tags_c -->
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
+{% else %}
+{% include 'onboarding-blog' %}
+{% endif %}
+{% schema %}
+  {
+    "name": "Blog posts",
+    "settings": [
+      {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "From the Blog"
+      },	
+	  {
+        "type": "blog",
+        "id": "recent-post-blog",
+        "label": "Choose blog"
+      },
+      {
+        "type": "range",
+        "id": "home_post_count",
+        "label": "Number of posts",
+         "min":       1,
+        "max":        4,
+        "step":       1,
+        "default": 4
+      },
+      {
+        "type": "checkbox",
+        "id": "home_blog_excerpt",
+        "label": "Show blog excerpt",
+        "info": "If unchecked, just the title of the blog post will be shown."
+      }
+    ],
+    "presets": [
+        {
+          "name": "Blog posts",
+          "category": "Blog"
+        }
+      ]
+  }
+{% endschema %}

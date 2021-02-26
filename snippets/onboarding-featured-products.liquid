@@ -1,0 +1,22 @@
+{% for i in (1..12) %}
+<div class="{% if section.settings.home_feature_product_grid_type == "grid" %}{{ section.settings.home_feature_product_grid_layout }} col-sm-4 col-xs-6 mb30{% endif %}">
+  <div class="main_box ">
+    <div class="box_1">
+      <div class="product-image">
+        <a href="#">
+          {% capture imgCount %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+          {% capture svg_name %}product-{{ imgCount }}{% endcapture %}
+          {{ svg_name | placeholder_svg_tag: 'placeholder-svg' }}
+        </a>
+      </div>
+    </div>
+    <div class="desc">
+      <h5><a href="#">Your Product name</a></h5>
+      {% if section.settings.show_grid_type %}
+      <p>Product type</p>
+      {% endif %}
+      <div class="price">$ 99.00</div>
+    </div>
+  </div>
+</div>
+{% endfor %}

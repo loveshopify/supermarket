@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en" class="noIE">
+  <head>
+
+    <!-- Basic page needs ================================================== -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Title and description ================================================== -->
+    <title>
+      {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+
+    {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    <!-- Helpers ================================================== -->
+    {% include 'social-meta-tags' %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.primary_color }}">
+
+    {% if settings.favicon != empty %}
+    <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+    {% endif %}
+    {{ 'apps.css' | asset_url | stylesheet_tag }}
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ 'flexslider.css' | asset_url | stylesheet_tag }}
+    {{ 'flexslider-product.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.scss.css' | asset_url | stylesheet_tag }}
+
+    {% if template contains "index" %}
+    <script src="//www.youtube.com/iframe_api"></script>
+    <script src="//player.vimeo.com/api/player.js"></script>
+    {% endif %}
+
+    <!-- Header hook for plugins ================================================== -->
+    {{ content_for_header }}
+    
+    {% if settings.app_wk_enabled %}
+    {% include 'appmate-wishlist-king' %}
+    {% endif %}
+
+    <!--[if lt IE 9]>
+	{{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+	<![endif]-->
+
+    {% if template contains 'customers' %}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+    {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    {{ 'jquery.js' | asset_url | script_tag }}
+
+    <script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>
+
+
+    <!-- Theme Global App JS ================================================== -->
+    <script>
+      var app = app || {
+        data:{
+          template:{{ template | json }},
+          money_format: {{ shop.money_format | default:false | json }}
+        }
+      }
+
+    </script>
+    {% include "no_script_styles" %}
+    {% render 'minmaxify-head' %}
+    {% section 'filter-menu-settings' %}
+    
+  {% render 'limoniapps-discountninja-header' %}
+<!-- BING Tracking -->
+	<script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"4058338"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script>
+<!-- End BING Tracking -->
+</head>
+
+  <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+<div id="limoniapps-discountninja-stickybar-pusher" class="limoniapps-sticky-bar-pusher"></div>
+    <span class="cart-count" style="display:none"></span>
+    <div class="wsmenucontainer clearfix">
+      <div class="overlapblackbg"></div>
+      {% if settings.show_entry_popup %}
+      {% include 'entry-popup' %}
+      {% endif %}
+
+      {% section 'header' %}
+
+      {{ content_for_layout }}
+
+      {% section 'icon-buttons' %}	
+      {% section 'footer' %}
+
+      {{ 'jquery.magnific-popup.min.js' | asset_url | script_tag }}
+      {{ 'api.jquery.js' | asset_url | script_tag }}
+      {{ 'ajaxify-shop.js' | asset_url | script_tag }}
+      {{ 'custom.js' | asset_url | script_tag }}
+
+      {% if template contains 'blog' %}
+      {{ "masonry.pkgd.min.js" | asset_url  | script_tag }}
+      {{ "imagesloaded.pkgd.min.js" | asset_url  | script_tag }}
+      {% endif %}
+
+      {% if settings.show_multiple_currencies %}
+      {% include 'currencies' %}
+      {% endif %}
+
+      {% if template == 'index' or template contains 'product' %}
+      {{ 'jquery.owl.min.js' | asset_url | script_tag }}
+      {% endif %}
+
+      {{ 'scripts.js' | asset_url | script_tag }}
+
+      <script>
+        $(document).ready(function() {
+          if ($('#snize_results').length) {
+            var searchaniseCartObserver = new MutationObserver(function() {
+              Shopify.getCart(function(cart) {Shopify.updateQuickCart(cart); })
+            });
+
+            searchaniseCartObserver.observe($('.cart-count').get(0), { childList: true });
+          }
+        });
+      </script>
+    </div>
+    
+    
+   <!-- Gorgias Chat Widget Start -->
+    <div id="gorgias-chat">
+    <script>window.gorgiasChatParameters = {}</script>
+    <script src="https://config.gorgias.io/production/RdOkb7oDgoxVXGNr/chat/QBGoD2eD446djqlX.js" defer></script>
+    </div>
+<!-- Gorgias Chat Widget End -->
+    
+    
+    {% include 'smile-initializer' %}
+    {% include 'seo-json-ld-schema' %}
+    {% include 'limoniapps-discountninja-body' %}
+
+    <script async type="text/javascript" data-api-key="" id="stamped-script-widget"
+      src="https://cdn-stamped-io.azureedge.net/files/widget.min.js">
+    </script>
+
+    <!-- Begin Constant Contact Active Forms -->
+    <script> var _ctct_m = "d61ce3a9c1c9d6bf99de482bc70ea594"; </script>
+    <script id="signupScript" src="//static.ctctcdn.com/js/signup-form-widget/current/signup-form-widget.min.js" async
+      defer></script>
+    <!-- End Constant Contact Active Forms -->
+    <script type="text/javascript">
+      var gorgiasChatInterval = window.setInterval(function () {
+        var iframe = document.querySelector('#gorgias-web-messenger-container');
+          if (iframe) { 
+            var head = iframe.contentWindow.document.querySelector('head')
+            if (head.children.length) {
+              window.clearInterval(gorgiasChatInterval); // this line breaks out of the loop - make sure it's not deleted.        
+              var styles = document.createElement('style');
+              styles.textContent = '#messenger-button {left: 20px}'  // the custom CSS you want to inject
+              head.appendChild(styles)
+            }
+          }    
+      }, 100);
+    </script>
+  
+</body>
+</html>

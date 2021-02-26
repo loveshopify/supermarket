@@ -1,0 +1,3 @@
+  <li><a target="_blank" href="//www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}"><i class="fa fa-facebook"></i></a></li> 
+  <li><a target="_blank" href="//twitter.com/intent/tweet?url={{shop.url}}{{article.url}}&via={{ settings.twitter_link | remove: "https://twitter.com/" | escape }}&text={{article.title | escape}}"><i class="fa fa-twitter"></i></a></li>
+  <li><a target="_blank" href="//pinterest.com/pin/create/button/?url={{ article.url }}&media={{ article.image.src | img_url: '1024x' }}&description={{ article.title | escape }}" count-layout="horizontal"><i class="fa fa-pinterest"></i></a></li>

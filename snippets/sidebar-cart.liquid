@@ -1,0 +1,22 @@
+<div class="col-md-3 col-md-pull-9 col-sm-4 col-sm-pull-8">
+  <div class="sidebar">
+    {% if settings.cart_link_list != "" %}
+    <div class="side_box side_box_1 red5">
+      <h5>{{ 'cart.general.widget_links_title' | t }}</h5>
+      <ul class="tgl_c">
+        {% for link in linklists[settings.cart_link_list].links %}
+        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if settings.show_shipping_calculator %}
+    <div class="side_box side_box_1 red5">
+      <h5>{{ 'cart.calculator.title' | t }}</h5>
+      <div class="shipping-calculator">
+        {% include 'shipping-calc' %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
